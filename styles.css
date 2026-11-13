@@ -125,6 +125,7 @@ body {
 .row:last-child { border-bottom: 0; }
 @media (max-width: 760px) { .row { grid-template-columns: 1fr; gap: 6px; } }
 .num { font-family: var(--mono); font-size: 0.78rem; color: var(--navy); padding-top: 6px; border-top: 2px solid var(--navy); width: 34px; }
+.row:nth-child(even) .num { transform: translateX(14px); } /* deliberate asymmetry — not a stamped card */
 .row h2 { font-size: 1.5rem; letter-spacing: -0.02em; line-height: 1.2; margin: 0 0 10px; font-weight: 750; }
 .row p { margin: 0 0 10px; color: var(--ink-soft); }
 .row p:last-of-type { margin-bottom: 0; }
