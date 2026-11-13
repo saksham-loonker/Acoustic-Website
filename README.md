@@ -1,22 +1,25 @@
 # Acoustic-Website
 
-Public website for [Acoustic](https://github.com/saksham-loonker/Acoustic) — an offline Android sound environment for noisy places. Static site, no build step; hosted on Netlify.
+Public website for [Acoustic](https://github.com/saksham-loonker/Acoustic) — an offline Android sound environment for noisy rooms. Static site, no build step; hosted on Netlify.
+
+**Coming soon to Google Play Store.** Engineering builds are available on request — see `index.html` (`mailto:sakshamloonker@gmail.com`).
 
 ## What it contains
 
-- `index.html` / `styles.css` — the single-page site: features, in-app screenshots, privacy, FAQ and pre-release download links.
-- `demo.js` — a small Web Audio coloured-noise demo (white/pink/brown) that runs entirely in the browser. It is an approximation of the app's coloured-noise side, not the app's native engine.
-- `assets/` — logo artwork derived from the finalised `Acoustic.png`, plus real cropped screenshots from a connected phone (`assets/screenshots/`).
+- `index.html` / `styles.css` — the single-page site: an editorial, minimalist layout set in the system's own serif and grotesque. No webfonts, no trackers, no cookies, no analytics.
+- `site.js` — scroll-progress hairline, the custom cursor (precise pointers + no-reduced-motion only) and the breathing hero canvas.
+- `bench.js` — **the listening bench**: loads the app's mask-shaping DSP core compiled to WebAssembly on first press, renders deterministic audio from the real engine, and plays it. ~95 KB total, fetched only on demand, nothing stored.
+- `engine/` — provenance and the rebuild script (`acoustic-wasm.cpp`, `build-wasm.ps1`). The wrapper compiles **only** `audio/src/dsp.cpp` and `audio/src/library.cpp` from the Acoustic repository. No Android code, no microphone, no preferences, no network.
+- `assets/` — logo artwork derived from the finalised `Acoustic.png`, the compiled engine (`engine.js` + `engine.wasm`), social image and cropped, real screenshots from the connected phone (`assets/screenshots/`).
+- `engine-smoke.mjs` — Node smoke test used to verify the engine output headlessly (render all three scenes, print peak/acknowledged layers).
 
 ## Local preview
-
-Any static file server works, e.g.:
 
 ```powershell
 python -m http.server 8080
 ```
 
-Open http://localhost:8080.
+Open http://localhost:8080. The bench downloads its engine on first press; keep the network or the files local.
 
 ## Deploy
 
@@ -24,7 +27,6 @@ Netlify publishes the repository root (see `netlify.toml`). No build command is 
 
 ## Notes
 
-- The site intentionally requires no third-party fonts, trackers or CDN assets. Everything is served from this repository.
-- Screenshots are unaltered captures from the connected test phone (the disposable `org.acoustic.app.validation` package, 0.23.0, fresh defaults, dark theme because the phone is in dark mode), cropped to the app frame and downscaled for the web. They show only the app UI — no personal data, notifications or recordings.
-- The feature/privacy copy reflects the shipping app's behaviour: no INTERNET permission, on-device preferences, no stored audio, no listening history.
+- Screenshots are unaltered captures from the connected test phone (the disposable `org.acoustic.app.validation` package, 0.23.0, fresh defaults), cropped to the app frame and downscaled.
+- The site intentionally has no third-party fonts, analytics or embeds. View source: it is one HTML file, two scripts and one stylesheet.
 - Acoustic is a comfort-focused sound environment, not a medical device, not hearing protection and not active noise cancellation.
