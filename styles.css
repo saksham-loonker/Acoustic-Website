@@ -77,7 +77,8 @@
 }
 
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 84px; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 116px; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 
 body {
   margin: 0;
@@ -511,7 +512,6 @@ table.rig-read td:last-child, table.rig-read th:last-child { text-align: right; 
 
 /* sticky nav shifts down for the ribbon */
 .nav { top: 32px; }
-html { scroll-padding-top: 116px; }
 
 /* ---------- stats strip under hero ---------- */
 .strip {
