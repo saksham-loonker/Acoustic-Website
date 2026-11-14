@@ -480,6 +480,17 @@ The maker's instruction: build the people page like a triangle — Saksham at th
 
 **Verification run this session.** HTML parse clean; `sweep-fast.mjs` 0 px overflow at 360–1600 px; `verify-team.mjs`: top card centred (640 px centre at 1280 px), second row starts below it, both dim cards equal width (367 px each). Fold screenshot reviewed.
 
+## 24. Sole developer, regular cards (2026-11-14)
+
+The maker's instruction: "cut down Lead Developer and replace with Sole Developer … remove the gold shine on the sole developer, just regular."
+
+**What changed.**
+- Saksham's role line: `CEO & CTO — Sole Developer`. Nothing else claims the title and no badge is needed to repeat it.
+- The gold shine/glow is gone: no gradient fill, no 44 px box-shadow, no filled-gold monogram. Saksham's card is byte-identical in styling to Mahir's and Aum's — same `rgba(233,196,106,.04)` wash, same `.18` gold edge, same gold-outline monogram treatment — arranged as the single-apex card of the triangle (430 px, centred, second row below). Uniform, regular, nothing shouted.
+- The `SOLE DEVELOPER` chip is removed along with its CSS; the role text carries the fact.
+
+**Verification run this session.** HTML parse clean; `verify-team2.mjs`: 3 cards, 0 px overflow, uniform computed `background/border/box-shadow` across all three, monogram `rgba(0,0,0,0)` with `.4`-alpha gold border, role string verified byte-for-byte, screenshot reviewed — the fold now shows one quiet apex figure and two matched cards, all regular.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.
