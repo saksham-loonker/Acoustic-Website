@@ -10,6 +10,36 @@
   let showOnShelf = null;
   let renderPicker = null;
 
+  /* ---------- the contents rail: which spread is open ---------- */
+  const railLinks = document.querySelectorAll('.rail a[href^="#"]');
+  if (railLinks.length && "IntersectionObserver" in window) {
+    const byId = new Map();
+    railLinks.forEach((a) => byId.set(a.getAttribute("href").slice(1), a));
+    const current = { id: null };
+    const mark = (id) => {
+      if (current.id === id) return;
+      current.id = id;
+      railLinks.forEach((a) => {
+        if (a.getAttribute("href") === "#" + id) a.setAttribute("aria-current", "true");
+        else a.removeAttribute("aria-current");
+      });
+    };
+    const seen = new Map();
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) seen.set(e.target.id, e.intersectionRatio);
+        let best = null, bestR = 0;
+        for (const [id, r] of seen) if (r > bestR) { bestR = r; best = id; }
+        if (best) mark(best);
+      },
+      { threshold: [0, 0.15, 0.35, 0.6], rootMargin: "-18% 0px -30% 0px" }
+    );
+    byId.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+  }
+
   const fine = window.matchMedia("(pointer: fine)").matches;
   const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 

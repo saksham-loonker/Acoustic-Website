@@ -278,6 +278,38 @@ The maker's verdict: "the run engine part is dumb." It was. Reviewed honestly, t
 
 **Still unverified:** no phone, no listening, and I cannot view the screenshots.
 
+## 16. The workshop-manual redesign (2026-11-14)
+
+Maker's verdict: content is acceptable; change the entire layout to make it more appealing and humane.
+
+**The design idea.** The page now reads as a small studio's printed manual for a small instrument, not as a SaaS landing page: a running head, a numbered contents rail, spreads that alternate paper and ink, chapter numbers, margin notes, and a colophon. The humour and the restraint both come from the same place — the idea that someone sat down and set this by hand.
+
+**What changed structurally.**
+- **Contents rail** on viewports ≥ 1560 px: fifteen numbered entries, `position: fixed` in the left gutter, `aria-current` tracking the section in view via IntersectionObserver (progressive enhancement only). Hidden below the fold width; the page is complete and navigable without it.
+- **Section numbers** set as large Fraunces italics (`.sec-no`, 01–14) in the top-right of every band — chapter furniture instead of another identical eyebrow label. Decorative and `aria-hidden`.
+- **Why Acoustic** is no longer three equal cards: it is three numbered chapters (roman numerals i/ii/iii), staggered, with dotted rules.
+- **What's in it** lost the four big cards and gained a **contents page**: a ledger of 59 / 17 / ∞ / You with dotted leaders and small tags (`recordings / music / generated / choices`). The interactive shelf index and the measured spectrum panel were kept and refined; the cards were the regular part.
+- **A day with Acoustic is now a full-bleed ink spread** — navy deep background, cream text, the manifesto as the spread's pull quote.
+- **Fine print is wrapped as a single document** (`.fineprint-wrap`) with a striped top rule, like a printed terms sheet, instead of two floating cards.
+- **Footer is now a real imprint**: centred logo mark, the word set large, a small-caps line, then the colophon in three columns (type credits, "In this manual" with numbered entries, contact) and a single signature rule.
+- **Nav** is a running head with a double rule and a subdued pill for v0.23.0; **the stripe under the hero** is the "running foot" of the cover.
+- **Margin notes**: two, in Fraunces italic with a hand-drawn arrow, both about the honest parts of the page (the rig and the questions). Visible only at ≥ 1400 px.
+- Old card-grid CSS (`.cards-3`, `.inside-grid`, `.inside-count`, etc.) was removed rather than left to rot.
+
+**What did not change.** Every claim, every honest limitation, every interactive tool (picker, shelf index, blend shelf, spectrum panel, rig, ceiling curve, eight-band tilt, contents rail excepted which is new), every id and JS hook, the custom round cursor, the self-hosted fonts, the OFL credits, the no-INTERNET posture, and the rule that the page demonstrates shaping, not benefit.
+
+**Verification run this session (host render only).**
+- `node --check site.js` / `bench.js`: pass. `engine-smoke.mjs`: exit 0.
+- HTML parse clean, 0 U+FFFD.
+- `verify-v5.mjs` (all prior checks): FIG 54,010-byte data URL; rig playing; Café→Street `max 0.22`; 390 px overflow 0; 0 console/page errors.
+- `verify-v9 / v10 / v12 / v13 / v6 / v8 / verify-rig`: all still green — 76 shelf rows, blend filters, spectrum orders, picker→shelf handoff (`Wind in the Trees` + `Mountain Stream  #7`), QA ledger 4 numbers, rig idle/playing/switch states.
+- `verify-rail.mjs` (new): at 1600 px the rail renders (190 px, left 18 px), tracks `#fineprint` via `aria-current`, never overlaps any `.wrap`, and is `display:none` at 1366 px. The two margin notes do not overlap the h2 they sit beside. `.sec-no` renders above backgrounds on all palette sections.
+- `sweep-widths.mjs`: 0 px overflow at 360–1600 px.
+- `audit-v4.mjs`: unchanged — 2 text families + system mono, 14.41:1 body contrast, 3 greys, 7 shadow roles, radii distributed across pill / 20 px / 12 px / 50 %.
+- Forbidden-claim scan: no positive dBA/ANC/medical/benefit wording anywhere (all hits are negations, column headers, or the disclaimer itself).
+
+**Still unverified:** no phone, no listening, and — as ever this session — I cannot view the screenshots. The visual judgement call (whether this feels good) belongs to the maker; every mechanical signal I can measure is clean.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.
