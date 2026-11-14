@@ -19,6 +19,14 @@
   const roPeak = document.getElementById("roPeak");
   const roMs = document.getElementById("roMs");
   const scenes = Array.from(document.querySelectorAll("[data-scene]"));
+  const shapeEl = document.getElementById("rigShape");
+
+  const SHAPES = [
+    "Warm — more of the low end, eased at the top.",
+    "Even — the same weight all the way across.",
+    "Bright — the top forward, the low end pulled in.",
+  ];
+  const SHAPE_SHORT = ["warm", "even", "bright"];
 
   const RATE = 48000;
   const FRAMES = RATE * 8;
@@ -88,7 +96,7 @@
 
   async function loadEngine() {
     if (engine) return engine;
-    say("fetching engine", null);
+    say("fetching the engine", null);
     rigLabel.textContent = "loading";
 
     const [jsText, wasmRes] = await Promise.all([
@@ -137,7 +145,7 @@
     if (roBands) roBands.textContent = live + " / 8 \u00b7 max " + loudest.toFixed(2);
 
     drawMeter(pcm);
-    say("rendered 8 s in " + ms + " ms", "ok");
+    say("8 s shaped in " + ms + " ms", "ok");
     return pcm;
   }
 
@@ -177,18 +185,19 @@
     source.onended = () => {
       if (!playing) return;
       playing = false;
-      button.textContent = "Run engine";
+      button.textContent = "Play 8 seconds";
       rigLabel.textContent = "standby";
       lamps(false);
-      say("finished \u00b7 press to run again", null);
+      say("done \u00b7 play it again whenever you like", null);
     };
     source.start();
 
     playing = true;
     button.textContent = "Stop";
-    rigLabel.textContent = ["room", "caf\u00e9", "street"][scene] + " \u00b7 running";
+    rigLabel.textContent = SHAPE_SHORT[scene] + " \u00b7 playing";
+    if (shapeEl) shapeEl.textContent = SHAPES[scene];
     lamps(true);
-    say("playing \u00b7 ceiling held at 0.30", "ok");
+    say("playing \u00b7 rendered at 0.30, well under any ceiling you would set", "ok");
   }
 
   button.addEventListener("click", async () => {
@@ -203,12 +212,12 @@
       await play();
     } catch (error) {
       console.error(error);
-      say("unavailable \u2014 the engine runs on the phone", "err");
+      say("could not load \u2014 the engine runs on the phone", "err");
       rigLabel.textContent = "fault";
-      button.textContent = "Run engine";
+      button.textContent = "Play 8 seconds";
     } finally {
       button.disabled = false;
-      if (!playing) button.textContent = "Run engine";
+      if (!playing) button.textContent = "Play 8 seconds";
     }
   });
 
@@ -216,15 +225,16 @@
     btn.addEventListener("click", async () => {
       scene = Number(btn.dataset.scene);
       scenes.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+      if (shapeEl) shapeEl.textContent = SHAPES[scene];
       if (!playing) {
-        say("ready \u00b7 press run", null);
+        say("ready when you are", null);
         return;
       }
       try {
         await play();
       } catch (error) {
         console.error(error);
-        say("scene change failed \u00b7 press stop, then run", "err");
+        say("that change did not take \u00b7 press stop, then play", "err");
       }
     });
   });

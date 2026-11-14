@@ -247,6 +247,37 @@ Two things were wrong in the earlier rounds and both are fixed here.
 
 **Still unverified:** no phone, no listening, and I cannot view the screenshots.
 
+## 15. The rig, rewritten for a person (2026-11-14)
+
+The maker's verdict: "the run engine part is dumb." It was. Reviewed honestly, the rig had four problems, and all four were mine.
+
+**What was wrong.**
+1. **It claimed to be rooms and was not.** The buttons read "Room / Café / Street", but the engine plays three fixed shapes. Nothing on the page listened to a room. That is the worst kind of wrong: a demo implying a capability the product only has in a session the user explicitly starts.
+2. **The primary action was engineer-speak.** "Run engine" is what the person who wrote it calls it. A visitor deciding whether to trust the page does not run engines; they listen.
+3. **The readouts were telemetry, not information.** "Peak sample 0.069", "Render time 1215 ms" and "Engine size" are diagnostics. They answer "did my build work", which is my question, not the visitor's.
+4. **A claim the page could not back.** The status said "ceiling held at 0.30" while the bench has no ceiling control at all — the 0.30 is the level this page renders at, nothing to do with the visitor's ceiling.
+
+**What the three shapes actually are** (measured from the engine this session, so the labels are not decorative): the low/mid/high band sums are Warm 0.550/0.240/0.210, Even 0.375/0.250/0.375, Bright 0.220/0.240/0.540. So "Warm — low end forward, top eased", "Even — same all across", "Bright — top forward, low pulled in" is a description of the numbers, not a mood.
+
+**What changed.**
+- Buttons are now **Warm / Even / Bright**, each with a one-line gloss of its own shape. Pressing one while idle updates the sentence under the meter, so the control does something before you commit to audio.
+- The action is **"Play 8 seconds"**, becoming **Stop** while it plays.
+- The side column leads with the honest sentence: *the engine does not hear your room here — it plays three fixed shapes, so you can hear what "shaped" means before you install anything*, then lists the shapes, then the quiet facts (same C++ the phone ships, 94 KB, no microphone, no upload).
+- Readouts are three lines a person can use: bands shaping, download once, shaped in. The peak is now a caption under the meter rather than a table row, and it says what 0.30 is: the level this page renders at, with the ceiling set in the app, not here.
+- Status copy throughout is plain: "ready when you are", "8 s shaped in 1.2 s", "done · play it again whenever you like", "could not load — the engine runs on the phone".
+
+**What I refused to change.** The bench still renders the real engine and reports real numbers from it; nothing is faked to sound friendlier. It still says it demonstrates shaping, not benefit. It still has no microphone and no network path. Making the labels human did not mean making the claims softer.
+
+**Verification run this session (host render only).**
+- `verify-rig.mjs` (new): idle state reads "Play 8 seconds" / "ready when you are" / "ready"; switching shape while idle updates the sentence and pressed state; playing reads "Stop", label `bright · playing`, bands `8 / 8 · max 0.22`, download 94 KB; switching mid-playback updates label, shape sentence and pressed state together; Stop returns to idle. 390 px and 768 px both 0 overflow, no clipped buttons.
+- `verify-v5.mjs`: FIG 54,010-byte data URL, rig playing, 390 px overflow 0, 0 console/page errors.
+- `sweep-widths.mjs`: 0 px overflow at 360–1600 px.
+- `contrast-rig.mjs` / `contrast-side.mjs`: every rig text run measures 6.17:1 or better against the gradient actually painted behind it (the light-on-dark text sits on `#241F1B`, so 7.76–13.26:1); two greys elsewhere lifted to 5.62:1. The only remaining sub-4.5:1 pair is the terracotta button fill at 4.22:1 for large bold text.
+- `audit-v4.mjs`: unchanged — 2 text families + system mono, 14.41:1 body contrast, 3 greys, 7 shadow roles.
+- HTML parse clean, 0 U+FFFD, `engine-smoke.mjs` exit 0.
+
+**Still unverified:** no phone, no listening, and I cannot view the screenshots.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.
