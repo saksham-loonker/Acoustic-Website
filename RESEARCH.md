@@ -491,6 +491,27 @@ The maker's instruction: "cut down Lead Developer and replace with Sole Develope
 
 **Verification run this session.** HTML parse clean; `verify-team2.mjs`: 3 cards, 0 px overflow, uniform computed `background/border/box-shadow` across all three, monogram `rgba(0,0,0,0)` with `.4`-alpha gold border, role string verified byte-for-byte, screenshot reviewed — the fold now shows one quiet apex figure and two matched cards, all regular.
 
+## 25. Poppins + light mode (2026-11-14)
+
+The maker's instruction: "the fonts need changing (even though this violates my previous message, override it). Make it more standardised for our logo, without changing the extravagant feel of this current website. Add a light and dark mode to the website too, btw. don't change layout or anything just font."
+
+**Fonts.** Poppins (OFL — Fraunces, Atkinson, and the Inter variable subset are no longer used in the CSS; the JetBrains Mono stays for data/labels). Poppins was chosen as the closest free, single-story geometric to the Acoustic mark's thin, monoline letterforms — the wordmark's `ACOUSTIC` in the built page now shares the same skeleton (notice the single-storey `a`, the perfectly round `O`, the uniform stroke weight). The extravagant thin-100-weight treatment is retained; the font simply matches the logo's geometry now. All faces are self-hosted (`assets/fonts/poppins-*-latin.woff2`) with Poppins + JetBrains Mono licences kept alongside the others.
+
+**Light mode.** Nothing about the layout, spacing, composition, order, or copy changed. Theming is a pure token swap: one `:root` dark definition, one `:root[data-theme="light"]` override defining the same names. Key moves:
+- paper `#f7f5ef`, panels `#fffdf8` / `#f1eee6`, ink `#2a2621`, faint `#6b665d`, line `rgba(38,34,28,.12)`;
+- the **cyan signal is replaced in light mode by a deep teal `#0a6f7b`** (saturated cyan on paper is ~2:1 — unusable for text);
+- the `#00f0ff` aqua bar on the blend list, the active chips' glow, the compat `ok` wash, the ghost strokes — all rewritten through `--aqua`, `--aqua-dim`, `--ok`, `--line`, `--ghostline`, `--hud-bg`, `--panel-chip`, `--tint`;
+- the hero canvas is recoloured per theme (deep-teal columns in light, unchanged cyan in dark) and repainted on toggle;
+- a sun/moon toggle in the running head, persisted per-visitor via `localStorage` (private, per-device, no network), defaulting to the OS `prefers-color-scheme`, honoured instantly with no flash (an inline head script sets `data-theme` before any paint).
+
+**A self-inflicted wound, honestly recorded.** The first theming pass silently renamed every `#hex` token in dark mode to `var(--same-name)` — circular references that computed to transparent, leaving an invisible-on-black page. Caught by screenshot, fixed by restoring the dark literals. The theme switch is now verified end-to-end in both directions, including a reload that preserves the choice.
+
+**Verification run this session.**
+- `verify-theme.mjs`: initial state, toggle→light (button aria-pressed=true, localStorage="light"), toggle→dark, and reload persistence — all pass.
+- `sweep-fast` / `verify-v9` / `verify-v6` / `verify-v10` / `verify-v13` / `verify-team2` / `verify-no-rig`: all green, 0 console errors, 0 px overflow at 360–1600 px.
+- `final-dark.png`, `final-light.png`, `final-light-mid.png`, `final-dark-mobile.png`, `final-light-mobile.png` reviewed — Poppins carries the extravagant thin aesthetic; both themes read as the same design, not two themes pasted side by side.
+- Zero `@keyframes` remain (the calm pass survived); zero third-party requests; `node --check site.js` clean; forbidden-claim scan shows negations only.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.

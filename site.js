@@ -38,6 +38,25 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
+  /* ---------- theme toggle: remember via localStorage, repaint canvas ---------- */
+  const rootEl = document.documentElement;
+  const toggle = document.getElementById("themeToggle");
+  const setThemeDots = () => {
+    if (!toggle) return;
+    toggle.setAttribute("aria-pressed", String(rootEl.getAttribute("data-theme") === "light"));
+  };
+  let repaint = null;
+  if (toggle) {
+    toggle.addEventListener("click", () => {
+      const next = rootEl.getAttribute("data-theme") === "light" ? "dark" : "light";
+      rootEl.setAttribute("data-theme", next);
+      try { localStorage.setItem("acoustic-theme", next); } catch (_) {}
+      setThemeDots();
+      if (repaint) repaint();
+    });
+    setThemeDots();
+  }
+
   /* ---------- the hero canvas: eight bands breathing, quietly ---------- */
   const heroCanvas = document.getElementById("heroCanvas");
   if (heroCanvas && heroCanvas.getContext) {
@@ -75,12 +94,17 @@
 
       const baseY = h * 0.88;
       const bandW = w / BAND_COUNT;
+      const light = rootEl.getAttribute("data-theme") === "light";
+      const A = light ? ["rgb(11,142,156", 0.2, 0.06] : ["rgb(0,240,255", 0.16, 0.05];
+      const BAR = light ? ["rgb(11,142,156", 0.16, 0.28] : ["rgb(0,240,255", 0.13, 0.22];
+      const INK = light ? "rgba(38,34,28,0.32)" : "rgba(0,240,255,0.35)";
+      const CAP = light ? "rgba(11,142,156,0.6)" : "rgba(0,240,255,0.45)";
 
       // one soft radial wash so the ember reads behind the wordmark
       const wash = ctx.createRadialGradient(w / 2, h * 0.78, 20, w / 2, h * 0.78, w * 0.7);
-      wash.addColorStop(0, "rgba(0,240,255,0.16)");
-      wash.addColorStop(0.5, "rgba(0,240,255,0.05)");
-      wash.addColorStop(1, "rgba(0,240,255,0)");
+      wash.addColorStop(0, A[0] + "," + A[1] + ")");
+      wash.addColorStop(0.5, A[0] + "," + A[2] + ")");
+      wash.addColorStop(1, A[0] + ",0)");
       ctx.fillStyle = wash;
       ctx.fillRect(0, 0, w, h);
 
@@ -92,22 +116,22 @@
         const amp = h * (0.12 + 0.3 * breath * wave);
         const x = i * bandW;
         const grad = ctx.createLinearGradient(0, baseY - amp, 0, baseY);
-        grad.addColorStop(0, "rgba(0,240,255,0)");
-        grad.addColorStop(0.5, "rgba(0,240,255," + (0.13 + 0.07 * breath).toFixed(3) + ")");
-        grad.addColorStop(1, "rgba(0,240,255," + (0.22 + 0.12 * breath).toFixed(3) + ")");
+        grad.addColorStop(0, BAR[0] + ",0)");
+        grad.addColorStop(0.5, BAR[0] + "," + (BAR[1] + 0.07 * breath).toFixed(3) + ")");
+        grad.addColorStop(1, BAR[0] + "," + (BAR[2] + 0.12 * breath).toFixed(3) + ")");
         ctx.fillStyle = grad;
         ctx.fillRect(x + bandW * 0.18, baseY - amp, bandW * 0.64, amp);
       }
 
       // horizon line — the ceiling
-      ctx.strokeStyle = "rgba(0,240,255,0.8)";
+      ctx.strokeStyle = INK;
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(0, baseY + 0.5);
       ctx.lineTo(w, baseY + 0.5);
       ctx.stroke();
       if (w >= 700) {
-        ctx.fillStyle = "rgba(0,240,255,0.45)";
+        ctx.fillStyle = CAP;
         ctx.font = '10px "JetBrains Mono", monospace';
         ctx.textAlign = "left";
         ctx.fillText("EIGHT BANDS, BREATHING", 24, baseY + 20);
@@ -117,7 +141,7 @@
 
       // a slow field of dust-like points
       for (const d of dots) {
-        ctx.fillStyle = "rgba(233,233,234,0.07)";
+        ctx.fillStyle = light ? "rgba(38,34,28,0.14)" : "rgba(233,233,234,0.07)";
         ctx.beginPath();
         ctx.arc(d.x, d.y, 1.1, 0, Math.PI * 2);
         ctx.fill();
@@ -126,8 +150,9 @@
       if (!STILL && !calm) requestAnimationFrame(frame);
     };
 
+    repaint = () => { resize(); frame(0); };
     resize();
-    window.addEventListener("resize", () => { resize(); frame(0); }, { passive: true });
+    window.addEventListener("resize", repaint, { passive: true });
     frame(0); // compose the single still frame; never animate
   }
 

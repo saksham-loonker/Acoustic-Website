@@ -5,7 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Acoustic — a quieter room for noisy places</title>
   <meta name="description" content="Acoustic is an offline Android instrument that fills a noisy room with steady, shaped sound. In testing now — free for testers. 59 CC0 field recordings, 17 public-domain works, one hard ceiling you set, no INTERNET permission.">
-  <meta name="theme-color" content="#F7F3EB">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f5ef">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#050506">
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem("acoustic-theme");
+      var theme = saved || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+      document.documentElement.setAttribute("data-theme", theme);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+</script>
   <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta property="og:type" content="website">
@@ -39,6 +51,10 @@
     <span id="clockUtc">00:00:00 UTC</span>
     <span class="head-sep" aria-hidden="true"></span>
     <span class="lvl">IN TESTING</span>
+    <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false" aria-label="Toggle light and dark mode" title="Toggle light and dark mode">
+      <svg class="theme-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4 4l2 2M18 18l2 2M4 20l2-2M18 6l2-2"/></svg>
+      <svg class="theme-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.4 14.5A8.5 8.5 0 0 1 9.5 3.6a8.5 8.5 0 1 0 10.9 10.9z"/></svg>
+    </button>
   </div>
 </header>
 
