@@ -113,7 +113,97 @@
     });
   }
 
-  /* ---------- the shelf index (every bundled file, from the manifest) ---------- */
+  /* ---------- where the energy sits (measured per file) ---------- */
+  const SPECTRUM = {
+    low: [
+      { t: "Fridge", f: "mechanism", l: 0.988, m: 0.012, h: 0.001 },
+      { t: "Parisian paved square, fountain", f: "fountain", l: 0.860, m: 0.114, h: 0.026 },
+      { t: "Campaign at night  #1", f: "night", l: 0.652, m: 0.118, h: 0.230 },
+      { t: "Metro, Paris  #2", f: "travel", l: 0.393, m: 0.569, h: 0.038 },
+      { t: "Ventilation  #2", f: "mechanism", l: 0.367, m: 0.603, h: 0.030 },
+      { t: "Forest", f: "forest", l: 0.307, m: 0.164, h: 0.529 },
+      { t: "Evening in Gironde, France", f: "night", l: 0.303, m: 0.438, h: 0.259 },
+      { t: "Fireplace  #4", f: "fire", l: 0.299, m: 0.408, h: 0.293 },
+      { t: "Ventilation  #5", f: "mechanism", l: 0.272, m: 0.671, h: 0.057 },
+      { t: "Car micheline", f: "travel", l: 0.253, m: 0.692, h: 0.055 }
+    ],
+    high: [
+      { t: "Forest  #3", f: "forest", l: 0.000, m: 0.000, h: 1.000 },
+      { t: "Field cricket", f: "insects", l: 0.000, m: 0.000, h: 1.000 },
+      { t: "Singing insect  #1", f: "insects", l: 0.000, m: 0.000, h: 1.000 },
+      { t: "Sun and Heat  #1", f: "insects", l: 0.000, m: 0.000, h: 1.000 },
+      { t: "Forest with wind and birds", f: "forest", l: 0.000, m: 0.001, h: 0.999 },
+      { t: "Woodland birdsong", f: "birds", l: 0.023, m: 0.014, h: 0.962 },
+      { t: "Footstep in the Snow  #2", f: "materials", l: 0.004, m: 0.039, h: 0.956 },
+      { t: "Cave atmosphere", f: "cave", l: 0.000, m: 0.053, h: 0.947 },
+      { t: "Forest brook with blackbirds", f: "forest", l: 0.001, m: 0.086, h: 0.913 },
+      { t: "Rain on concrete", f: "rain", l: 0.007, m: 0.085, h: 0.908 }
+    ],
+    even: [
+      { t: "Fireplace  #4", f: "fire", l: 0.299, m: 0.408, h: 0.293 },
+      { t: "Evening in Gironde, France", f: "night", l: 0.303, m: 0.438, h: 0.259 },
+      { t: "Fireplace  #1", f: "fire", l: 0.186, m: 0.324, h: 0.490 },
+      { t: "Beach: Small Waves", f: "shore", l: 0.156, m: 0.495, h: 0.349 },
+      { t: "Forest", f: "forest", l: 0.307, m: 0.164, h: 0.529 },
+      { t: "Wind through a tree with distant birds", f: "foliage", l: 0.064, m: 0.462, h: 0.474 },
+      { t: "Sea Waves", f: "shore", l: 0.043, m: 0.524, h: 0.433 },
+      { t: "Mountain Stream  #7", f: "water", l: 0.003, m: 0.496, h: 0.501 },
+      { t: "Heidelberg Printing Press  #6", f: "materials", l: 0.090, m: 0.598, h: 0.311 },
+      { t: "Small Stream  #4", f: "water", l: 0.002, m: 0.487, h: 0.511 }
+    ]
+  };
+
+const specBars = document.getElementById("specBars");
+const specRead = document.getElementById("specRead");
+if (specBars && specRead) {
+    const LABELS = { low: "Low-heavy", high: "High-heavy", even: "Most even" };
+    const NOTES = {
+      low: "Sorted by how much of each recording sits in the bottom two bands. Machines, vents and traffic lead — which is the honest reason a fridge is in the shelf at all.",
+      high: "Sorted the other way: insects, leaves and rain sit almost entirely in the top three bands. Bright, detailed, no rumble.",
+      even: "Sorted by the smallest spread between the three groups — these carry energy across the whole range rather than piling it in one end.",
+    };
+
+    const paint = (key) => {
+      const rows = SPECTRUM[key];
+      specBars.textContent = "";
+      rows.forEach((r) => {
+        const line = document.createElement("div");
+        line.className = "spec-row";
+        const name = document.createElement("span");
+        name.className = "spec-name";
+        name.textContent = r.t;
+        const track = document.createElement("span");
+        track.className = "spec-track";
+        [["l", "spec-low", "low"], ["m", "spec-mid", "mid"], ["h", "spec-high", "high"]].forEach((seg) => {
+          const part = document.createElement("span");
+          part.className = "spec-seg " + seg[1];
+          part.style.width = (r[seg[0]] * 100).toFixed(1) + "%";
+          part.title = seg[2] === "l" ? "low" : seg[2] === "m" ? "mid" : "high";
+          track.appendChild(part);
+        });
+        line.appendChild(name);
+        line.appendChild(track);
+        specBars.appendChild(line);
+      });
+      specRead.textContent = NOTES[key];
+      const lead = key === "low" ? "l" : key === "high" ? "h" : "l";
+      const leadName = lead === "l" ? "low" : "high";
+      specBars.setAttribute(
+        "aria-label",
+        LABELS[key] + " order: " + rows.map((r) => r.t + " " + Math.round(r[lead] * 100) + "% " + leadName).join(", ")
+      );
+      document.querySelectorAll("[data-spec]").forEach((b) => {
+        b.setAttribute("aria-pressed", String(b.dataset.spec === key));
+      });
+    };
+
+    document.querySelectorAll("[data-spec]").forEach((btn) => {
+      btn.addEventListener("click", () => paint(btn.dataset.spec));
+    });
+    paint("low");
+  }
+
+/* ---------- the shelf index (every bundled file, from the manifest) ---------- */
   const SHELF = [
     { t: "Woodland birdsong", f: "birds", k: "ambience", d: "60 s", b: "Stream with woodland birds", c: "kvgarlic; edited by Porrumentzio" },
     { t: "Cave atmosphere", f: "cave", k: "ambience", d: "60 s", b: "Cave and stream", c: "Joseph SARDIN" },
@@ -267,13 +357,13 @@
         left.textContent = x.t;
         const right = document.createElement("span");
         right.className = "shelf-row-m";
-        right.textContent = x.f + " · " + x.d + (x.k === "music" ? " · music" : "");
+        right.textContent = (x.k === "music" ? "music · " + x.f : "recording · " + x.f) + " · " + x.d;
         row.appendChild(left);
         row.appendChild(right);
         if (x.b) {
           const tag = document.createElement("span");
           tag.className = "shelf-row-b";
-          tag.textContent = "in " + x.b;
+          tag.textContent = x.b;
           row.appendChild(tag);
         }
         frag.appendChild(row);

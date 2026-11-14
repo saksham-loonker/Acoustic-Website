@@ -199,6 +199,34 @@ The site claimed 59 + 17 = 76 files; now a visitor can check that against the bu
 
 **Still unverified:** no phone, no listening, and I still cannot view the screenshots this session produces.
 
+## 13. Round six — what the recordings actually contain (2026-11-14)
+
+The library manifest carries a measured `spectral_fractions` array per file — eight numbers that say where each recording's energy sits across the eight engine bands. That is real, checkable data, so this pass turns it into a page section instead of another paragraph of adjectives.
+
+**Source of the new facts.** `app/src/main/assets/library/manifest.json`, read this session: `spectral_fractions` has 8 entries per ambience file; summing bands 1–2 (80–315 Hz), 3–5 (315 Hz–1.25 kHz) and 6–8 (1.25–7.8 kHz) gives the three shares plotted. The ten most low-heavy, ten most high-heavy and ten most even files are the ones shown; every number in the panel comes straight from those arrays. Also confirmed: no file's `true_peak_dbtp` exceeds −6 dBTP, and the mean share across the 59 ambience files is roughly 11 % low / 37 % mid / 52 % high.
+
+**Added.** "Where the energy actually sits": three sort orders (low-heavy, high-heavy, most even), each drawn as a three-segment bar per recording with a colour key and a sentence explaining what the sort reveals — machines and traffic lead the low end, insects and leaves the high end, and the "most even" list is mostly fire and shoreline. Each segment carries a title, and the panel has a text alternative.
+
+**Also in this pass (found by measuring, not by eye).**
+- Contrast: the new section used `#8D8478` on cream at 3.07:1, and the shelf's mono meta and green blend tag were 3.62:1 and effectively 1:1 against their own backgrounds. All were lifted above 4.5:1 (the tag is now `#3E5A4C` on `#E4EDE5`).
+- Geometry: long recording names were clipping inside fixed-width columns at 1280 px, and shelf rows sat at 113 px on a phone. Names now wrap instead of truncating, and the name column narrows at intermediate widths.
+- Metadata: music rows collapsed every family to the single label "music", which hid real information. Each row now reads `music · <family> · <length>`, and a short "how to read a row" note sits above the list.
+- Consistency: the new controls arrived in two different radii. All chips and buttons are pill-radius again — one shape per control type.
+
+**Refused.** No claim that any of this makes a recording better for focus, or that the shaping helps anyone; the panel describes content, not effect. No playback of the recordings, because the site does not ship them.
+
+**Verification run this session (host render only).**
+- `node --check site.js` / `bench.js`: pass. `engine-smoke.mjs`: exit 0.
+- `verify-v10.mjs` (new): all ten rows render in each of the three orders, the three segment widths sum to 100 % in every row, the aria-label follows the active sort, no title clips, 390 px overflow 0.
+- `verify-v9.mjs`: shelf still returns 76 rows, "rain" gives four titles, `piano` gives ten works, `Music works` gives 17 rows.
+- `verify-v12.mjs` (new): each music row reports its own family (piano, guitar, harp, strings, winds, ambient, other music); Stop is still reachable and labelled `Stop` during playback.
+- `verify-v5.mjs`: FIG, rig and 390 px all green, 0 console/page errors.
+- `contrast-scan.mjs`: no remaining body-text pair below 4.5:1 except the intentional ones (terracotta button fill at 4.22–4.25:1 for large bold text, mono table header on the dark rig at 4.59:1).
+- `audit-v4.mjs`: 2 text families + system mono, 14.41:1 body contrast, 3 greys, 7 shadow roles, all controls back to a single pill radius.
+- `sweep-widths.mjs`: 0 px overflow at 360–1600 px. HTML parse clean, 0 U+FFFD.
+
+**Still unverified:** no phone, no listening, and I still cannot view the screenshots this session produces.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.

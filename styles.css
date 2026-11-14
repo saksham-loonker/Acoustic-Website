@@ -371,7 +371,7 @@ html.has-cursor, html.has-cursor * { cursor: none !important; }
 table.rig-read { width: 100%; border-collapse: collapse; margin-top: var(--sp-2); font-size: 11px; }
 table.rig-read th {
   text-align: left; font-weight: 400; text-transform: uppercase; letter-spacing: .14em;
-  color: #8D8478; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.09); font-size: 10px;
+  color: #B3AA9C; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.09); font-size: 10px;
 }
 table.rig-read td { padding: 9px 0; color: #EDE7DC; border-bottom: 1px solid rgba(255,255,255,.05); }
 table.rig-read td:last-child, table.rig-read th:last-child { text-align: right; }
@@ -745,6 +745,70 @@ table.rig-read td:last-child, table.rig-read th:last-child { text-align: right; 
   line-height: 1; float: left; padding: 4px 10px 0 0; color: var(--navy);
 }
 
+/* ---------- how to read the shelf ---------- */
+.shelf-key-line {
+  margin: 0 0 var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--paper-deep); border-radius: var(--r-md);
+  border-left: 3px solid var(--terra);
+}
+.shelf-key-line p { margin: 0; font-size: .9rem; color: var(--ink-soft); max-width: 54rem; }
+.shelf-key-line b { color: var(--ink); }
+
+/* ---------- spectrum: where each recording's energy sits ---------- */
+.spectrum {
+  display: grid; grid-template-columns: minmax(0,.95fr) minmax(0,1.05fr);
+  gap: var(--sp-4); align-items: start;
+  margin-bottom: var(--sp-5);
+}
+@media (max-width: 980px) { .spectrum { grid-template-columns: minmax(0,1fr); } }
+.spectrum-copy h3 {
+  font-family: var(--display); font-weight: 600; font-size: 1.75rem;
+  letter-spacing: -0.02em; line-height: 1.12; margin: 0 0 var(--sp-2); color: var(--ink);
+}
+.spectrum-copy p { color: var(--ink-soft); margin: 0 0 var(--sp-2); max-width: 34rem; }
+.spectrum-hint { font-size: .84rem !important; color: var(--ink-soft) !important; }
+.spectrum-panel {
+  min-width: 0;
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r-lg); padding: var(--sp-4);
+  box-shadow: var(--shadow-card); transform: rotate(-.4deg);
+}
+.spectrum-opts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: var(--sp-3); }
+.spectrum-label {
+  margin: 0 6px 0 0; font-size: .74rem; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--terra-deep);
+}
+.spectrum-opts button {
+  font: inherit; font-size: .84rem; font-weight: 700; cursor: pointer;
+  border: 1.5px solid var(--line-strong); background: var(--paper);
+  color: var(--ink-soft); border-radius: var(--r-pill); padding: 8px 15px;
+  transition: border-color .18s ease, background .18s ease, color .18s ease;
+}
+.spectrum-opts button:hover { border-color: var(--terra); color: var(--terra-deep); }
+.spectrum-opts button[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #FDF8EC; }
+.spectrum-bars { display: grid; gap: 9px; margin-bottom: var(--sp-2); }
+.spec-row { display: grid; grid-template-columns: 12.5rem minmax(0,1fr); gap: 10px; align-items: center; }
+@media (max-width: 600px) {
+  .spec-row { grid-template-columns: minmax(0,1fr); gap: 3px; }
+}
+.spec-track {
+  display: flex; height: 14px; border-radius: var(--r-pill);
+  overflow: hidden; background: #EDE6D9;
+}
+.spec-seg { display: block; height: 100%; }
+.spec-low { background: var(--navy); }
+.spec-mid { background: #7A93A8; }
+.spec-high { background: var(--terra); }
+.spectrum-read { margin: 0; font-size: .88rem; color: var(--ink-soft); }
+.spectrum-key {
+  display: flex; gap: 8px 16px; flex-wrap: wrap;
+  font-size: .78rem; color: var(--ink-soft);
+  margin: 0 0 var(--sp-3); padding: 0; list-style: none;
+}
+.spectrum-key li { display: flex; align-items: center; gap: 7px; }
+.swatch { width: 12px; height: 12px; border-radius: 3px; display: block; flex: none; }
+
 /* ---------- shelf index ---------- */
 .shelf-index {
   margin: var(--sp-4) 0 var(--sp-5);
@@ -795,11 +859,11 @@ table.rig-read td:last-child, table.rig-read th:last-child { text-align: right; 
   font-size: .9rem;
 }
 .shelf-row-t { color: var(--ink); font-weight: 700; }
-.shelf-row-m { font-family: var(--mono); font-size: .76rem; color: #8D8478; letter-spacing: .03em; }
+.shelf-row-m { font-family: var(--mono); font-size: .78rem; color: var(--ink-soft); letter-spacing: .03em; }
 .shelf-row-b {
-  margin-left: auto; font-size: .74rem; font-weight: 700; color: var(--sage);
-  background: rgba(79, 111, 95, .1); border-radius: var(--r-pill); padding: 2px 10px;
-  white-space: nowrap;
+  margin-left: auto; font-size: .74rem; font-weight: 700; color: #3E5A4C;
+  background: #E4EDE5; border: 1px solid #C9D9CC; border-radius: var(--r-pill);
+  padding: 2px 10px; max-width: 100%;
 }
 .shelf-empty { color: var(--ink-soft); font-size: .92rem; padding: var(--sp-3) 0; margin: 0; }
 @media (max-width: 600px) {

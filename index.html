@@ -149,6 +149,32 @@
         <p class="shelf-count-line" id="shelfCount" role="status" aria-live="polite"></p>
         <div class="shelf-list" id="shelfList" role="group" aria-label="Bundled files" tabindex="0"></div>
       </div>
+      <div class="shelf-key-line">
+        <p><b>How to read a row.</b> Title on the left; whether it is a recording or a music work, its family and its length; and, where it is one, which of the ten blends uses it. The chip can only show what the bundle contains — the shelf is fixed at 76 files.</p>
+      </div>
+      <div class="spectrum" id="spectrum">
+        <div class="spectrum-copy">
+          <p class="eyebrow">Where the energy actually sits</p>
+          <h3>Not every recording is shaped the same&nbsp;way.</h3>
+          <p>Every file in the bundle was measured once, and those measurements ship inside the app. The share of each recording's energy in the low, middle and high part of the eight-band range is a real number — so the shelf sorts itself by what it actually contains. Move the buttons: this is the manifest's own arithmetic, drawn as bars.</p>
+          <p class="spectrum-hint">The three groups are drawn from the engine's band edges: 80–315&nbsp;Hz (bands 1–2), 315&nbsp;Hz–1.25&nbsp;kHz (bands 3–5) and 1.25–7.8&nbsp;kHz (bands 6–8).</p>
+        </div>
+        <div class="spectrum-panel">
+          <div class="spectrum-opts" role="group" aria-labelledby="specLabel">
+            <p class="spectrum-label" id="specLabel">Sort the shelf by</p>
+            <button type="button" data-spec="low" aria-pressed="true">Low-heavy</button>
+            <button type="button" data-spec="high" aria-pressed="false">High-heavy</button>
+            <button type="button" data-spec="even" aria-pressed="false">Most even</button>
+          </div>
+          <div class="spectrum-bars" id="specBars" role="img" aria-label="Low, middle and high energy share for the ten most extreme recordings"></div>
+          <ul class="spectrum-key">
+            <li><b class="swatch spec-low" aria-hidden="true"></b>low 80–315&nbsp;Hz</li>
+            <li><b class="swatch spec-mid" aria-hidden="true"></b>mid 315&nbsp;Hz–1.25&nbsp;kHz</li>
+            <li><b class="swatch spec-high" aria-hidden="true"></b>high 1.25–7.8&nbsp;kHz</li>
+          </ul>
+          <p class="spectrum-read" id="specRead" role="status" aria-live="polite"></p>
+        </div>
+      </div>
       <div class="inside-grid">
         <article class="inside-card">
           <p class="inside-count">59</p>
