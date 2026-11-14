@@ -52,6 +52,30 @@ Key findings:
 Applied here:
 - Deliberate human texture: real screenshots with real room names ("Mountain refuge"), a breathing canvas   instead of a stock hero image, an email address in three places, and honest limitations printed in body copy.
 
+## 6. Three design critiques (obtained 2026-11-14, via OpenCode subagents on free endpoints)
+
+After the first "humane" redesign was rejected as still reading as AI slop, three independent critiques were run against the page. Findings are mapped to changes; what was refused is listed too.
+
+Critique 1 — recommended, in its own order:
+- Kill the custom cursor — applied (markup, `.cross`/`.cross-tag` styles and the pointer-tracking script were deleted; the native cursor is used).
+- De-clone the six identical "Not disclosed" notes — applied: each entry now states its withheld material in its own sentence and own label (`Held back` / `Closed` / `Not printed` / `Unpublished` / `Nothing withheld` / `Not a secret`); no two share a template. Facts are unchanged.
+- Remove the fake `translateX(14px)` asymmetry — applied: no transform-based offsets remain, and the plate stagger (`nth-child` margin offsets) was flattened in the same pass. Asymmetry, where it exists, now comes from the content.
+- Drop the scroll-progress bar and the film grain — applied: neither element is present; verified by grep and by full-page screenshots.
+- Flatten the console shadow — applied: the rig keeps its 1px border; the offset block shadow was removed.
+- Replace the procedural "fig. 1" canvas — applied: `site.js` now plots the shipped band edges (80 Hz–7.8 kHz, `Config::edges` in `audio/include/acoustic/dsp.h`) as a log-frequency raised-cosine schematic, captioned as such, not as a measurement.
+- Add a dated colophon build line — applied: `Sheet 1 of 1 · rev 0.23.0 · Set 14 Nov 2026`.
+- An unstaged desk photo and one real first-person incident — **not applied**: both need material only the maker has (a real photo, a real story). Nothing was fabricated to fill the slots.
+
+Critique 2 — flagged as AI tells:
+- Pill radius `999px` — none remain; border-radius is 0 everywhere.
+- Tabular numerals (`font-variant-numeric`) — none.
+- `backdrop-filter` blur — none.
+- `clamp()` fluid scale — removed; the display and section titles step at fixed breakpoints instead.
+- Hairline grids — **deliberately retained** as the datasheet's sheet rules (structure, not decoration). This one was weighed and kept, and is recorded here so it is not mistaken for an oversight.
+- Eight specific AI-sounding copy passages — copy was rewritten throughout; the six entry notes were de-formulaed (see critique 1) and aphoristic constructions were cut where they carried no information.
+
+Critique 3 — ranked the custom cursor the single worst offender. It was deleted; the critiques did not disagree about it.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.

@@ -6,9 +6,9 @@ Public website for [Acoustic](https://github.com/saksham-loonker/Acoustic) — a
 
 ## What it contains
 
-- `RESEARCH.md` — the real research log behind "human, not vibe-coded": sources actually fetched (AI-slop and vibe-coding literature, Willison's slop definition, NN/g's AI-era stance, the backlash meme), findings, and what was applied or refused — plus an honest list of search engines that were bot-walled.
-- `index.html` / `styles.css` — the single-page site: an editorial, minimalist layout set in the system's own serif and grotesque. No webfonts, no trackers, no cookies, no analytics.
-- `site.js` — scroll-progress hairline, the custom cursor (precise pointers + no-reduced-motion only) and the breathing hero canvas.
+- `RESEARCH.md` — the real research log behind "human, not vibe-coded": sources actually fetched (AI-slop and vibe-coding literature, Willison's slop definition, NN/g's AI-era stance, the backlash meme), findings, three design critiques and what was applied or refused — plus an honest list of search engines that were bot-walled.
+- `index.html` / `styles.css` — the single-page site: a warm-paper engineering datasheet set in the system's own serif, grotesque and mono. No webfonts, no trackers, no cookies, no analytics.
+- `site.js` — draws Fig. 1, the shipped eight-band layout (band edges from `audio/src/dsp.cpp`), as a log-frequency response plot on a canvas.
 - `bench.js` — **the listening bench**: loads the app's mask-shaping DSP core compiled to WebAssembly on first press, renders deterministic audio from the real engine, and plays it. ~95 KB total, fetched only on demand, nothing stored.
 - `engine/` — provenance and the rebuild script (`acoustic-wasm.cpp`, `build-wasm.ps1`). The wrapper compiles **only** `audio/src/dsp.cpp` and `audio/src/library.cpp` from the Acoustic repository. No Android code, no microphone, no preferences, no network.
 - `assets/` — logo artwork derived from the finalised `Acoustic.png`, the compiled engine (`engine.js` + `engine.wasm`), social image and cropped, real screenshots from the connected phone (`assets/screenshots/`).

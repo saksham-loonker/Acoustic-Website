@@ -1,157 +1,233 @@
-/* Acoustic — the listening bench.
-   Lazy-loads the app's DSP core compiled to WebAssembly (assets/engine.js + engine.wasm)
-   on first press, renders deterministic audio from the real Renderer, and plays it.
-   No microphone, no upload, nothing persisted on this page. */
+/* Acoustic — test rig.
+   Loads the app's masking core compiled to WebAssembly, but only after a press.
+   Renders eight seconds of deterministic audio from the real Renderer, draws the
+   meter from those samples, and reports the engine's own acknowledgement slots.
+   No microphone, no upload, nothing stored by this page. */
 (() => {
   "use strict";
 
   const button = document.getElementById("runEngine");
-  const scenes = Array.from(document.querySelectorAll("[data-scene]"));
-  const status = document.getElementById("benchStatus");
   const meterCanvas = document.getElementById("meter");
-  const roApplied = document.getElementById("roApplied");
-  const roPeak = document.getElementById("roPeak");
-  const engineSize = document.getElementById("engineSize");
   if (!button || !meterCanvas) return;
 
   const meter = meterCanvas.getContext("2d");
-  const FRAMES = 48000 * 8;
+  const statusEl = document.getElementById("benchStatus");
+  const rigLabel = document.getElementById("rigLabel");
+  const dots = [1, 2, 3].map((n) => document.getElementById("dot" + n));
+  const roSize = document.getElementById("roSize");
+  const roBands = document.getElementById("roBands");
+  const roPeak = document.getElementById("roPeak");
+  const roMs = document.getElementById("roMs");
+  const scenes = Array.from(document.querySelectorAll("[data-scene]"));
+
+  const RATE = 48000;
+  const FRAMES = RATE * 8;
   const CHANNELS = 2;
 
-  let engine = null;      // emscripten module
+  let engine = null;
   let audioCtx = null;
   let source = null;
   let analyser = null;
-  let currentScene = 0;
+  let gain = null;
+  let scene = 0;
   let playing = false;
-  let raf = 0;
-  let loadBytes = 0;
+  let bytes = 0;
 
-  const setStatus = (text, kind) => {
-    status.textContent = text;
-    status.classList.toggle("ok", kind === "ok");
-    status.classList.toggle("err", kind === "err");
+  const say = (text, kind) => {
+    if (!statusEl) return;
+    statusEl.textContent = text;
+    statusEl.classList.toggle("ok", kind === "ok");
+    statusEl.classList.toggle("err", kind === "err");
   };
 
-  /* Draw the meter from the actual engine PCM — no synthetic "fake spectrum". */
+  const lamps = (on) => dots.forEach((d, i) => d && d.classList.toggle("on", on && i === 0));
+
   function drawMeter(pcm) {
-    meter.clearRect(0, 0, meterCanvas.width, meterCanvas.height);
-    meter.fillStyle = "#0B1019";
-    meter.fillRect(0, 0, meterCanvas.width, meterCanvas.height);
+    const w = meterCanvas.width;
+    const h = meterCanvas.height;
+    meter.fillStyle = "#080B0F";
+    meter.fillRect(0, 0, w, h);
+
     if (!pcm) {
-      meter.fillStyle = "#232B3C";
-      meter.font = "12px ui-monospace, Consolas, monospace";
-      meter.textBaseline = "middle";
-      meter.fillText("engine output renders here — real samples, not an animation", 14, meterCanvas.height / 2);
+      meter.strokeStyle = "rgba(221,226,232,0.16)";
+      meter.lineWidth = 1;
+      meter.beginPath();
+      meter.moveTo(0, h / 2);
+      meter.lineTo(w, h / 2);
+      meter.stroke();
       return;
     }
-    const bars = 96;
-    const stride = Math.floor((pcm.length / CHANNELS) / bars);
-    for (let i = 0; i < bars; i++) {
+
+    // Peak per column, from real samples.
+    const cols = 120;
+    const stride = Math.max(1, Math.floor(FRAMES / cols));
+    for (let c = 0; c < cols; c++) {
       let peak = 0;
-      const from = i * stride * CHANNELS;
-      for (let j = from; j < from + stride * CHANNELS; j += 2) {
-        const v = Math.abs(pcm[j]) + Math.abs(pcm[j + 1]) * 0.35;
+      const from = c * stride * CHANNELS;
+      const to = Math.min(pcm.length, from + stride * CHANNELS);
+      for (let i = from; i < to; i += 2) {
+        const v = Math.abs(pcm[i]);
         if (v > peak) peak = v;
       }
-      const h = Math.max(2, Math.min(1, peak * 1.6) * (meterCanvas.height - 14));
-      const x = i * (meterCanvas.width / bars);
-      meter.fillStyle = peak > 0.55 ? "#D8A35F" : "#8FB4A4";
-      meter.fillRect(x, (meterCanvas.height - h) / 2, meterCanvas.width / bars - 1.5, h);
+      const barH = Math.max(1, Math.min(1, peak / 0.3) * (h - 10));
+      const x = (c / cols) * w;
+      meter.fillStyle = peak > 0.2 ? "#DDE2E8" : "#7E8894";
+      meter.fillRect(x, (h - barH) / 2, Math.max(1, w / cols - 1), barH);
     }
+
+    // ceiling guide at 0.3 (the rig's submission amplitude)
+    const y = h - (0.3 / 0.3) * (h - 10) - 5;
+    meter.strokeStyle = "rgba(196,85,47,0.75)";
+    meter.setLineDash([3, 3]);
+    meter.beginPath();
+    meter.moveTo(0, 5);
+    meter.lineTo(w, 5);
+    meter.stroke();
+    meter.setLineDash([]);
   }
 
-  function layerReadout() {
-    if (!engine) return;
-    let strongest = 0, strongestValue = -1;
-    for (let i = 0; i < 8; i++) {
-      const v = engine._acoustic_demo_applied(i);
-      if (v > strongestValue) { strongestValue = v; strongest = i + 1; }
-    }
-    roApplied.textContent = `L${strongest} · ${strongestValue.toFixed(2)}`;
-  }
-
-  async function ensureEngine() {
+  async function loadEngine() {
     if (engine) return engine;
-    setStatus("fetching the engine (~40 KB)…");
-    const response = await fetch("assets/engine.js", { cache: "force-cache" });
-    const jsText = await response.text();
-    loadBytes += jsText.length;
-    const wasmResponse = await fetch("assets/engine.wasm", { cache: "force-cache" });
-    const wasmBytes = await wasmResponse.arrayBuffer();
-    loadBytes += wasmBytes.byteLength;
-    engineSize.textContent = String(Math.round(loadBytes / 1024));
+    say("fetching engine", null);
+    rigLabel.textContent = "loading";
+
+    const [jsText, wasmRes] = await Promise.all([
+      fetch("assets/engine.js", { cache: "force-cache" }).then((r) => r.text()),
+      fetch("assets/engine.wasm", { cache: "force-cache" }).then((r) => r.arrayBuffer()),
+    ]);
+    bytes = jsText.length + wasmRes.byteLength;
+    if (roSize) roSize.textContent = Math.round(bytes / 1024) + " KB";
+
     const url = URL.createObjectURL(new Blob([jsText], { type: "text/javascript" }));
     const mod = await import(url);
     URL.revokeObjectURL(url);
-    // wasmBinary is already in memory — emscripten uses it directly, no second fetch.
+
     engine = await mod.default({
-      locateFile: (path) => path.endsWith(".wasm") ? "assets/engine.wasm" : path,
-      wasmBinary: wasmBytes,
+      locateFile: (p) => (p.endsWith(".wasm") ? "assets/engine.wasm" : p),
+      wasmBinary: wasmRes,
     });
     engine._acoustic_demo_create();
-    setStatus(`engine live — ${Math.round(loadBytes / 1024)} KB delivered, on demand`, "ok");
     return engine;
   }
 
-  async function renderScene(scene) {
-    const eng = await ensureEngine();
+  async function render() {
     const t0 = performance.now();
-    const rc = eng._acoustic_demo_render(scene);
+    const rc = engine._acoustic_demo_render(scene);
     const ms = Math.round(performance.now() - t0);
-    if (rc !== 0) throw new Error("engine render failed (" + rc + ")");
-    const ptr = eng._acoustic_demo_out();
-    const pcm = new Float32Array(eng.HEAPF32.buffer, ptr, FRAMES * CHANNELS);
-    const copy = new Float32Array(pcm); // own copy; engine buffer is reused
+    if (rc !== 0) throw new Error("engine returned " + rc);
+
+    const ptr = engine._acoustic_demo_out();
+    const pcm = new Float32Array(engine.HEAPF32.buffer.slice(0), ptr, FRAMES * CHANNELS);
+
     let peak = 0;
-    for (let i = 0; i < copy.length; i += 64) { const a = Math.abs(copy[i]); if (a > peak) peak = a; }
-    roPeak.textContent = peak.toFixed(3);
-    layerReadout();
-    drawMeter(copy);
-    setStatus(`rendered 8s in ${ms} ms — the same DSP the phone runs`, "ok");
-    return copy;
+    for (let i = 0; i < pcm.length; i += 32) {
+      const v = Math.abs(pcm[i]);
+      if (v > peak) peak = v;
+    }
+    if (roPeak) roPeak.textContent = peak.toFixed(3);
+    if (roMs) roMs.textContent = ms + " ms";
+
+    let live = 0;
+    let loudest = 0;
+    for (let i = 0; i < 8; i++) {
+      const v = engine._acoustic_demo_applied(i);
+      if (v > 0.0001) live++;
+      if (v > loudest) loudest = v;
+    }
+    if (roBands) roBands.textContent = live + " / 8 \u00b7 max " + loudest.toFixed(2);
+
+    drawMeter(pcm);
+    say("rendered 8 s in " + ms + " ms", "ok");
+    return pcm;
   }
 
   async function play() {
-    const pcm = await renderScene(currentScene);
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const pcm = await render();
+
+    if (!audioCtx) {
+      const Ctor = window.AudioContext || window.webkitAudioContext;
+      if (!Ctor) throw new Error("no Web Audio");
+      audioCtx = new Ctor();
+      gain = audioCtx.createGain();
+      analyser = audioCtx.createAnalyser();
+      gain.connect(analyser);
+      analyser.connect(audioCtx.destination);
+    }
     if (audioCtx.state === "suspended") await audioCtx.resume();
-    if (source) { const old = source; old.onended = null; try { old.stop(); } catch (_) {} old.disconnect(); }
-    source = audioCtx.createBufferSource();
-    const buffer = audioCtx.createBuffer(CHANNELS, FRAMES, 48000);
+
+    if (source) {
+      const old = source;
+      old.onended = null;
+      try { old.stop(); } catch (_) {}
+      old.disconnect();
+    }
+
+    const buffer = audioCtx.createBuffer(CHANNELS, FRAMES, RATE);
     const left = buffer.getChannelData(0);
     const right = buffer.getChannelData(1);
-    for (let i = 0; i < FRAMES; i++) { left[i] = pcm[i * CHANNELS]; right[i] = pcm[i * CHANNELS + 1]; }
+    for (let i = 0; i < FRAMES; i++) {
+      left[i] = pcm[i * CHANNELS];
+      right[i] = pcm[i * CHANNELS + 1];
+    }
+
+    source = audioCtx.createBufferSource();
     source.buffer = buffer;
-    analyser = audioCtx.createAnalyser();
-    const gain = audioCtx.createGain();
     gain.gain.value = 0.9;
-    source.connect(gain); gain.connect(analyser); analyser.connect(audioCtx.destination);
-    source.onended = () => { playing = false; button.textContent = "Run the engine"; setStatus("stopped — press run to hear it again", null); cancelAnimationFrame(raf); };
+    source.connect(gain);
+    source.onended = () => {
+      if (!playing) return;
+      playing = false;
+      button.textContent = "Run engine";
+      rigLabel.textContent = "standby";
+      lamps(false);
+      say("finished \u00b7 press to run again", null);
+    };
     source.start();
+
     playing = true;
     button.textContent = "Stop";
-    setStatus(`playing: ${["empty room", "café murmur", "busy street"][currentScene]} — ceiling respected`, "ok");
-    drawMeter(pcm);
+    rigLabel.textContent = ["room", "caf\u00e9", "street"][scene] + " \u00b7 running";
+    lamps(true);
+    say("playing \u00b7 ceiling held at 0.30", "ok");
   }
 
   button.addEventListener("click", async () => {
-    if (playing) { try { source.stop(); } catch (_) {} return; }
+    if (playing) {
+      try { source.stop(); } catch (_) {}
+      return;
+    }
     button.disabled = true;
-    try { await play(); }
-    catch (error) {
+    button.textContent = "Loading";
+    try {
+      await loadEngine();
+      await play();
+    } catch (error) {
       console.error(error);
-      setStatus("engine unavailable in this build — the real thing is on your phone; email for a build", "err");
-    } finally { button.disabled = false; }
+      say("unavailable \u2014 the engine runs on the phone", "err");
+      rigLabel.textContent = "fault";
+      button.textContent = "Run engine";
+    } finally {
+      button.disabled = false;
+      if (!playing) button.textContent = "Run engine";
+    }
   });
 
-  scenes.forEach((btn) => btn.addEventListener("click", async () => {
-    currentScene = Number(btn.dataset.scene);
-    scenes.forEach((b) => b.classList.toggle("is-on", b === btn));
-    if (!playing) return;
-    try { await play(); }
-    catch (error) { console.error(error); setStatus("scene switch failed — press Stop and run again", "err"); }
-  }));
+  scenes.forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      scene = Number(btn.dataset.scene);
+      scenes.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+      if (!playing) {
+        say("ready \u00b7 press run", null);
+        return;
+      }
+      try {
+        await play();
+      } catch (error) {
+        console.error(error);
+        say("scene change failed \u00b7 press stop, then run", "err");
+      }
+    });
+  });
 
   drawMeter(null);
 })();
