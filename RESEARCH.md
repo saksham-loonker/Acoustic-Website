@@ -467,6 +467,19 @@ No numbers anywhere. The honesty survives; the accounting does not.
 
 **Verification run this session.** HTML parse clean; `sweep-fast.mjs` 0 px overflow at 360–1600 px; `node --check site.js` clean; brace-balance clean; 0 console errors. Stale references to the ledger were deleted rather than hidden (CSS included).
 
+## 23. The team, as a triangle (2026-11-14)
+
+The maker's instruction: build the people page like a triangle — Saksham at the top, highlighted in yellow as the sole developer; Mahir and Aum on a second row, same treatment but extremely subtly dimmer — and remove each person's bio ("they will write themselves").
+
+**What changed.**
+- Layout: one centred top card (Saksham Loonker, 430 px max) above a two-column second row of Mahir Thadani and Aum Sonnenblick. The row wraps to a single column on narrow screens.
+- Highlight, two tiers and no more: Saksham's card takes a warm `#E9C46A` wash (`rgba(233,196,106,.15 → .06)`) with a `.5`-edge and a soft 44 px glow, filled-gold monogram (`SL` on `#1c1c1f` dark), and a `SOLE DEVELOPER` mono chip. The two second-row cards take the same gold at `.04` background and a `.18` edge with a gold-outline monogram — "subtle, extremely subtle," as asked.
+- The member bios are deleted from the HTML and their CSS is removed. Each card now carries monogram, name and role only; the words are theirs to write and will be added when they supply them.
+
+**What I did not invent.** No bios, no quotes, no ages, no history. The only new copy is the `SOLE DEVELOPER` chip, which restates what the maker already told me.
+
+**Verification run this session.** HTML parse clean; `sweep-fast.mjs` 0 px overflow at 360–1600 px; `verify-team.mjs`: top card centred (640 px centre at 1280 px), second row starts below it, both dim cards equal width (367 px each). Fold screenshot reviewed.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.

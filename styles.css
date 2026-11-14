@@ -525,18 +525,41 @@ figure.specimen-frame .tick, .blend-detail .tick, .fig-card .tick { border-color
 .promise-card.bad .promise-list svg { stroke: #ff9a66; }
 
 /* ============ team ============ */
-.team-grid { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
-@media (max-width: 980px) { .team-grid { grid-template-columns: minmax(0,1fr); max-width: 520px; } }
-.member { background: var(--bg); padding: clamp(24px, 3vw, 40px); }
-.member-ceo { background: var(--panel); }
+.team-triangle { display: grid; gap: clamp(16px, 3vw, 26px); justify-items: center; }
+.team-triangle .member-top { width: min(430px, 100%); }
+.team-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: clamp(16px, 3vw, 26px); width: min(760px, 100%); }
+@media (max-width: 640px) { .team-row { grid-template-columns: minmax(0,1fr); } }
+.member { background: var(--bg); padding: clamp(24px, 3vw, 40px); border: 1px solid var(--line); }
+.member-top {
+  background: linear-gradient(180deg, rgba(233,196,106,.15), rgba(233,196,106,.06) 70%);
+  border-color: rgba(233,196,106,.5);
+  box-shadow: 0 0 44px rgba(233,196,106,.16);
+  position: relative; z-index: 1;
+}
+.member-dim {
+  background: rgba(233,196,106,.04);
+  border-color: rgba(233,196,106,.18);
+}
+.member-dim .member-role { color: #8f897c; }
 .monogram {
   width: 56px; height: 56px; display: grid; place-items: center;
   font-family: var(--mono); font-weight: 100; font-size: 20px;
   color: var(--aqua); border: 1px solid var(--aqua-dim); margin-bottom: var(--sp-2);
 }
+.monogram-top {
+  background: #E9C46A; border-color: #E9C46A; color: #1c1c1f;
+}
+.monogram-dim {
+  background: transparent; border-color: rgba(233,196,106,.4); color: #c9b579;
+}
+.sole-dev {
+  display: inline-flex; margin-top: 12px;
+  font-size: 8.5px; letter-spacing: .26em; text-transform: uppercase;
+  color: #E9C46A; border: 1px solid rgba(233,196,106,.45);
+  background: rgba(233,196,106,.08); padding: 5px 11px;
+}
 .member h3 { font-weight: 300; font-size: 17px; margin: 0 0 2px; letter-spacing: .03em; }
 .member-role { font-family: var(--mono); font-size: 8.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--faint); margin: 0 0 14px; }
-.member-bio { color: var(--dim); font-size: 14px; margin: 0; }
 .team-note { margin-top: var(--sp-4); color: var(--faint); font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; }
 
 /* ============ compat ============ */
