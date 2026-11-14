@@ -227,6 +227,26 @@ The library manifest carries a measured `spectral_fractions` array per file — 
 
 **Still unverified:** no phone, no listening, and I still cannot view the screenshots this session produces.
 
+## 14. Round seven — the picker can hand you to the shelf (2026-11-14)
+
+Two things were wrong in the earlier rounds and both are fixed here.
+
+**1. The picker used a blend name the app does not use.** Its three "Cave & stream" answers said `Cave & stream`; the shipped recipe is titled **"Cave and stream"** (`natural_library.recipes`, `BundledDefaults.kt`). A visitor who searched the shelf for the name the picker gave them found nothing. All three now read "Cave and stream".
+
+**2. A suggestion could not be acted on.** The picker's answers are mostly blends, families or generated noise — not file names — so pointing at the shelf by file name would never have matched. The shelf now resolves three kinds of suggestion: an exact file title, a family (`piano` covers "Public-domain piano"), or a blend. Choosing a blend filters the shelf to the sources that blend uses and says so in the count ("2 of 76 files in Mountain refuge match"); the list receives focus so keyboard and screen-reader users land where the change happened. Colour noise is generated rather than bundled, so it honestly offers no jump at all.
+
+**Also fixed.** The blend filter could survive a later chip click or search, leaving a stale subset on screen. Every chip and the search box now clear it.
+
+**Refused.** No reordering of the shelf by "quality", no ranking of recordings, and no claim that a suggestion is right for anyone — the picker still calls itself a suggestion, not a prescription.
+
+**Verification run this session (host render only).**
+- `verify-v13.mjs` (new): picker "water + deep work" suggests Mountain refuge and offers the jump; clicking it leaves exactly `Wind in the Trees` and `Mountain Stream  #7` with the count "2 of 76 files in Mountain refuge match"; focus moves to the shelf list; "quiet + reading" offers a piano jump; "voices + deep work" (colour noise) offers none, because there is no such file.
+- `verify-v9.mjs`: shelf still 76 rows, `piano` still ten works, `Music works` still 17 rows across families, empty state intact, 0 errors.
+- `verify-v10.mjs`, `verify-v12.mjs`, `verify-v5.mjs`: green, 0 console/page errors, Stop still reachable.
+- `sweep-widths.mjs`: 0 px overflow at 360–1600 px. `audit-v4.mjs`: 12 button variants, 14.41:1 body contrast. HTML parse clean, 0 U+FFFD. `engine-smoke.mjs` exit 0.
+
+**Still unverified:** no phone, no listening, and I cannot view the screenshots.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.

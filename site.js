@@ -6,6 +6,10 @@
 (() => {
   "use strict";
 
+  let findOnShelf = null;
+  let showOnShelf = null;
+  let renderPicker = null;
+
   const fine = window.matchMedia("(pointer: fine)").matches;
   const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -40,8 +44,8 @@
       const answers = {
       water: {
         deep: ["Mountain refuge", "Streams & water — a steady mountain stream is the most even bed in the shelf. Start there."],
-        read: ["Cave & stream", "Soft water, no syllables — room to think between the sentences."],
-        sleep: ["Cave & stream", "Darker and slower than the open mountain; best company for pre-bed with the volume low."],
+        read: ["Cave and stream", "Soft water, no syllables — room to think between the sentences."],
+        sleep: ["Cave and stream", "Darker and slower than the open mountain; best company for pre-bed with the volume low."],
         comfort: ["Ocean with distant whales", "Slow weather, low detail — nothing here asks to be solved."],
       },
       voices: {
@@ -52,7 +56,7 @@
       },
       street: {
         deep: ["Colour noise", "Deep and engine-shaped — it sits on street rumble like it belongs to it; the street becomes texture, not events."],
-        read: ["Cave & stream", "Water you can keep behind the street — the ears take the stream and lose the engines."],
+        read: ["Cave and stream", "Water you can keep behind the street — the ears take the stream and lose the engines."],
         sleep: ["Colour noise, low", "Thick enough for buses, quiet enough for sleep — set the volume limit before bed."],
         comfort: ["Mountain refuge", "Water you can put between yourself and the carriageway."],
       },
@@ -64,7 +68,9 @@
       },
     };
     const chosen = { room: null, task: null };
-    const render = () => {
+    const render = () => renderPickerBody();
+
+    const renderPickerBody = () => {
       picker.querySelectorAll(".picker-opts").forEach((group) => {
         const q = group.dataset.q;
         group.querySelectorAll("button").forEach((btn) => {
@@ -77,9 +83,24 @@
         return;
       }
       const [title, body] = answers[chosen.room][chosen.task];
+      const known = typeof findOnShelf === "function" && findOnShelf(title);
+      const link = known
+        ? ' <button type="button" class="picker-jump" data-jump="' + title + '">Find it in the shelf index below</button>'
+        : "";
       pickerResult.dataset.ready = "true";
-      pickerResult.innerHTML = "<strong>" + title + "</strong><span>" + body + "</span>";
+      pickerResult.innerHTML = "<strong>" + title + "</strong><span>" + body + link + "</span>";
     };
+    pickerResult.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-jump]");
+      if (!btn || typeof showOnShelf !== "function") return;
+      showOnShelf(btn.dataset.jump);
+      const shelf = document.getElementById("shelfList");
+      if (shelf) {
+        shelf.setAttribute("tabindex", "-1");
+        shelf.focus({ preventScroll: true });
+        shelf.scrollIntoView({ behavior: "auto", block: "center" });
+      }
+    });
     picker.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-answer]");
       if (!btn) return;
@@ -87,6 +108,8 @@
       chosen[group.dataset.q] = btn.dataset.answer;
       render();
     });
+    renderPicker = render;
+    renderPicker();
   }
 
   /* ---------- compat checker ---------- */
@@ -289,11 +312,13 @@ if (specBars && specRead) {
   const shelfCount = document.getElementById("shelfCount");
   if (shelfList && shelfChips && shelfSearch && shelfCount) {
     const KIND_ORDER = ["all", "ambience", "music"];
+    const FAMILY_LABELS = [...new Set(SHELF.map((x) => x.f))];
     const FAMILIES = ["all"].concat(
       [...new Set(SHELF.map((x) => x.f))].sort((a, b) => a.localeCompare(b))
     );
     let kind = "all";
     let family = "all";
+    let blendOnly = "";
     let query = "";
 
     const chip = (label, pressed, onClick) => {
@@ -313,7 +338,7 @@ if (specBars && specRead) {
         shelfChips.appendChild(chip(
           k === "ambience" ? "Field recordings" : "Music works",
           kind === k,
-          () => { kind = kind === k ? "all" : k; render(); }
+          () => { kind = kind === k ? "all" : k; blendOnly = ""; render(); }
         ));
       });
       FAMILIES.forEach((f) => {
@@ -321,7 +346,7 @@ if (specBars && specRead) {
         shelfChips.appendChild(chip(
           f,
           family === f,
-          () => { family = family === f ? "all" : f; render(); }
+          () => { family = family === f ? "all" : f; blendOnly = ""; render(); }
         ));
       });
     };
@@ -330,15 +355,18 @@ if (specBars && specRead) {
       renderChips();
       const q = query.trim().toLowerCase();
       const hits = SHELF.filter((x) => {
+        if (blendOnly && x.b !== blendOnly) return false;
         if (kind !== "all" && x.k !== kind) return false;
         if (family !== "all" && x.f !== family) return false;
         if (q && !(x.t + " " + x.f + " " + x.c).toLowerCase().includes(q)) return false;
         return true;
       });
 
+      const filtered = blendOnly || kind !== "all" || family !== "all" || Boolean(q);
       shelfCount.innerHTML =
         "<b>" + hits.length + "</b> of 76 files" +
-        (kind === "all" && family === "all" && !q ? " — the whole shelf, nothing held back" : " match");
+        (blendOnly ? ' in <b>' + blendOnly + "</b>" : "") +
+        (filtered ? " match" : " — the whole shelf, nothing held back");
 
       shelfList.textContent = "";
       if (!hits.length) {
@@ -373,9 +401,57 @@ if (specBars && specRead) {
 
     shelfSearch.addEventListener("input", () => {
       query = shelfSearch.value;
+      blendOnly = "";
       render();
     });
+
+    // The picker runs earlier in this file, so it reaches the shelf through these
+    // two small hooks rather than sharing state.
+    // A picker answer is usually a blend, a family, or generated noise rather
+    // than a file name, so the jump resolves whichever one the shelf can show.
+    findOnShelf = (title) => {
+      const t = String(title).toLowerCase();
+      if (SHELF.some((x) => x.t.toLowerCase() === t)) return true;
+      if (FAMILY_LABELS.some((f) => f.toLowerCase() === t)) return true;
+      if (typeof BLENDS !== "undefined" && BLENDS.some((b) => b[0].toLowerCase() === t)) return true;
+      if (/piano/.test(t) && FAMILY_LABELS.includes("piano")) return true;
+      return false;
+    };
+    showOnShelf = (title) => {
+      const t = String(title).toLowerCase();
+      kind = "all";
+      family = "all";
+      blendOnly = "";
+      query = "";
+
+      const file = SHELF.find((x) => x.t.toLowerCase() === t);
+      const fam = FAMILY_LABELS.find((f) => f.toLowerCase() === t);
+      const blend = typeof BLENDS !== "undefined"
+        ? BLENDS.find((b) => b[0].toLowerCase() === t)
+        : null;
+      // the picker says "public-domain piano"; the shelf files them under "piano"
+      const kindWord = /piano/.test(t) ? "piano" : null;
+
+      if (file) {
+        query = file.t;
+      } else if (blend) {
+        blendOnly = blend[0];
+      } else if (fam) {
+        family = fam;
+      } else if (kindWord && FAMILY_LABELS.includes(kindWord)) {
+        family = kindWord;
+      } else {
+        return false;
+      }
+
+      shelfSearch.value = query;
+      render();
+      if (renderPicker) renderPicker();
+      return true;
+    };
+
     render();
+    if (renderPicker) renderPicker();
   }
 
 /* ---------- the ten blends (the app's own recipe table) ---------- */
