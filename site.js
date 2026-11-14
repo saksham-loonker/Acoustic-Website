@@ -33,6 +33,62 @@
     requestAnimationFrame(step);
   }
 
+  /* ---------- start-sound picker ---------- */
+  const picker = document.getElementById("startPicker");
+  const pickerResult = document.getElementById("pickerResult");
+  if (picker && pickerResult) {
+      const answers = {
+      water: {
+        deep: ["Mountain refuge", "Streams & water — a steady mountain stream is the most even bed in the shelf. Start there."],
+        read: ["Cave & stream", "Soft water, no syllables — room to think between the sentences."],
+        sleep: ["Cave & stream", "Darker and slower than the open mountain; best company for pre-bed with the volume low."],
+        comfort: ["Ocean with distant whales", "Slow weather, low detail — nothing here asks to be solved."],
+      },
+      voices: {
+        deep: ["Colour noise", "Voice-free and steady — the best counter to café chatter while you work."],
+        read: ["Soft fireside", "Low crackle, no syllables to accidentally follow."],
+        sleep: ["Soft fireside, low", "A hearth without the pop and flare — whisper level only."],
+        comfort: ["Colour noise or a café", "A shelf café at low presence, or colour noise if words keep pulling at you."],
+      },
+      street: {
+        deep: ["Colour noise", "Deep and engine-shaped — it sits on street rumble like it belongs to it; the street becomes texture, not events."],
+        read: ["Cave & stream", "Water you can keep behind the street — the ears take the stream and lose the engines."],
+        sleep: ["Colour noise, low", "Thick enough for buses, quiet enough for sleep — set the volume limit before bed."],
+        comfort: ["Mountain refuge", "Water you can put between yourself and the carriageway."],
+      },
+      quiet: {
+        deep: ["Colour noise", "A silent house is full of details the mind chases — an even bed takes them all back."],
+        read: ["Public-domain piano", "Reading and plain piano were made for each other."],
+        sleep: ["Public-domain piano", "Softer each chapter — and set the volume limit at 4 p.m., midnight-you will thank you."],
+        comfort: ["Public-domain piano", "The calmest thing we ship. Change it when you want rain."],
+      },
+    };
+    const chosen = { room: null, task: null };
+    const render = () => {
+      picker.querySelectorAll(".picker-opts").forEach((group) => {
+        const q = group.dataset.q;
+        group.querySelectorAll("button").forEach((btn) => {
+          btn.setAttribute("aria-pressed", String(chosen[q] === btn.dataset.answer));
+        });
+      });
+      if (!chosen.room || !chosen.task) {
+        pickerResult.dataset.ready = "false";
+        pickerResult.innerHTML = "<strong>Pick one from each row above — I'll point you somewhere sensible.</strong>";
+        return;
+      }
+      const [title, body] = answers[chosen.room][chosen.task];
+      pickerResult.dataset.ready = "true";
+      pickerResult.innerHTML = "<strong>" + title + "</strong><span>" + body + "</span>";
+    };
+    picker.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-answer]");
+      if (!btn) return;
+      const group = btn.closest(".picker-opts");
+      chosen[group.dataset.q] = btn.dataset.answer;
+      render();
+    });
+  }
+
   /* ---------- compat checker ---------- */
   const form = document.getElementById("compatForm");
   const result = document.getElementById("compatResult");

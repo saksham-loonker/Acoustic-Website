@@ -116,6 +116,19 @@ The maker changed the frame the same day: Acoustic is a three-person commercial 
 
 Verification for this pass: HTML parse OK; `node --check` on site.js/bench.js; headless Edge — rig plays, 0 px mobile overflow, 0 console/page errors; compat checker returns the right answer for API 28 and API 34; screenshots re-reviewed at 1280px and 390px.
 
+
+## 9. Overload, round two — picker, anatomy, ornament (2026-11-14)
+
+The same day, the maker asked for more: keep adding until the page is overloaded and humane. Added in this pass:
+
+- **Start-sound picker** ("Find your starting sound") — a two-question deterministic widget (room × task → suggested shelf item: Mountain refuge, Cave & stream, Ocean with distant whales, Soft fireside, Colour noise, public-domain piano). No network, no storage, no learning; a suggestion for a first session, not a prescription.
+- **Anatomy of a session** — four plain steps (Start → Listen → Shape → Stop) in the app's own terms, including the honest Auto listening posture (only while a session you started is running).
+- **Ornamental wave divider** before the closing CTA; the `dropcap` and `wave-divider` CSS hooks.
+- Picker bodies rewritten to avoid restating the title ("Cave & stream — Cave & stream…"), compat answers softened to "usually within a day or two", team lede changed from "not a startup" to "and one loud room we all share. Not a growth machine. A workshop." (the venture is three people; no funding claims are made anywhere).
+
+Claims scan re-run: no dBA/ANC/medical/outcome wording anywhere except negations and disclaimers; zero GitHub/source links remain.
+
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.

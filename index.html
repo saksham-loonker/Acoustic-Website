@@ -199,6 +199,40 @@
     </div>
   </section>
 
+  <!-- sound picker -->
+  <section class="band" id="picker">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Start here</p>
+        <h2>Find your starting sound.</h2>
+        <p>Two honest taps and the shelf points you at one place to begin — a suggestion for your first session, not a prescription. Your ears decide the rest.</p>
+      </div>
+      <div class="picker" id="startPicker">
+        <div class="picker-q">
+          <p class="picker-label" id="q1Label">1 · What is the room doing?</p>
+          <div class="picker-opts" role="group" aria-labelledby="q1Label" data-q="room">
+            <button type="button" data-answer="water" aria-pressed="false">Water &amp; storms</button>
+            <button type="button" data-answer="voices" aria-pressed="false">People &amp; caf&eacute;s</button>
+            <button type="button" data-answer="street" aria-pressed="false">Streets &amp; engines</button>
+            <button type="button" data-answer="quiet" aria-pressed="false">Basically silent, somehow</button>
+          </div>
+        </div>
+        <div class="picker-q">
+          <p class="picker-label" id="q2Label">2 · What are you here to do?</p>
+          <div class="picker-opts" role="group" aria-labelledby="q2Label" data-q="task">
+            <button type="button" data-answer="deep" aria-pressed="false">Deep work</button>
+            <button type="button" data-answer="read" aria-pressed="false">Reading / wind-down</button>
+            <button type="button" data-answer="sleep" aria-pressed="false">Pre-bed calm</button>
+            <button type="button" data-answer="comfort" aria-pressed="false">Background comfort</button>
+          </div>
+        </div>
+        <div class="picker-result" id="pickerResult" data-ready="false" role="status" aria-live="polite">
+          <strong>Pick one from each row above — I'll point you somewhere sensible.</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- the rig -->
   <section class="rig-band" id="rig">
     <div class="wrap">
@@ -290,6 +324,40 @@
       <blockquote class="manifesto">The room is allowed to be loud.<br><em>Your head doesn&rsquo;t have to be.</em>
         <svg class="scribble" viewBox="0 0 220 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 14 C40 6, 66 17, 96 10 S 150 15, 216 8"/></svg>
       </blockquote>
+    </div>
+  </section>
+
+
+  <!-- anatomy of a session -->
+  <section class="band" id="session">
+    <div class="wrap">
+      <div class="sec-head sec-head-offset">
+        <p class="eyebrow">Anatomy of a session</p>
+        <h2>What happens, from tap to stop.</h2>
+        <p>The short version of what the app does between the moment your thumb leaves the Start button and the moment it doesn't.</p>
+      </div>
+      <div class="anatomy">
+        <div class="anatomy-step">
+          <code>1 · Start</code>
+          <h3>You press it. Always you.</h3>
+          <p>Nothing starts by itself — no schedules, no geofencing, no &ldquo;smart&rdquo; auto-on. The session begins when you say so.</p>
+        </div>
+        <div class="anatomy-step">
+          <code>2 · Listen</code>
+          <h3>Only while you'd notice.</h3>
+          <p>In an Auto session the phone samples the room briefly, only then — a few seconds at a time, never otherwise. Leave, lock or stop, and listening ends.</p>
+        </div>
+        <div class="anatomy-step">
+          <code>3 · Shape</code>
+          <h3>Within your ceiling.</h3>
+          <p>It eases the blend inside the limit you set, clamped in the audio path — the UI can't paint you out of your own ceiling.</p>
+        </div>
+        <div class="anatomy-step">
+          <code>4 · Stop</code>
+          <h3>Stop means stop.</h3>
+          <p>One tap ends sound and listening. No fade of twenty seconds, no &ldquo;are you sure?&rdquo;, no resumed session unless you press Start again.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -458,7 +526,15 @@
     </div>
   </section>
 
-  <!-- final cta -->
+  <!-- closing ornament -->
+  <div class="wave-wrap" aria-hidden="true">
+    <svg class="wave-divider" viewBox="0 0 1180 34" fill="none">
+      <path d="M0 17 Q 74 2 148 17 T 296 17 T 444 17 T 592 17 T 740 17 T 888 17 T 1036 17 T 1180 17" stroke="#C4552F" stroke-opacity="0.45" stroke-width="1.6" stroke-linecap="round"/>
+      <circle cx="592" cy="17" r="3.2" fill="#C4552F" fill-opacity="0.6"/>
+    </svg>
+  </div>
+
+  <!-- final cta -->  <!-- final cta -->
   <section class="cta-band" id="get">
     <p class="eyebrow" style="color:#D89A6B">Testing now</p>
     <h2>Free for testers. <em>Forever&nbsp;unofficial.</em></h2>
