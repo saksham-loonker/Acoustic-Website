@@ -113,6 +113,181 @@
     });
   }
 
+  /* ---------- the shelf index (every bundled file, from the manifest) ---------- */
+  const SHELF = [
+    { t: "Woodland birdsong", f: "birds", k: "ambience", d: "60 s", b: "Stream with woodland birds", c: "kvgarlic; edited by Porrumentzio" },
+    { t: "Cave atmosphere", f: "cave", k: "ambience", d: "60 s", b: "Cave and stream", c: "Joseph SARDIN" },
+    { t: "Fire, Foley", f: "fire", k: "ambience", d: "36 s", b: "", c: "Joseph SARDIN & Axeline T." },
+    { t: "Fireplace  #1", f: "fire", k: "ambience", d: "62 s", b: "Soft fireside", c: "Joseph SARDIN" },
+    { t: "Fireplace  #4", f: "fire", k: "ambience", d: "79 s", b: "", c: "Joseph SARDIN" },
+    { t: "Quiet hearth", f: "fire", k: "ambience", d: "45 s", b: "Quiet hearth", c: "Joseph SARDIN" },
+    { t: "Wind in a cornfield", f: "foliage", k: "ambience", d: "120 s", b: "", c: "Joseph SARDIN" },
+    { t: "Wind in shrub", f: "foliage", k: "ambience", d: "120 s", b: "Soft fireside", c: "Joseph SARDIN" },
+    { t: "Wind in Tall Grass", f: "foliage", k: "ambience", d: "85 s", b: "", c: "Joseph SARDIN" },
+    { t: "Wind in the Trees", f: "foliage", k: "ambience", d: "120 s", b: "Mountain refuge", c: "Joseph SARDIN" },
+    { t: "Wind through a tree with distant birds", f: "foliage", k: "ambience", d: "60 s", b: "", c: "Joseph SARDIN" },
+    { t: "At the woodland edge", f: "forest", k: "ambience", d: "90 s", b: "Woodland edge", c: "Joseph SARDIN" },
+    { t: "Forest", f: "forest", k: "ambience", d: "54 s", b: "", c: "Joseph SARDIN" },
+    { t: "Forest  #2", f: "forest", k: "ambience", d: "120 s", b: "", c: "Joseph SARDIN" },
+    { t: "Forest  #3", f: "forest", k: "ambience", d: "120 s", b: "", c: "Pierre SIBANARCO" },
+    { t: "Forest  #5", f: "forest", k: "ambience", d: "97 s", b: "", c: "Joseph SARDIN" },
+    { t: "Forest brook with blackbirds", f: "forest", k: "ambience", d: "90 s", b: "Woodland brook", c: "Pierre SIBANARCO" },
+    { t: "Forest with wind and birds", f: "forest", k: "ambience", d: "90 s", b: "", c: "Joseph SARDIN" },
+    { t: "Fountain of a Japanese Temple", f: "fountain", k: "ambience", d: "62 s", b: "", c: "Olivier du Japon" },
+    { t: "Parisian paved square, fountain", f: "fountain", k: "ambience", d: "120 s", b: "", c: "Joseph SARDIN" },
+    { t: "Water fountain for cat or dog", f: "fountain", k: "ambience", d: "35 s", b: "", c: "Joseph SARDIN" },
+    { t: "Field cricket", f: "insects", k: "ambience", d: "37 s", b: "", c: "Joseph SARDIN" },
+    { t: "Singing insect  #1", f: "insects", k: "ambience", d: "27 s", b: "", c: "Joseph SARDIN" },
+    { t: "Sun and Heat  #1", f: "insects", k: "ambience", d: "45 s", b: "", c: "Joseph SARDIN" },
+    { t: "Feet in Leaves  #1", f: "materials", k: "ambience", d: "64 s", b: "", c: "Joseph SARDIN" },
+    { t: "Footstep in the Snow  #2", f: "materials", k: "ambience", d: "56 s", b: "", c: "Joseph SARDIN" },
+    { t: "Heidelberg Printing Press  #6", f: "materials", k: "ambience", d: "40 s", b: "", c: "Mireille B." },
+    { t: "Paper", f: "materials", k: "ambience", d: "30 s", b: "", c: "Joseph SARDIN" },
+    { t: "Pencil  #1", f: "materials", k: "ambience", d: "33 s", b: "", c: "Joseph SARDIN" },
+    { t: "Sewing machine, slow speed", f: "materials", k: "ambience", d: "26 s", b: "", c: "Joseph SARDIN" },
+    { t: "Tent or curtain shower", f: "materials", k: "ambience", d: "26 s", b: "", c: "Joseph SARDIN" },
+    { t: "Electric hood  #1", f: "mechanism", k: "ambience", d: "29 s", b: "", c: "Joseph SARDIN" },
+    { t: "Fridge", f: "mechanism", k: "ambience", d: "36 s", b: "Fridge focus", c: "Joseph SARDIN" },
+    { t: "Ventilation  #2", f: "mechanism", k: "ambience", d: "35 s", b: "", c: "Joseph SARDIN" },
+    { t: "Ventilation  #5", f: "mechanism", k: "ambience", d: "77 s", b: "", c: "Joseph SARDIN & Axeline T." },
+    { t: "Campaign at night  #1", f: "night", k: "ambience", d: "75 s", b: "", c: "Joseph SARDIN" },
+    { t: "Evening in Gironde, France", f: "night", k: "ambience", d: "120 s", b: "", c: "Joseph SARDIN" },
+    { t: "Mountain, Evening  #1", f: "night", k: "ambience", d: "120 s", b: "", c: "Joseph SARDIN & Axeline T." },
+    { t: "Humpback whale song", f: "ocean life", k: "ambience", d: "38 s", b: "Ocean with distant whales", c: "Spyrogumas" },
+    { t: "Rain on car windshield", f: "rain", k: "ambience", d: "73 s", b: "", c: "Joseph SARDIN" },
+    { t: "Rain on concrete", f: "rain", k: "ambience", d: "81 s", b: "", c: "Joseph SARDIN" },
+    { t: "Rain Under an Umbrella", f: "rain", k: "ambience", d: "31 s", b: "", c: "Pierre SIBANARCO" },
+    { t: "Summer Rain on Terrace", f: "rain", k: "ambience", d: "120 s", b: "", c: "Joseph SARDIN" },
+    { t: "Beach: Small Waves", f: "shore", k: "ambience", d: "57 s", b: "", c: "DenisChardonnet" },
+    { t: "Cliff  #1", f: "shore", k: "ambience", d: "120 s", b: "", c: "Joseph SARDIN" },
+    { t: "Sea of the Beach of Dellec  #2", f: "shore", k: "ambience", d: "120 s", b: "", c: "Joseph SARDIN" },
+    { t: "Sea Waves", f: "shore", k: "ambience", d: "120 s", b: "Ocean with distant whales", c: "Joseph SARDIN" },
+    { t: "Small Waves, Froth and Beach", f: "shore", k: "ambience", d: "98 s", b: "", c: "Joseph SARDIN" },
+    { t: "Car micheline", f: "travel", k: "ambience", d: "120 s", b: "", c: "gamin" },
+    { t: "Metro, Paris  #2", f: "travel", k: "ambience", d: "54 s", b: "", c: "Joseph SARDIN" },
+    { t: "Old metro, interior", f: "travel", k: "ambience", d: "120 s", b: "", c: "Joseph SARDIN" },
+    { t: "Cave  #2", f: "water", k: "ambience", d: "71 s", b: "", c: "Joseph SARDIN" },
+    { t: "Flowing woodland stream", f: "water", k: "ambience", d: "60 s", b: "Stream with woodland birds", c: "gluckose" },
+    { t: "Mountain Stream  #7", f: "water", k: "ambience", d: "120 s", b: "Mountain refuge", c: "Joseph SARDIN & Axeline T." },
+    { t: "Ocean from the shore", f: "water", k: "ambience", d: "90 s", b: "Woodland edge", c: "Joseph SARDIN" },
+    { t: "Small Stream", f: "water", k: "ambience", d: "96 s", b: "", c: "Joseph SARDIN" },
+    { t: "Small Stream  #4", f: "water", k: "ambience", d: "105 s", b: "", c: "Joseph SARDIN" },
+    { t: "Watercourse 5.2", f: "water", k: "ambience", d: "60 s", b: "", c: "Joseph SARDIN" },
+    { t: "Waves among small rocks", f: "water", k: "ambience", d: "90 s", b: "Rocky coast", c: "Joseph SARDIN" },
+    { t: "Calm ambient pads", f: "ambient", k: "music", d: "120 s", b: "", c: "The Cynic Project (cynicmusic)" },
+    { t: "In the middle of nowhere", f: "guitar", k: "music", d: "96 s", b: "", c: "Centurion_of_war" },
+    { t: "LaDaDa Guitar", f: "guitar", k: "music", d: "120 s", b: "", c: "Alex McCulloch (Pro Sensory)" },
+    { t: "A new town", f: "harp", k: "music", d: "62 s", b: "", c: "The Cynic Project (cynicmusic)" },
+    { t: "Goldberg Variations: Aria", f: "other music", k: "music", d: "300 s", b: "", c: "Kimiko Ishizaka" },
+    { t: "Bach — Prelude 1 in C major", f: "piano", k: "music", d: "163 s", b: "", c: "Johann Sebastian Bach (composition); Kimiko Ishizaka (piano performance)" },
+    { t: "Bach — Prelude 10 in E minor", f: "piano", k: "music", d: "121 s", b: "", c: "Johann Sebastian Bach (composition); Kimiko Ishizaka (piano performance)" },
+    { t: "Bach — Prelude 14 in F-sharp minor", f: "piano", k: "music", d: "65 s", b: "", c: "Johann Sebastian Bach (composition); Kimiko Ishizaka (piano performance)" },
+    { t: "Bach — Prelude 17 in A-flat major", f: "piano", k: "music", d: "93 s", b: "", c: "Johann Sebastian Bach (composition); Kimiko Ishizaka (piano performance)" },
+    { t: "Bach — Prelude 24 in B minor", f: "piano", k: "music", d: "148 s", b: "", c: "Johann Sebastian Bach (composition); Kimiko Ishizaka (piano performance)" },
+    { t: "Bach — Prelude 4 in C-sharp minor", f: "piano", k: "music", d: "178 s", b: "", c: "Johann Sebastian Bach (composition); Kimiko Ishizaka (piano performance)" },
+    { t: "Bach — Prelude 8 in E-flat minor", f: "piano", k: "music", d: "238 s", b: "", c: "Johann Sebastian Bach (composition); Kimiko Ishizaka (piano performance)" },
+    { t: "Bach — Prelude 9 in E major", f: "piano", k: "music", d: "105 s", b: "", c: "Johann Sebastian Bach (composition); Kimiko Ishizaka (piano performance)" },
+    { t: "Gentle piano solo", f: "piano", k: "music", d: "120 s", b: "", c: "Tozan" },
+    { t: "Simple piano chords", f: "piano", k: "music", d: "41 s", b: "", c: "8125" },
+    { t: "Beautiful forest", f: "strings", k: "music", d: "70 s", b: "", c: "nene" },
+    { t: "Jazz flute", f: "winds", k: "music", d: "74 s", b: "", c: "Alex McCulloch (Pro Sensory)" }
+  ];
+
+  const shelfList = document.getElementById("shelfList");
+  const shelfChips = document.getElementById("shelfChips");
+  const shelfSearch = document.getElementById("shelfSearch");
+  const shelfCount = document.getElementById("shelfCount");
+  if (shelfList && shelfChips && shelfSearch && shelfCount) {
+    const KIND_ORDER = ["all", "ambience", "music"];
+    const FAMILIES = ["all"].concat(
+      [...new Set(SHELF.map((x) => x.f))].sort((a, b) => a.localeCompare(b))
+    );
+    let kind = "all";
+    let family = "all";
+    let query = "";
+
+    const chip = (label, pressed, onClick) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "shelf-chip";
+      b.textContent = label;
+      b.setAttribute("aria-pressed", String(pressed));
+      b.addEventListener("click", onClick);
+      return b;
+    };
+
+    const renderChips = () => {
+      shelfChips.textContent = "";
+      KIND_ORDER.forEach((k) => {
+        if (k === "all") return;
+        shelfChips.appendChild(chip(
+          k === "ambience" ? "Field recordings" : "Music works",
+          kind === k,
+          () => { kind = kind === k ? "all" : k; render(); }
+        ));
+      });
+      FAMILIES.forEach((f) => {
+        if (f === "all") return;
+        shelfChips.appendChild(chip(
+          f,
+          family === f,
+          () => { family = family === f ? "all" : f; render(); }
+        ));
+      });
+    };
+
+    const render = () => {
+      renderChips();
+      const q = query.trim().toLowerCase();
+      const hits = SHELF.filter((x) => {
+        if (kind !== "all" && x.k !== kind) return false;
+        if (family !== "all" && x.f !== family) return false;
+        if (q && !(x.t + " " + x.f + " " + x.c).toLowerCase().includes(q)) return false;
+        return true;
+      });
+
+      shelfCount.innerHTML =
+        "<b>" + hits.length + "</b> of 76 files" +
+        (kind === "all" && family === "all" && !q ? " — the whole shelf, nothing held back" : " match");
+
+      shelfList.textContent = "";
+      if (!hits.length) {
+        const p = document.createElement("p");
+        p.className = "shelf-empty";
+        p.textContent = "Nothing in the bundle matches that. The shelf is fixed at 76 files — try a family like water, fire or piano.";
+        shelfList.appendChild(p);
+        return;
+      }
+      const frag = document.createDocumentFragment();
+      hits.forEach((x) => {
+        const row = document.createElement("div");
+        row.className = "shelf-row";
+        const left = document.createElement("span");
+        left.className = "shelf-row-t";
+        left.textContent = x.t;
+        const right = document.createElement("span");
+        right.className = "shelf-row-m";
+        right.textContent = x.f + " · " + x.d + (x.k === "music" ? " · music" : "");
+        row.appendChild(left);
+        row.appendChild(right);
+        if (x.b) {
+          const tag = document.createElement("span");
+          tag.className = "shelf-row-b";
+          tag.textContent = "in " + x.b;
+          row.appendChild(tag);
+        }
+        frag.appendChild(row);
+      });
+      shelfList.appendChild(frag);
+    };
+
+    shelfSearch.addEventListener("input", () => {
+      query = shelfSearch.value;
+      render();
+    });
+    render();
+  }
+
 /* ---------- the ten blends (the app's own recipe table) ---------- */
   const BLEND_ASSETS = {
     "bsb-3222": ["Mountain Stream #7", "water", "120 s"],

@@ -179,6 +179,26 @@ Same standing instruction: keep adding until overloaded, keep it honest, keep it
 
 **Still not verified:** no phone was touched this delivery, no listening took place, and I cannot view images in this session — screenshots are generated but unexamined by me.
 
+## 12. Round five — an index of the actual shelf (2026-11-14)
+
+The site claimed 59 + 17 = 76 files; now a visitor can check that against the bundle itself.
+
+**Source of the new facts.** `app/src/main/assets/library/manifest.json` (76 entries), read and cross-checked this session: all 76 are `CC0-1.0`, all Ogg/Opus 48 kHz stereo, 59 `ambience` and 17 `music`, 22 distinct family labels, 15 of the ambience files also appear in the ten-blend recipe table (`BundledDefaults.kt`), 44 do not. The 59 ambience files total 74.1 minutes with a 73 s median; the 17 music works total 35.2 minutes.
+
+**Added.** A filterable index of the shelf inside "What's in it": every bundled title, its family, its duration and, where it is one, which of the ten blends it belongs to. Two kind chips (field recordings / music works), one chip per family, a title search, a live count, and a truthful empty state when nothing matches. The list scrolls inside its own panel at every width; nothing is fetched and nothing is stored.
+
+**Refused.** No playback, no preview, no waveform and no download — the site does not ship the library and must not pretend to. No ratings or rankings of the recordings, because the app does not rank them either; it only offers fixed recipes.
+
+**Verification run this session (host render only).**
+- `node --check site.js`: pass. `engine-smoke.mjs`: exit 0.
+- `verify-v9.mjs` (new): 76 rows at rest, count reads "76 of 76 files — the whole shelf, nothing held back", 15 blend tags; search "rain" → exactly the four rain titles; the `piano` chip → exactly the ten piano works; `Music works` → 17 rows across 7 families; an impossible query → 0 rows with the honest empty state; chip focus shows a 3 px outline; 390 px overflow 0.
+- `verify-v5.mjs`: rig/FIG/390 px all green, 0 console/page errors.
+- `sweep-widths.mjs`: 0 px overflow at 360–1600 px.
+- `audit-v4.mjs`: still 2 text families + system mono, 14.41:1 body contrast, 3 greys, 7 shadow roles.
+- HTML parse clean, 0 U+FFFD.
+
+**Still unverified:** no phone, no listening, and I still cannot view the screenshots this session produces.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.
