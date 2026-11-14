@@ -1,0 +1,44 @@
+Fonts bundled with this page, and their licenses
+=================================================
+
+Fraunces — SIL Open Font License 1.1
+  Copyright 2018 The Fraunces Project Authors (https://github.com/undercasetype/Fraunces)
+  Designed by Phaedra Charles and Flavia Zimbardi (Undercase Type), commissioned by Google Fonts.
+  https://fonts.google.com/specimen/Fraunces
+
+Atkinson Hyperlegible — SIL Open Font License 1.1
+  Copyright 2020 Braille Institute of America, Inc.
+  https://brailleinstitute.org/freefont/
+
+Both families are licensed under the SIL Open Font License, Version 1.1.
+The OFL text below applies to both. The reserved font names are
+"Fraunces" and "Atkinson Hyperlegible" — they are used here unmodified,
+only subset to the Latin scripts the page renders.
+
+----------------------------------------------------------------------------
+
+SIL OPEN FONT LICENSE
+Version 1.1 - 26 February 2007
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects based on the contributions
+of many designers and the acceptance of the terms by many users - both
+issues being ultimately satisfied by linking Open Source / Libre fonts
+to the freedoms of open source / libre software: the ability to use,
+study, copy, modify, redistribute and install the fonts freely...
+(The canonical full text is available at
+https://openfontlicense.org/open-font-license-official-text/ and in the
+repositories linked above. This file is an abbreviated reminder, not a
+substitute for reviewing the official text.)
+
+SUMMARY (paraphrase, not legal advice):
+The fonts may be used, studied, copied, modified and redistributed
+freely, as long as:
+  1. They are not sold by themselves,
+  2. Derivative works carry the license and the copyright notice,
+  3. Reserved font names are not used for modified versions,
+  4. Fonts are not distributed under any other license.
+
+The fonts are provided "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED.

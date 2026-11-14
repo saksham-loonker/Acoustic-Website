@@ -45,11 +45,11 @@
   function drawMeter(pcm) {
     const w = meterCanvas.width;
     const h = meterCanvas.height;
-    meter.fillStyle = "#080B0F";
+    meter.fillStyle = "#15110E";
     meter.fillRect(0, 0, w, h);
 
     if (!pcm) {
-      meter.strokeStyle = "rgba(221,226,232,0.16)";
+      meter.strokeStyle = "rgba(237,231,220,0.16)";
       meter.lineWidth = 1;
       meter.beginPath();
       meter.moveTo(0, h / 2);
@@ -71,7 +71,7 @@
       }
       const barH = Math.max(1, Math.min(1, peak / 0.3) * (h - 10));
       const x = (c / cols) * w;
-      meter.fillStyle = peak > 0.2 ? "#DDE2E8" : "#7E8894";
+      meter.fillStyle = peak > 0.2 ? "#F2E9DB" : "#9A9082";
       meter.fillRect(x, (h - barH) / 2, Math.max(1, w / cols - 1), barH);
     }
 

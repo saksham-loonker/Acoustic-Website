@@ -3,404 +3,338 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Acoustic — datasheet</title>
-  <meta name="description" content="Acoustic is an offline Android sound-masking instrument: eight shaped bands, 59 CC0 field recordings, 17 public-domain works, one hard ceiling, no INTERNET permission. Coming soon to Google Play.">
-  <meta name="theme-color" content="#F7F5F0">
+  <title>Acoustic — a quieter room for noisy places</title>
+  <meta name="description" content="Acoustic is a small offline Android app that fills a noisy room with steady, shaped sound. 59 CC0 field recordings, 17 public-domain works, one hard ceiling you set. No account, no ads, no INTERNET permission. Coming soon to Google Play.">
+  <meta name="theme-color" content="#F7F3EB">
   <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Acoustic — datasheet">
-  <meta property="og:description" content="An offline Android sound-masking instrument. Eight bands, one ceiling, no network permission.">
+  <meta property="og:title" content="Acoustic — a quieter room for noisy places">
+  <meta property="og:description" content="Steady, shaped masking on your phone. It never asks the network for anything.">
   <meta property="og:image" content="assets/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="styles.css">
+  <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
 
-<header class="masthead">
-  <div class="wrap">
-    <div class="masthead-in">
-      <a class="ident" href="#top">
-        <img src="assets/logo-mark.png" alt="" width="30" height="30">
-        <b>Acoustic</b>
-      </a>
-      <div class="mast-meta">
-        Sheet 1 of 1 &middot; Rev. 0.23.0 &middot; 14 Nov 2026<br>
-        <a href="mailto:sakshamloonker@gmail.com?subject=Acoustic%20try-out">sakshamloonker@gmail.com</a>
-      </div>
-    </div>
-    <nav class="toc" aria-label="Contents">
-      <a href="#spec">Specification</a>
-      <a href="#behaviour">Behaviour</a>
-      <a href="#rig">Test rig</a>
-      <a href="#plates">Plates</a>
-      <a href="#request">Request a build</a>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top" aria-label="Acoustic — home">
+      <img src="assets/logo-mark.png" alt="" width="34" height="34">
+      <span class="brand-word">Acoustic</span>
+      <span class="ver">v0.23.0</span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#app">The app</a>
+      <a href="#fineprint">Fine print</a>
       <a href="#questions">Questions</a>
     </nav>
+    <a class="nav-cta" href="#get">Get the build</a>
   </div>
 </header>
 
 <main id="top">
 
-  <!-- 00 · summary -->
+  <!-- hero -->
   <section class="hero">
+    <svg class="hero-arcs" viewBox="0 0 720 720" aria-hidden="true" fill="none">
+      <g stroke="#C4552F" stroke-opacity="0.16" stroke-width="1.4">
+        <circle cx="360" cy="360" r="340"/><circle cx="360" cy="360" r="268"/>
+        <circle cx="360" cy="360" r="196"/><circle cx="360" cy="360" r="124"/>
+      </g>
+      <circle cx="360" cy="360" r="52" fill="#C4552F" fill-opacity="0.10"/>
+    </svg>
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Sound masking for Android</p>
+        <h1>A&nbsp;quieter room, measured in <em>eight bands.</em></h1>
+        <p class="lede">Acoustic is a little Android app that fills a noisy room with steady, shaped sound — so your mind stops chasing <b>every keyboard, every call, every creak</b>. It runs offline, never asks the network for anything, and the whole story fits on one page.</p>
+        <div class="cta-row">
+          <a class="btn btn-solid" href="#get">Get the build <span aria-hidden="true">&rarr;</span></a>
+          <a class="btn btn-ghost" href="#rig">Hear it right here <span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <div class="trust-chips">
+          <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.6-3 7.7-7 9.2-4-1.5-7-4.6-7-9.2V6l7-3z"/><path d="M9.6 12l1.8 1.8 3.2-3.6"/></svg>No INTERNET permission</span>
+          <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5.5 20c1.7-3.6 4-5.3 6.5-5.3s4.8 1.7 6.5 5.3"/></svg>No account, ever</span>
+          <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M9 8l-4.5 4L9 16M15 8l4.5 4L15 16"/></svg>Open source</span>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <figure class="phone-frame">
+          <img src="assets/screenshots/now.png" alt="" width="720" height="1447">
+        </figure>
+        <svg class="badge-circle" viewBox="0 0 120 120" aria-hidden="true">
+          <defs>
+            <path id="circlePath" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0"/>
+          </defs>
+          <circle cx="60" cy="60" r="59" fill="#C4552F"/>
+          <circle cx="60" cy="60" r="31" fill="#A63E1E"/>
+          <text font-family="'Atkinson Hyperlegible',sans-serif" font-weight="700" font-size="10.2" letter-spacing="1.6" fill="#FFF3E8">
+            <textPath href="#circlePath">SET YOUR CEILING &middot; THE APP ENFORCES IT &middot; SET YOUR CEILING &middot; THE APP ENFORCES IT &middot; </textPath>
+          </text>
+          <g stroke="#FFF3E8" stroke-width="2.4" stroke-linecap="round">
+            <line x1="48" y1="62" x2="48" y2="58"/><line x1="54" y1="64" x2="54" y2="56"/><line x1="60" y1="66" x2="60" y2="54"/><line x1="66" y1="63" x2="66" y2="57"/><line x1="72" y1="61" x2="72" y2="59"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- why -->
+  <section class="band" id="why">
     <div class="wrap">
-      <div class="grid">
-        <dl class="rail">
-          <dt>Item</dt>
-          <dd>Android sound-masking instrument</dd>
-          <dt>Maker</dt>
-          <dd>Saksham Loonker</dd>
-          <dt>Status</dt>
-          <dd><span class="stamp">In review</span></dd>
-          <dt>Network</dt>
-          <dd>None. No permission declared.</dd>
-        </dl>
+      <div class="sec-head">
+        <p class="eyebrow">Why Acoustic</p>
+        <h2>Made for the rooms that never shut&nbsp;up.</h2>
+        <p>Open offices, shared desks, the house at 6 a.m. Acoustic lays down a steady, even bed of sound, the way a good library feels &mdash; so the detail of noise stops pulling at you.</p>
+      </div>
+      <div class="cards-3">
+        <article class="card">
+          <div class="icon-chip"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19v-7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v7"/><path d="M2 19h20"/><path d="M9 10V6.5A1.5 1.5 0 0 1 10.5 5h3A1.5 1.5 0 0 1 15 6.5V10"/></svg></div>
+          <h3>Open-plan offices</h3>
+          <p>Three conversations at once, and none of them is yours. A steady shaped bed takes the sharp edge off speech detail so it reaches you as texture, not words.</p>
+        </article>
+        <article class="card">
+          <div class="icon-chip"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="7.2"/><circle cx="12" cy="12" r="2.6"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3"/></svg></div>
+          <h3>Deep work at the desk</h3>
+          <p>Study blocks and focus sessions. Pick a sound, press start, set your ceiling once — and then stop thinking about it. The sound just sits there doing its quiet job.</p>
+        </article>
+        <article class="card">
+          <div class="icon-chip"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 11.5L12 4.5l7.5 7"/><path d="M6.8 9.8V19h10.4V9.8"/></svg></div>
+          <h3>The shared house</h3>
+          <p>Someone is loud, the street is louder, and you just want the room to feel calm again. Also works on a plane — no signal required, no fuss.</p>
+        </article>
+      </div>
+    </div>
+  </section>
 
-        <div>
-          <div class="plate-fig" style="margin-bottom:var(--s5)">
-            <canvas id="figBands" width="900" height="230" role="img" aria-label="Response plot of the eight masking bands, from 80 Hz to 7.8 kHz"></canvas>
-            <div class="fig-cap"><b>Fig. 1.</b> The eight bands, plotted from the shipped edges (80 Hz to 7.8 kHz). Fixed at build time; the instrument only changes how much energy each receives. Not a measurement of any room.</div>
+  <!-- how it works -->
+  <section class="band" id="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">How it works</p>
+        <h2>Three steps. That&rsquo;s the whole recipe.</h2>
+      </div>
+      <div class="how-grid">
+        <div class="steps">
+          <div class="step">
+            <div class="step-no">1</div>
+            <div>
+              <h3>Pick your sound</h3>
+              <p>59 CC0 field recordings — rain, caf&eacute;s, rivers, rooms — 17 public-domain music works, or steady colour noise, generated live on the phone. Your taste, your call.</p>
+            </div>
           </div>
-
-          <h1 class="display">A quieter room, measured in <em>eight</em> bands.</h1>
-          <p class="lede">Acoustic fills the gaps in a noisy room with steady, shaped masking. It runs on the phone, keeps every preference on the phone, and never asks the network for anything. It is not noise cancellation, and does not claim to be.</p>
-
-          <div class="hero-actions">
-            <a class="btn" href="#request"><span class="ar">&rarr;</span> Request the build</a>
-            <a class="btn btn-ghost" href="#rig"><span class="ar">&rarr;</span> Run the engine</a>
+          <div class="step">
+            <div class="step-no">2</div>
+            <div>
+              <h3>Eight gentle bands</h3>
+              <p>The engine shapes the sound across eight bands, 80&nbsp;Hz to 7.8&nbsp;kHz, so the result stays even and calm instead of hissy or boomy.</p>
+            </div>
           </div>
+          <div class="step">
+            <div class="step-no">3</div>
+            <div>
+              <h3>One ceiling, yours</h3>
+              <p>You set the loudest it may ever play, once. Every automatic move, every layer, every queued change is clamped below it — enforced in the audio path, not just the interface.</p>
+            </div>
+          </div>
+        </div>
+        <figure class="fig-card" style="margin:0">
+          <canvas id="figBands" width="900" height="230" role="img" aria-label="Response plot of the eight masking bands, from 80 Hz to 7.8 kHz"></canvas>
+          <figcaption class="fig-cap"><b>Fig. 1.</b> The eight bands as shipped (edges: 80&nbsp;Hz &rarr; 7.8&nbsp;kHz, straight from the engine source). A drawing of the layout — not a measurement of your room.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- the rig -->
+  <section class="rig-band" id="rig">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Hear it first</p>
+        <h2>Press play. No install, no account.</h2>
+        <p>The masking core running in the app is compiled to WebAssembly and runs right here — 8 seconds of real engine output, measured from the engine's own samples, not from an animation. This page has no microphone, and nothing you press can send anything anywhere.</p>
+      </div>
+      <div class="rig-grid">
+        <ul class="rig-facts">
+          <li><b>Engine</b> — the same C++ the phone ships (dsp.cpp + library.cpp)</li>
+          <li><b>Payload</b> — ~95 KB, touched only if you press play</li>
+          <li><b>Render</b> — 8 s &middot; 48 kHz &middot; stereo, deterministic</li>
+          <li><b>Capture</b> — none. This page has no mic at all</li>
+          <li><b>Upload</b> — none. Not now, not later</li>
+        </ul>
+        <div class="rig">
+          <div class="rig-bar">
+            <span class="dot" id="dot1"></span>
+            <span class="dot" id="dot2"></span>
+            <span class="dot" id="dot3"></span>
+            <span id="rigLabel" style="margin-left:auto">standby</span>
+          </div>
+          <div class="rig-body">
+            <div class="rig-row" role="group" aria-label="Room">
+              <button type="button" data-scene="0" aria-pressed="true">Room</button>
+              <button type="button" data-scene="1" aria-pressed="false">Caf&eacute;</button>
+              <button type="button" data-scene="2" aria-pressed="false">Street</button>
+            </div>
+            <canvas id="meter" width="480" height="96" aria-hidden="true"></canvas>
+            <table class="rig-read">
+              <thead><tr><th scope="col">Channel</th><th scope="col">Value</th></tr></thead>
+              <tbody>
+                <tr><td>Engine size</td><td><span id="roSize">&mdash;</span></td></tr>
+                <tr><td>Bands live</td><td><span id="roBands">&mdash;</span></td></tr>
+                <tr><td>Peak sample</td><td><span id="roPeak">&mdash;</span></td></tr>
+                <tr><td>Render time</td><td><span id="roMs">&mdash;</span></td></tr>
+              </tbody>
+            </table>
+            <div class="rig-foot">
+              <button id="runEngine" type="button">Run engine</button>
+              <span id="benchStatus" role="status">standby</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="color:#8D8478; font-size:.85rem; margin-top:var(--sp-4); max-width:46rem">A straight word: the rig demonstrates <em>shaping</em>, not benefit. Whether Acoustic helps you is measured on your phone, with your ears — not by a button in a browser, and never promised here.</p>
+    </div>
+  </section>
+
+  <!-- the app -->
+  <section class="band" id="app">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">The app</p>
+        <h2>Straight from the phone.</h2>
+        <p>Real screenshots from a connected phone running the disposable validation build at fresh defaults — cropped to the frame, scaled down, never redrawn.</p>
+      </div>
+      <div class="plates">
+        <figure class="plate">
+          <img src="assets/screenshots/now.png" alt="The Now screen: current sound, Fixed and Auto choices, transport controls, and volume" loading="lazy" width="720" height="1447">
+          <figcaption><b>The Now screen.</b> The sound, your ceiling, one thumb. Microphone off until you ask.</figcaption>
+        </figure>
+        <figure class="plate">
+          <img src="assets/screenshots/sounds.png" alt="Sounds screen: searchable library of field recordings and music" loading="lazy" width="720" height="1447">
+          <figcaption><b>The shelf.</b> All 76 recordings and works, browsable — with credits inside the app.</figcaption>
+        </figure>
+        <figure class="plate">
+          <img src="assets/screenshots/settings.png" alt="Settings screen in greyscale: appearance, volume limit, daily use" loading="lazy" width="720" height="1447">
+          <figcaption><b>The settings.</b> Set the limit once. No wizard, no upsell, no accounts.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- honest fine print -->
+  <section class="band" id="fineprint">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Fine print</p>
+        <h2>The honest fine print.</h2>
+        <p>It took one person, no funding, and a lot of evenings to make this small. Here is exactly what it is — and what it is not.</p>
+      </div>
+      <div class="promise-grid">
+        <div class="promise-card good">
+          <h3>What it is</h3>
+          <ul class="promise-list">
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>An offline masking instrument.</b> The phone plays steady, shaped sound; that is all.</span></li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>All bundled.</b> 59 CC0 field recordings and 17 public-domain works, inside the install. No streaming.</span></li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>One ceiling you set.</b> Every automatic move is clamped below it — in the audio path, not just the UI.</span></li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>Private by construction.</b> Preferences stay on the phone, excluded from backup and transfer.</span></li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>Open source.</b> Read every line — DSP, build scripts, this page — on GitHub.</span></li>
+          </ul>
+        </div>
+        <div class="promise-card bad">
+          <h3>What it is not</h3>
+          <ul class="promise-list">
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span><b>Not noise cancellation.</b> It adds shaped sound; it does not subtract anything from your room.</span></li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span><b>Not a medical device.</b> A comfort tool. Not treatment, not hearing protection, not a diagnostic.</span></li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span><b>Not calibrated in dBA.</b> Levels are percentages of your ceiling — the app says so on screen.</span></li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span><b>Not outcome evidence.</b> Whether it helps is yours to judge, on your phone, with your ears.</span></li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span><b>Not a hidden listener.</b> The mic listens only while a session you started is running — never otherwise.</span></li>
+          </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 01 · specification -->
-  <section class="band" id="spec">
-    <div class="wrap">
-      <div class="grid">
-        <div class="rail">
-          <div class="fig-no">01</div>
-          Specification
-        </div>
-        <div>
-          <h2 class="sec-title">What is in the box, and what is not.</h2>
-          <div class="prose">
-            <p>Everything below is a property of the shipping build. Nothing here is aspirational, and nothing here is measured at your ear.</p>
-          </div>
-
-          <table class="spec">
-            <caption>Table 1 &mdash; shipped properties</caption>
-            <tbody>
-              <tr><th>Platform</th><td>Android 10 &middot; API 29</td></tr>
-              <tr><th>ABIs</th><td>arm64-v8a, x86_64</td></tr>
-              <tr><th>Network permission</th><td>none declared</td></tr>
-              <tr><th>Masking engine</th><td>8 shaped bands, 80 Hz &ndash; 7.8 kHz</td></tr>
-              <tr><th>Field recordings</th><td>59 &middot; CC0 &middot; bundled</td></tr>
-              <tr><th>Music works</th><td>17 &middot; public domain &middot; bundled</td></tr>
-              <tr><th>Accounts</th><td>none</td></tr>
-              <tr><th>Telemetry</th><td>none</td></tr>
-              <tr><th>Stored audio</th><td>none <span>&mdash; by construction</span></td></tr>
-              <tr><th>Preference backup</th><td>excluded <span>&mdash; OS-level</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 02 · behaviour -->
-  <section class="band" id="behaviour">
-    <div class="wrap">
-      <div class="grid">
-        <div class="rail">
-          <div class="fig-no">02</div>
-          Behaviour
-        </div>
-        <div>
-          <h2 class="sec-title">Six properties, stated as facts.</h2>
-
-          <div class="entry">
-            <div class="entry-no">2.1<span>Shaping</span></div>
-            <div>
-              <h3>Masking, band by band</h3>
-              <p>A steady coloured texture, divided into eight bands. The instrument changes how much energy each band receives, moment to moment, and never pushes past the ceiling you set. It adds; it does not subtract.</p>
-              <p class="held"><b>Held back</b> the mapping from room evidence to band energy. The band edges, the additive behaviour and the ceiling bound are all public; the mapping is the part we keep.</p>
-            </div>
-          </div>
-
-          <div class="entry">
-            <div class="entry-no">2.2<span>Auto</span></div>
-            <div>
-              <h3>Short checks, only on request</h3>
-              <p>Auto is off until you turn it on. With it on, the phone listens in short windows &mdash; a few seconds at a time, roughly every fifteen &mdash; and adjusts the blend inside the limit you already chose. Continuous Auto-Adapt keeps listening only while a session you started is running. Stop, leave the app, or lose the route, and listening ends. It does not restart itself.</p>
-              <p class="held"><b>Closed</b> &mdash; the analysis and decision path. Audio is never written to storage and never leaves the device; it is never transcribed and never searched for speech. Those facts are public.</p>
-            </div>
-          </div>
-
-          <div class="entry">
-            <div class="entry-no">2.3<span>Ceiling</span></div>
-            <div>
-              <h3>One ceiling, enforced below the UI</h3>
-              <p>You set a maximum once. Every automatic move, every layer, every queued change is clamped to it, and the clamp lives in the audio path rather than the interface &mdash; so a rendering fault cannot carry the level past it. Lowering the ceiling holds immediately. Only a fresh, deliberate request re-opens headroom, and never beyond the maximum.</p>
-              <p class="held"><b>Not printed</b> the amplitude and peak-guard implementation. The one number the app shows is the one it can defend: relative amplitude, as a percentage of your ceiling, labelled as such on screen.</p>
-            </div>
-          </div>
-
-          <div class="entry">
-            <div class="entry-no">2.4<span>Taste</span></div>
-            <div>
-              <h3>Ratings, with no surveillance</h3>
-              <p>Like, Love, or Not for me on any sound. A fixed rule set on the device uses those answers to order what surfaces next. Nothing is trained, no weights are fitted, and the answers never leave the phone.</p>
-              <p class="held"><b>Unpublished</b> the ranking rule. Clearing your ratings clears the profile, and there is no listening history to export &mdash; none is kept to begin with.</p>
-            </div>
-          </div>
-
-          <div class="entry">
-            <div class="entry-no">2.5<span>Offline</span></div>
-            <div>
-              <h3>No network, by permission</h3>
-              <p>The build declares no INTERNET permission. The operating system refuses the request before the app can make one. Field recordings and music are inside the install; preferences live in storage excluded from backup and device transfer.</p>
-              <p class="held"><b>Nothing withheld</b> &mdash; there is no server to disclose, subpoena, sunset, or re-price.</p>
-            </div>
-          </div>
-
-          <div class="entry">
-            <div class="entry-no">2.6<span>Surface</span></div>
-            <div>
-              <h3>Black, white, and reachable</h3>
-              <p>The interface is greyscale by default. Start and Stop are the two largest targets. Stop stays reachable inside every panel, including modals. The phone-speaker path asks every time; the app never reroutes behind you.</p>
-              <p class="held"><b>Not a secret</b> &mdash; the controls are the product; there is no hidden layer behind them.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 03 · test rig -->
-  <section class="band" id="rig">
-    <div class="wrap">
-      <div class="grid">
-        <div class="rail">
-          <div class="fig-no">03</div>
-          Test rig
-        </div>
-        <div>
-          <h2 class="sec-title">The engine, running in this page.</h2>
-          <div class="prose">
-            <p>The masking core below is the same C++ the phone runs, compiled to WebAssembly and loaded only when you press the button. Three rooms, one ceiling. The meter is drawn from the engine's own samples, not from an animation.</p>
-          </div>
-
-          <div class="bench-grid" style="margin-top:var(--s4)">
-            <div>
-              <table class="spec">
-                <caption>Table 2 &mdash; test conditions</caption>
-                <tbody>
-                  <tr><th>Engine</th><td>acoustic_dsp &middot; C++17</td></tr>
-                  <tr><th>Target</th><td>wasm32 &middot; Emscripten 3.1.74</td></tr>
-                  <tr><th>Payload</th><td>95 KB &middot; on demand</td></tr>
-                  <tr><th>Render</th><td>8 s &middot; 48 kHz &middot; stereo</td></tr>
-                  <tr><th>Capture</th><td>none &middot; page has no mic</td></tr>
-                  <tr><th>Upload</th><td>none</td></tr>
-                  <tr><th>Storage</th><td>none</td></tr>
-                </tbody>
-              </table>
-              <p class="fig-cap" style="margin-top:var(--s4)"><b>Note.</b> The rig demonstrates shaping, not benefit. Whether it helps you is measured on the phone, with your ears, not by a button in a browser.</p>
-            </div>
-
-            <div class="rig">
-              <div class="rig-bar">
-                <span class="dot" id="dot1"></span>
-                <span class="dot" id="dot2"></span>
-                <span class="dot" id="dot3"></span>
-                <span id="rigLabel" style="margin-left:auto">standby</span>
-              </div>
-              <div class="rig-body">
-                <div class="rig-row" role="group" aria-label="Room">
-                  <button type="button" data-scene="0" aria-pressed="true">Room</button>
-                  <button type="button" data-scene="1" aria-pressed="false">Caf&eacute;</button>
-                  <button type="button" data-scene="2" aria-pressed="false">Street</button>
-                </div>
-                <canvas id="meter" width="480" height="96" aria-hidden="true"></canvas>
-                <table class="rig-read">
-                  <thead><tr><th scope="col">Channel</th><th scope="col">Value</th></tr></thead>
-                  <tbody>
-                    <tr><td>Engine size</td><td><span id="roSize">&mdash;</span></td></tr>
-                    <tr><td>Bands live</td><td><span id="roBands">&mdash;</span></td></tr>
-                    <tr><td>Peak sample</td><td><span id="roPeak">&mdash;</span></td></tr>
-                    <tr><td>Render time</td><td><span id="roMs">&mdash;</span></td></tr>
-                  </tbody>
-                </table>
-                <div class="rig-foot">
-                  <button id="runEngine" type="button">Run engine</button>
-                  <span id="benchStatus" role="status">standby</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 04 · plates -->
-  <section class="band" id="plates">
-    <div class="wrap">
-      <div class="grid">
-        <div class="rail">
-          <div class="fig-no">04</div>
-          Plates
-        </div>
-        <div>
-          <h2 class="sec-title">Three screens, unretouched.</h2>
-          <div class="prose">
-            <p>Captured from a connected phone running the disposable validation build at fresh defaults, cropped to the frame, and scaled down. Nothing in these images has been redrawn.</p>
-          </div>
-
-          <div class="plates" style="margin-top:var(--s5)">
-            <figure class="plate">
-              <img src="assets/screenshots/now.png" alt="The Now screen: current sound, Fixed and Auto, transport controls, volume" loading="lazy" width="720" height="1447">
-              <figcaption><b>Plate 1.</b> Now. Three decisions and a thumb. Microphone off until asked.</figcaption>
-            </figure>
-            <figure class="plate">
-              <img src="assets/screenshots/sounds.png" alt="Sounds screen: searchable library of field recordings and music" loading="lazy" width="720" height="1447">
-              <figcaption><b>Plate 2.</b> Sounds. A shelf, not a feed. Credits ship inside the app.</figcaption>
-            </figure>
-            <figure class="plate">
-              <img src="assets/screenshots/settings.png" alt="Settings screen in greyscale: appearance, volume limit, daily use" loading="lazy" width="720" height="1447">
-              <figcaption><b>Plate 3.</b> Settings. No wizard, no upsell, no account wall.</figcaption>
-            </figure>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 05 · request -->
-  <section class="band" id="request">
-    <div class="wrap">
-      <div class="grid">
-        <div class="rail">
-          <div class="fig-no">05</div>
-          Request
-        </div>
-        <div>
-          <div class="request">
-            <h2>Coming soon to Google&nbsp;Play.</h2>
-            <div class="request-grid">
-              <div>
-                <p>Until the store listing goes live, the build exists and can be sent to you directly. Email with the subject <b>Acoustic try-out</b>, and include your phone model and Android version. You will get the current APK and a plain list of what works and what does not.</p>
-                <p style="margin-bottom:0">
-                  <a class="btn" href="mailto:sakshamloonker@gmail.com?subject=Acoustic%20try-out&amp;body=Phone%3A%20%0AAndroid%3A%20%0A"><span class="ar">&rarr;</span> sakshamloonker@gmail.com</a>
-                </p>
-              </div>
-              <table class="spec">
-                <caption>Table 3 &mdash; request details</caption>
-                <tbody>
-                  <tr><th>Store</th><td>Google Play <span>&mdash; pending</span></td></tr>
-                  <tr><th>Build channel</th><td>direct email</td></tr>
-                  <tr><th>Cost</th><td>none</td></tr>
-                  <tr><th>Account</th><td>none required</td></tr>
-                  <tr><th>Source</th><td><a href="https://github.com/saksham-loonker/Acoustic" rel="noopener" style="border-bottom:1px solid currentColor">public</a></td></tr>
-                </tbody>
-              </table>
-            </div>
-            <p class="fine">Android 10 or newer. arm64-v8a and x86_64. No INTERNET permission, so there is nothing to opt out of. Builds are sent when they are ready, with notes, not on a schedule.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 06 · questions -->
+  <!-- faq -->
   <section class="band" id="questions">
     <div class="wrap">
-      <div class="grid">
-        <div class="rail">
-          <div class="fig-no">06</div>
-          Questions
-        </div>
-        <div>
-          <h2 class="sec-title">Asked before, answered plainly.</h2>
-          <div class="qa" style="margin-top:var(--s4)">
-            <details>
-              <summary><span><span class="q">Q1</span>Is it really going to Google Play?</span><span class="pm" aria-hidden="true"></span></summary>
-              <p>That is the plan, and Play will be the only store carrying it. There is no waitlist to join and no pre-order. When the build is ready this page and the listing will both say so. Until then, email for the engineering build.</p>
-            </details>
-            <details>
-              <summary><span><span class="q">Q2</span>Does it need a connection?</span><span class="pm" aria-hidden="true"></span></summary>
-              <p>No. The manifest declares no INTERNET permission, and the engine, library and preferences are all on the device. It works in a basement, on a plane, and after the router dies.</p>
-            </details>
-            <details>
-              <summary><span><span class="q">Q3</span>Is this a medical device?</span><span class="pm" aria-hidden="true"></span></summary>
-              <p>No. It is a comfort tool for noisy rooms. It is not hearing protection, not treatment, and not a diagnostic. It cannot promise you will hear less of a specific sound, and it does not try to.</p>
-            </details>
-            <details>
-              <summary><span><span class="q">Q4</span>What does Auto actually measure?</span><span class="pm" aria-hidden="true"></span></summary>
-              <p>The level and rough spectral shape of the room, in short windows, for as long as a session is running. It is a phone on a desk, not a probe at your ear, which is why the app calls the result provisional instead of calling it cancellation.</p>
-            </details>
-            <details>
-              <summary><span><span class="q">Q5</span>Can I read the code?</span><span class="pm" aria-hidden="true"></span></summary>
-              <p>Yes. The repository is public, including the native DSP and the build scripts. What is not in the repository is the tuning that maps room evidence to band energy, and this page does not describe it.</p>
-            </details>
-          </div>
-        </div>
+      <div class="sec-head">
+        <p class="eyebrow">Questions</p>
+        <h2>Asked before. Answered straight.</h2>
+      </div>
+      <div class="qa">
+        <details>
+          <summary><span>Is it really coming to Google Play?</span><span class="pm" aria-hidden="true">+</span></summary>
+          <p>That is the plan, and Play will be the only store. No waitlist, no pre-order, no founder's edition. When the build is ready, this page and the listing will both say so. Until then, email me and I will send it to you directly.</p>
+        </details>
+        <details>
+          <summary><span>Does it need a connection?</span><span class="pm" aria-hidden="true">+</span></summary>
+          <p>No. The manifest declares no INTERNET permission, and the operating system refuses the request before the app can even try. The engine, the library and your preferences all live on the device. It works in a basement, on a plane, and after the router dies.</p>
+        </details>
+        <details>
+          <summary><span>Is this a medical device?</span><span class="pm" aria-hidden="true">+</span></summary>
+          <p>No. It is a comfort tool for noisy rooms. It is not hearing protection, not treatment, and not a diagnostic — and it cannot promise to erase a specific sound, so it doesn't try.</p>
+        </details>
+        <details>
+          <summary><span>What does Auto actually measure?</span><span class="pm" aria-hidden="true">+</span></summary>
+          <p>The level and rough spectral shape of the room, in short windows, only while a session you started is running. A phone on a desk is not a probe at your ear — which is why the app calls the result provisional, not cancellation.</p>
+        </details>
+        <details>
+          <summary><span>Can I read the code?</span><span class="pm" aria-hidden="true">+</span></summary>
+          <p>Yes — the repository is public, native DSP and build scripts included. What is not public is the tuning that maps room evidence to band energy. This page doesn't pretend otherwise.</p>
+        </details>
       </div>
     </div>
   </section>
 
-  <!-- footnotes -->
-  <section class="band">
-    <div class="wrap">
-      <div class="grid">
-        <div class="rail"><div class="fig-no">&mdash;</div> Notes</div>
-        <div>
-          <div class="footnotes">
-            <p class="label" style="margin-bottom:10px">Notes to this sheet</p>
-            <ol>
-              <li><b>Relative, not absolute.</b> Every level in the app is a percentage of a ceiling you set. It is not dB SPL and is not calibrated.</li>
-              <li><b>Provisional.</b> Auto shapes what the phone plays. It does not cancel sound at your ear, and the app says so in the interface.</li>
-              <li><b>Counts as shipped.</b> 59 field recordings and 17 music works, all CC0 or public domain, all bundled. Credits are listed inside the app.</li>
-              <li><b>Verification.</b> The WebAssembly rig is compiled from <span style="font-family:var(--mono)">audio/src/dsp.cpp</span> and <span style="font-family:var(--mono)">library.cpp</span>. Rebuild with <span style="font-family:var(--mono)">engine/build-wasm.ps1</span>; smoke-test with <span style="font-family:var(--mono)">engine-smoke.mjs</span>.</li>
-            </ol>
-
-            <div style="margin-top:var(--s5)">
-              <p class="label" style="margin-bottom:10px">Revision history</p>
-              <table class="rev">
-                <thead><tr><th>Rev</th><th>Date</th><th>Change</th></tr></thead>
-                <tbody>
-                  <tr><td>0.23.0</td><td>2026-11-14</td><td>Datasheet layout; engine rig wired to shipping DSP</td></tr>
-                  <tr><td>&mdash;</td><td>2026-11-13</td><td>First public sheet</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <!-- final cta -->
+  <section class="cta-band" id="get">
+    <p class="eyebrow" style="color:#D89A6B">Coming soon</p>
+    <h2>Coming soon to <em>Google Play.</em></h2>
+    <p>Until the listing goes live, the build exists — and it can be sent straight to you. Email with the subject <b style="color:#FBF6EA">Acoustic try-out</b>, tell me your phone model and Android version, and you will get the app with notes on what works and what doesn't.</p>
+    <a class="btn btn-solid" href="mailto:sakshamloonker@gmail.com?subject=Acoustic%20try-out&amp;body=Phone%3A%20%0AAndroid%3A%20%0A">Email for the build <span aria-hidden="true">&rarr;</span></a>
+    <p class="fine">Free, forever. Android 10+. arm64-v8a and x86_64. No INTERNET permission, so there is nothing to opt out of — and nothing to sneak past you.</p>
   </section>
 
 </main>
 
 <footer class="colophon">
-  <div class="wrap col-grid">
-    <div>
-      <p><b>Acoustic</b> is made by Saksham Loonker. One person, no funding, no growth team. The mark was drawn once and left alone; the code keeps moving.</p>
-      <p>Set in the system's own Palatino-class serif and grotesque. No webfonts, no trackers, no cookies, no analytics, no third-party requests. This page is one HTML file, two small scripts and one stylesheet.</p>
-      <p>Acoustic is a comfort tool. Not a medical device. Not hearing protection. Not noise cancellation.</p>
-      <p class="sig" style="margin-top:var(--s4)">
-        <a href="https://github.com/saksham-loonker/Acoustic" rel="noopener">Source</a> &middot;
-        <a href="https://github.com/saksham-loonker/Acoustic-Website" rel="noopener">This page</a> &middot;
-        <a href="https://github.com/saksham-loonker/Acoustic-Website/blob/main/RESEARCH.md" rel="noopener">Research notes</a>
-      </p>
+  <div class="wrap">
+    <div class="col-grid">
+      <div>
+        <a class="brand" href="#top" style="text-decoration:none; color:var(--ink)">
+          <img src="assets/logo-mark.png" alt="" width="40" height="40">
+          <span class="brand-word">Acoustic</span>
+        </a>
+        <p style="margin-top:14px">A quieter room for noisy places. Made by <b>Saksham Loonker</b> — one person, no funding, no ads to sell. The code is public; the sound is honest; the page is hand-built.</p>
+      </div>
+      <div>
+        <p class="col-head">Explore</p>
+        <ul>
+          <li><a href="https://github.com/saksham-loonker/Acoustic" rel="noopener">Source code</a></li>
+          <li><a href="https://github.com/saksham-loonker/Acoustic-Website" rel="noopener">This page</a></li>
+          <li><a href="https://github.com/saksham-loonker/Acoustic-Website/blob/main/RESEARCH.md" rel="noopener">Research notes</a></li>
+          <li><a href="#rig">Hear the engine</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="col-head">Write to me</p>
+        <ul>
+          <li><a href="mailto:sakshamloonker@gmail.com">sakshamloonker@gmail.com</a></li>
+        </ul>
+        <p style="margin-top:10px; font-size:.88rem">I read every email myself. Plain questions get plain answers.</p>
+      </div>
     </div>
-    <div class="sig">
-      Contact<br>
-      <a href="mailto:sakshamloonker@gmail.com">sakshamloonker@gmail.com</a><br><br>
-      &copy; 2026 Saksham Loonker<br>
-      Sheet 1 of 1 &middot; rev 0.23.0<br>
-      Set 14 Nov 2026<br>
+    <div class="sig-line">
+      <span>&copy; 2026 Saksham Loonker &middot; v0.23.0 &middot; Set 14 Nov 2026</span>
+      <span>Fraunces (Undercase Type) &amp; Atkinson Hyperlegible (Braille Institute), both OFL &middot; No trackers, no cookies, no third-party requests</span>
+      <span>Acoustic is a comfort tool. Not hearing protection. Not noise cancellation.</span>
     </div>
   </div>
 </footer>
@@ -409,3 +343,7 @@
 <script src="bench.js" defer></script>
 </body>
 </html>
+
+
+
+
