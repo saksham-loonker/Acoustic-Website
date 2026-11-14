@@ -50,6 +50,9 @@
     let w = 0, h = 0, dpr = 1;
     let dots = [];
 
+    // Calmer by request: the scene is composed once, never animated.
+    const STILL = true;
+
     const resize = () => {
       dpr = Math.min(2, window.devicePixelRatio || 1);
       w = heroCanvas.clientWidth;
@@ -75,8 +78,8 @@
 
       // one soft radial wash so the ember reads behind the wordmark
       const wash = ctx.createRadialGradient(w / 2, h * 0.78, 20, w / 2, h * 0.78, w * 0.7);
-      wash.addColorStop(0, "rgba(0,240,255,0.5)");
-      wash.addColorStop(0.5, "rgba(0,240,255,0.16)");
+      wash.addColorStop(0, "rgba(0,240,255,0.16)");
+      wash.addColorStop(0.5, "rgba(0,240,255,0.05)");
       wash.addColorStop(1, "rgba(0,240,255,0)");
       ctx.fillStyle = wash;
       ctx.fillRect(0, 0, w, h);
@@ -84,14 +87,14 @@
       // the eight bands as breathing light columns
       for (let i = 0; i < BAND_COUNT; i++) {
         const speed = 0.00032 + i * 0.00004;
-        const breath = 0.5 + 0.5 * Math.sin(t * speed * 1000 + i * 0.9);
-        const wave = Math.pow(Math.sin((i + 1) * 0.72 + t * 0.00035), 2);
-        const amp = h * (0.08 + 0.34 * (0.35 + 0.65 * breath) * (0.55 + 0.45 * wave));
+        const breath = [0.82, 0.62, 0.44, 0.34, 0.3, 0.24, 0.18, 0.14][i];
+        const wave = [1, 0.86, 0.74, 0.66, 0.6, 0.55, 0.5, 0.46][i];
+        const amp = h * (0.12 + 0.3 * breath * wave);
         const x = i * bandW;
         const grad = ctx.createLinearGradient(0, baseY - amp, 0, baseY);
         grad.addColorStop(0, "rgba(0,240,255,0)");
-        grad.addColorStop(0.5, "rgba(0,240,255," + (0.45 + 0.24 * breath).toFixed(3) + ")");
-        grad.addColorStop(1, "rgba(0,240,255," + (0.7 + 0.3 * breath).toFixed(3) + ")");
+        grad.addColorStop(0.5, "rgba(0,240,255," + (0.13 + 0.07 * breath).toFixed(3) + ")");
+        grad.addColorStop(1, "rgba(0,240,255," + (0.22 + 0.12 * breath).toFixed(3) + ")");
         ctx.fillStyle = grad;
         ctx.fillRect(x + bandW * 0.18, baseY - amp, bandW * 0.64, amp);
       }
@@ -103,28 +106,29 @@
       ctx.moveTo(0, baseY + 0.5);
       ctx.lineTo(w, baseY + 0.5);
       ctx.stroke();
-      ctx.fillStyle = "rgba(0,240,255,0.55)";
-      ctx.font = '10px "JetBrains Mono", monospace';
-      ctx.textAlign = "left";
-      ctx.fillText("EIGHT BANDS, BREATHING", 24, baseY + 20);
-      ctx.textAlign = "right";
-      ctx.fillText("80 HZ → 7.8 KHZ", w - 24, baseY + 18);
+      if (w >= 700) {
+        ctx.fillStyle = "rgba(0,240,255,0.45)";
+        ctx.font = '10px "JetBrains Mono", monospace';
+        ctx.textAlign = "left";
+        ctx.fillText("EIGHT BANDS, BREATHING", 24, baseY + 20);
+        ctx.textAlign = "right";
+        ctx.fillText("80 HZ → 7.8 KHZ", w - 24, baseY + 18);
+      }
 
       // a slow field of dust-like points
       for (const d of dots) {
-        const drift = Math.sin(t * 0.0004 + d.phase) * 5;
-        ctx.fillStyle = "rgba(233,233,234," + (0.10 + 0.07 * (0.5 + 0.5 * Math.sin(d.phase * 3 + t * 0.0006))).toFixed(3) + ")";
+        ctx.fillStyle = "rgba(233,233,234,0.07)";
         ctx.beginPath();
-        ctx.arc(d.x + drift, d.y, 1.1, 0, Math.PI * 2);
+        ctx.arc(d.x, d.y, 1.1, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      if (!calm) requestAnimationFrame(frame);
+      if (!STILL && !calm) requestAnimationFrame(frame);
     };
 
     resize();
-    window.addEventListener("resize", resize, { passive: true });
-    if (calm) frame(0); else requestAnimationFrame(frame);
+    window.addEventListener("resize", () => { resize(); frame(0); }, { passive: true });
+    frame(0); // compose the single still frame; never animate
   }
 
   /* ---------- the UTC clock in the running head ---------- */
@@ -138,9 +142,6 @@
         String(d.getUTCSeconds()).padStart(2, "0") + " UTC";
     };
     tick();
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setInterval(tick, 1000);
-    }
   }
 
   /* ---------- the contents rail: which spread is open ---------- */

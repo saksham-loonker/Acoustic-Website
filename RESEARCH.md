@@ -422,6 +422,38 @@ The maker's instruction, after seeing "Engine could not load (Failed to fetch)" 
 
 **Honest ledger.** The page lost its one live audio demo. Visitors can no longer hear the engine shape noise in the browser. That trade was explicitly requested. The remaining page still says what the app does, what it is not, and lets the two drawings make one point each: ceilings clip flat, bands tilt slopes. No verification of the engine's live behaviour is claimed anywhere on the page any more, because nothing on the page can produce it.
 
+## 21. The calm pass (2026-11-14)
+
+The maker, looking at the dark dossier hero: "Also the top part is very distracting, any neurodivergent person might suffer from it. Reduce the intensity and make it calmer and more attractive."
+
+Sensory load audit of the page, item by item, and what was done:
+
+**Visual glare**
+- `--ink` lowered from `#e9e9ea` to `#d8d5cd` (soft warm off-white on near-black; still ≈13:1).
+- `.hero-title` dropped from 15vw to 12.5vw, weight kept at 100 but colour moved to `#c9c6be`, letter-spacing widened, shadow removed entirely.
+- The kicker `SOUND MASKING FOR ANDROID · IN TESTING` moved from full `#00f0ff` to muted sage `#6f8f94`.
+- `.vignette` softened from .42 to .22 edge opacity; centre 58% → 62% transparent.
+- `--faint` was already lifted to `#6f6f76` in the previous pass; unchanged.
+
+**Motion — all of it deleted, not merely gated**
+- The hero canvas no longer breathes: the scene is composed once, never animated, at any time of day, regardless of motion preference. Alphas dropped across the board (wash .5→.16, bars .45/.7→.13/.22, dots .10/.17→.05, horizon .8→.35, canvas overall opacity .8→.32). Static column heights replace live trig.
+- `grainShift`, `cueDrop` (scroll-cue drop), `pulse` (footer badge) keyframes deleted; both remaining animation declarations are gone — **there are zero CSS animations and zero `@keyframes` in the stylesheet.**
+- The footer marquee no longer scrolls: it is one centred, static line of text.
+- The running-head UTC clock no longer ticks every second: it renders once at load (still honest, still labelled UTC, no fixation point).
+- The only per-frame work left on the page is the custom cursor lerp — the element the maker explicitly asked to keep.
+
+**What was deliberately not made calm**
+- The layout, the typefaces, the palette and the dark scheme stay. Calm is an intensity dial, not a revert.
+- The primary CTA keeps the highest contrast role on the fold (an ink-filled button) because a calmer page is still one that asks for the build once.
+- Per-section animations (rail glow on scroll, chip presses, hover transitions) remain user-initiated or on-release, amplitude-limited, and none auto-run.
+
+**Verification run this session.**
+- `node --check site.js`: pass. HTML parse clean. 0 U+FFFD.
+- `sweep-fast.mjs`: 0 px overflow at 360–1600 px.
+- Fold screenshot re-shot and reviewed: the hero is now a quiet near-black field with thin dimmer type, a muted kicker, four low teal columns, no flicker, no pulse, no ticker. Mobile fold reviewed as well; in-canvas captions hidden below 700 px so they never sit under the CTAs.
+
+**Note for the maker:** if "calmer" for your audience means "less of the dark theme and more of the warm paper," that is a one-commit revert of the dossier pass, and the file history knows how to do it. What shipped today is the calmest version of the dark dossier that still shipped with your requested scheme.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.
