@@ -9,7 +9,7 @@ The website for Acoustic — an offline Android sound-masking instrument for noi
 - `RESEARCH.md` — the real research log behind "human, not vibe-coded": sources actually fetched (AI-slop and vibe-coding literature, Willison's slop definition, NN/g's AI-era stance, the backlash meme), two research waves, the anti-slop critiques, the v3 datasheet mistake, findings, and what was applied or refused — plus an honest list of search engines that were bot-walled.
 - `index.html` / `styles.css` — the single-page site: a dark "field dossier" product page set in Inter (100–400) and JetBrains Mono (100–400), both self-hosted from `assets/fonts/` (SIL OFL; Inter and JetBrains Mono licences alongside Fraunces/Atkinson's `OFL.txt`). No third-party fonts, no trackers, no cookies, no analytics.
 - `site.js` — the round cursor (cream dot, terracotta ring; precise pointers and no-reduced-motion only), the animated hero canvas (eight breathing band columns, static under reduced motion), the UTC clock in the running head, Fig. 1 (the shipped eight-band layout, band edges from `audio/include/acoustic/dsp.h`), the ten-blend shelf (the app's own recipe table, with per-source amounts from the bundled library manifest), the shelf index, the QA ledger and the two rig practice benches (both drawings).
-- `bench.js` — **the listening bench**: loads the app's mask-shaping DSP core compiled to WebAssembly on first press, renders deterministic audio from the real engine, and plays it. If the engine cannot load, it synthesises and plays a plain Web Audio approximation of the same three shapes and says exactly that (`playing · page approximation — not the app engine`), with the underlying error shown inline. ~95 KB, fetched only on demand, nothing stored.
+- No listening bench. The WebAssembly live-demo was removed from the page at the maker's request after it failed to fetch on real machines; nothing on the page attempts any fetch now. The app's engine remains in `assets/engine.*` and `engine/` for `engine-smoke.mjs` (local smoke test) only.
 - `engine/` — provenance and the rebuild script (`acoustic-wasm.cpp`, `build-wasm.ps1`). The wrapper compiles **only** `audio/src/dsp.cpp` and `audio/src/library.cpp` from the Acoustic repository. No Android code, no microphone, no preferences, no network.
 - `assets/` — logo artwork derived from the finalised `Acoustic.png`, the compiled engine (`engine.js` + `engine.wasm`), social image and cropped, real screenshots from the connected phone (`assets/screenshots/`).
 - `engine-smoke.mjs` — Node smoke test used to verify the engine output headlessly (render all three scenes, print peak/acknowledged layers).
@@ -20,7 +20,7 @@ The website for Acoustic — an offline Android sound-masking instrument for noi
 python -m http.server 8080
 ```
 
-Open http://localhost:8080. The bench downloads its engine on first press; keep the network or the files local.
+Open http://localhost:8080. Everything the page ships is static; there is nothing to download interactively.
 
 ## Deploy
 

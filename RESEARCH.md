@@ -399,6 +399,29 @@ The maker reported the rig failing in their environment: pressing Play produced 
 
 **Still unverified:** what specifically failed for the maker. I could not reproduce the failure here (headless Edge loads the engine fine), so the diagnosis is inference from their symptom, not certainty. The fallback text now shows the raw reason, which is the part I needed from them anyway.
 
+## 20. The listening bench is removed (2026-11-14)
+
+The maker's instruction, after seeing "Engine could not load (Failed to fetch)" persist across two redesign rounds and one fallback: "instead remove it."
+
+**What was kept and why.** The two practice benches — the ceiling transfer curve and the eight-band tilt — are pure drawings off the shipped band edges and the documented ceiling behaviour. They have no fetch, no Wasm, no audio, and cannot fail. They remain under "Two honest benches. No install, no engine."
+
+**What was removed.**
+- The entire live-engine panel: the warm/even/bright buttons, the Play/Stop control, the meter canvas, the readout table, the "rig" dark instrument frame, `#rigWhy`, and its scripts.
+- `bench.js` and the `<script src="bench.js">` tag. The engine itself stays in `assets/engine.js` / `assets/engine.wasm` only as provenance for the local `engine-smoke.mjs` check (it still renders all three scenes and passes).
+- All calls to action read "Two honest benches" / "The benches" instead of "Hear it"; the rail, the footer and the hero CTA follow.
+- The section now opens with the reason, honestly: the demo needed your browser to fetch 95 KB of WebAssembly on demand, and too many real machines couldn't.
+
+**What I did not do.** I did not quietly hide the failure or strip the error text while keeping a hollow rig. The thing that failed is gone; the page no longer offers an interaction whose main effect on a failing browser is an orange error.
+
+**Verification run this session (host render only).**
+- HTML parse clean; `node --check site.js` clean; `engine-smoke.mjs` exit 0 (engine provenance still verified locally; it no longer ships to the page).
+- `verify-v5.mjs`-equivalent (FIG draws, 0 px mobile overflow, 0 console/page errors) re-checked via `verify-rig`-free path: all remaining widgets green (shelf, picker jump, blends, spectrum, QA ledger, ceiling curve, tilt).
+- `sweep-fast.mjs`: 0 px overflow at 360–1600 px.
+- Forbidden-claim scan: negations only; nothing about heating, outcomes or devices is implied by the two drawings beyond their captions.
+- Stale references pruned: no `runEngine`, `benchStatus`, `rigWhy`, `rig-row`, `.rig-bar`, `bench.js`, or "Hear it/engine" strings remain in `index.html`; the old rig CSS was deleted, not commented out.
+
+**Honest ledger.** The page lost its one live audio demo. Visitors can no longer hear the engine shape noise in the browser. That trade was explicitly requested. The remaining page still says what the app does, what it is not, and lets the two drawings make one point each: ceilings clip flat, bands tilt slopes. No verification of the engine's live behaviour is claimed anywhere on the page any more, because nothing on the page can produce it.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.
