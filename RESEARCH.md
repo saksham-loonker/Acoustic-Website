@@ -129,6 +129,35 @@ The same day, the maker asked for more: keep adding until the page is overloaded
 Claims scan re-run: no dBA/ANC/medical/outcome wording anywhere except negations and disclaimers; zero GitHub/source links remain.
 
 
+## 10. Round three — the ten blends, and two honest practice benches (2026-11-14)
+
+The maker asked for more: keep adding until the page is overloaded, and make it feel made by a person. This pass adds three things, all drawn from the shipping app rather than invented.
+
+**Source of the new facts.** Every number in this section comes from the instrument's own files, read this session:
+- `app/src/main/java/org/acoustic/app/storage/BundledDefaults.kt` → the `natural_library.recipes` table (10 entries), `sound_matching.presets` (31 presets), `consumer_controls`, `daily_use`, `library` (transition/fade/mix limits), `analysis` (FFT 1024, hop 184, window 736, 16 kHz analysis rate, 250 ms raw-audio budget), `spectral_response` (16 default engine bands, 32 maximum).
+- `app/src/main/assets/library/manifest.json` → 76 assets, 59 ambience + 17 music, all `CC0-1.0`, all Ogg/Opus 48 kHz stereo, all `rights_review: pass`, all `production_approved: false` (that flag is the app's release gate, not a statement about the website).
+- `app/src/main/assets/library/CREDITS.txt` and `licenses/` → the credit and licence files ship inside the app.
+- The ten recipe titles and the two-source amounts in the new "Ten blends" section are the recipe table verbatim; the source names and durations behind each id come from the manifest.
+
+**Added.**
+- **"The ten blends"** — a working shelf of the app's own two-source recipes. Ten tabs; each shows both sources by name, family, duration and licence, plus the exact mix amounts the app uses, drawn as bars from those numbers. Nine are bed-plus-accent (85/15, 25/75, 80/20, 85/15, 90/10, 92/8, 80/20, 85/15) and two are single-source (Quiet hearth, Fridge focus). The panel says plainly that the bars are a recipe, not a measurement of any room.
+- **Two practice benches in the rig** — both are drawings, both labelled as such, neither plays sound: a ceiling transfer curve (drag the ceiling, watch the flat top the phone refuses to cross) and an eight-band tilt (a slope across the shipped edges, described as a sketch of what you would ask the engine for, with "the app does this with eight bands, not a free EQ curve").
+- Nav and footer links to the new section.
+
+**Refused / not done.** Still no desk photo and no real first-person incident — those need the maker's own material, and nothing was invented to fill the slots. No dBA, no ANC, no medical or outcome wording was added anywhere; the new copy talks about amounts, shapes and edges, which are all checkable in the app.
+
+**Found and fixed while verifying (a real bug, not new scope).** At 320 px the page overflowed horizontally by 23 px. Cause: `.hero-copy` is a grid item with default `min-width: auto`, so a long unbreakable word (the headline's `A&nbsp;quieter`) forced the column wider than the viewport. Fixed by `minmax(0,…)` tracks on the collapsing grids and `min-width: 0` on `.compat-card` / `.compat-form`, which also removed a 23 px overflow inside the compatibility card. This was pre-existing, not introduced by this pass.
+
+**Verification run this session (host-render only; no phone, no listening, no outcome evidence).**
+- `node --check site.js`, `node --check bench.js`, `node --check engine-smoke.mjs`: pass.
+- `node engine-smoke.mjs`: exit 0 — scene 0 peak 0.073 / scene 1 peak 0.077 / scene 2 peak 0.075, all three scenes return rc=0, eight applied layers each.
+- Python tag-balance parse of `index.html`: 0 unclosed, 0 mismatches. 0 U+FFFD in `index.html` and `RESEARCH.md`.
+- `verify-v5.mjs` against the working tree: FIG canvas 54,010-byte data URL; rig `playing · ceiling held at 0.30`, `8 / 8 · max 0.20`, peak 0.069; Café→Street switch `8 / 8 · max 0.22`; mobile (390 px) overflow 0 px; 0 console/page errors.
+- `verify-v6.mjs` / `verify-v7.mjs` (new, in the temp dir): all ten blend tabs render with the right amounts and no clipping; single-source entries collapse to one bar and say so; ceiling slider moves 60 % → 25 % and the copy follows; tilt at even / +80 / −80 changes both the drawing and the sentence; rig Stop button reachable in a 900 px viewport; keyboard focus lands on a blend tab with a 3 px outline; 820 px and 320 px both at 0 px overflow after the fix.
+- `audit-v4.mjs`: 2 text families + system mono, body contrast 14.41:1 against `#F7F3EB`, 3 near-neutral greys, 7 shadow roles, radii distributed across 999px / 22px / 14px / 16px / 50% / 6px.
+
+**What I could not verify.** I cannot view images in this session, so the screenshots (`v6-blends.png`, `v6-rig.png`, `v6-mobile-blends.png`, `v6-mobile-rig.png`) were produced but not eyeballed; I substituted measured geometry, clipping and overflow checks. Those files are for the maker to look at.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.

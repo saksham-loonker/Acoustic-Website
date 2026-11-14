@@ -113,6 +113,301 @@
     });
   }
 
+/* ---------- the ten blends (the app's own recipe table) ---------- */
+  const BLEND_ASSETS = {
+    "bsb-3222": ["Mountain Stream #7", "water", "120 s"],
+    "bsb-0904": ["Wind in the Trees", "foliage", "120 s"],
+    "bsb-2135": ["Cave atmosphere", "cave", "60 s"],
+    "bsb-0030": ["Fireplace #1", "fire", "62 s"],
+    "bsb-0907": ["Wind in shrub", "foliage", "120 s"],
+    "nature-stream": ["Flowing woodland stream", "water", "60 s"],
+    "nature-birds": ["Woodland birdsong", "birds", "60 s"],
+    "bsb-0698": ["Sea Waves", "shore", "120 s"],
+    "nature-whale": ["Humpback whale song", "ocean-life", "38 s"],
+    "bsb-1445": ["Waves among small rocks", "water", "90 s"],
+    "bsb-2857": ["Quiet hearth", "fire", "45 s"],
+    "bsb-2713": ["Forest brook with blackbirds", "forest", "90 s"],
+    "bsb-1046": ["Ocean from the shore", "water", "90 s"],
+    "bsb-0905": ["At the woodland edge", "forest", "90 s"],
+    "bsb-1157": ["Fridge", "mechanism", "36 s"],
+  };
+  const BLENDS = [
+    ["Mountain refuge", 0.85, 0.15, "bsb-3222", "bsb-0904"],
+    ["Cave and stream", 0.25, 0.75, "bsb-2135", "bsb-3222"],
+    ["Soft fireside", 0.8, 0.2, "bsb-0030", "bsb-0907"],
+    ["Stream with woodland birds", 0.85, 0.15, "nature-stream", "nature-birds"],
+    ["Ocean with distant whales", 0.9, 0.1, "bsb-0698", "nature-whale"],
+    ["Rocky coast", 0.92, 0.08, "bsb-1445", "nature-whale"],
+    ["Woodland brook", 0.8, 0.2, "nature-stream", "bsb-2713"],
+    ["Woodland edge", 0.85, 0.15, "bsb-1046", "bsb-0905"],
+    ["Quiet hearth", 1.0, 0.0, "bsb-2857", null],
+    ["Fridge focus", 1.0, 0.0, "bsb-1157", null],
+  ];
+
+  const blendList = document.getElementById("blendGrid") && document.getElementById("blendGrid").querySelector(".blend-list");
+  const blendDetail = document.getElementById("blendDetail");
+  if (blendList && blendDetail) {
+    const pct = (v) => Math.round(v * 100) + "%";
+    const row = (id, amount, accent) => {
+      const a = BLEND_ASSETS[id];
+      if (!a) return "";
+      return (
+        '<div class="blend-amt' + (accent ? " accent" : "") + '">' +
+          '<div class="blend-amt-top"><span><b>' + a[0] + "</b> " +
+            '<span class="meta">' + a[1] + " · " + a[2] + " · CC0</span></span>" +
+            '<span class="pct">' + pct(amount) + "</span></div>" +
+          '<div class="blend-bar"><span style="width:' + pct(amount) + '"></span></div>' +
+        "</div>"
+      );
+    };
+    const show = (i) => {
+      const b = BLENDS[i];
+      const sum = b[4]
+        ? "A <b>bed and an accent</b>: the two amounts above are the mix the app ships. The bars are drawn from those two numbers, not from a measurement of your room."
+        : "One recording, no accent — <b>all of it</b>, and nothing else in the mix. The other nine entries blend two sources.";
+      blendDetail.innerHTML =
+        "<h3>" + b[0] + "</h3>" +
+        '<p class="blend-sub">' + (b[4] ? "two sources · fixed amounts" : "one source · no accent") + "</p>" +
+        '<div class="blend-amounts">' + row(b[3], b[1], false) + (b[4] ? row(b[4], b[2], true) : "") + "</div>" +
+        '<p class="blend-sum">' + sum + "</p>";
+      blendList.querySelectorAll(".blend-tab").forEach((t, n) => {
+        t.setAttribute("aria-pressed", String(n === i));
+      });
+    };
+    BLENDS.forEach((b, i) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "blend-tab";
+      btn.innerHTML = '<span class="bt-no">' + String(i + 1).padStart(2, "0") + "</span><span>" + b[0] + "</span>";
+      btn.addEventListener("click", () => show(i));
+      blendList.appendChild(btn);
+    });
+    show(0);
+  }
+
+  /* ---------- the two practice benches ---------- */
+  const cCan = document.getElementById("toolCeiling");
+  const cRead = document.getElementById("ceilRead");
+  if (cCan && cCan.getContext && cRead) {
+    const g = cCan.getContext("2d");
+    const W = cCan.width, H = cCan.height;
+    const P = { t: 22, r: 18, b: 40, l: 54 };
+    const pw = W - P.l - P.r, ph = H - P.t - P.b;
+    const X = (v) => P.l + v * pw;
+    const Y = (v) => P.t + (1 - v) * ph;
+    const mono = (px) => px + 'px ui-monospace, "Cascadia Mono", Consolas, monospace';
+
+    const drawCeiling = (pct) => {
+      const ceiling = pct / 100;
+      g.clearRect(0, 0, W, H);
+
+      // the hard ceiling, drawn as a terracotta wall
+      g.strokeStyle = "rgba(196,85,47,0.85)";
+      g.setLineDash([5, 4]);
+      g.lineWidth = 1.5;
+      g.beginPath();
+      g.moveTo(X(ceiling), Y(0));
+      g.lineTo(X(ceiling), Y(1));
+      g.stroke();
+      g.setLineDash([]);
+
+      // the clipped transfer: unity below the ceiling, flat above it
+      g.beginPath();
+      g.moveTo(X(0), Y(0));
+      for (let px = 0; px <= pw; px += 2) {
+        const v = px / pw;
+        g.lineTo(X(v), Y(Math.min(v, ceiling)));
+      }
+      g.strokeStyle = "#F2E9DB";
+      g.lineWidth = 2.4;
+      g.lineJoin = "round";
+      g.stroke();
+
+      g.lineTo(X(1), Y(0));
+      g.closePath();
+      g.fillStyle = "rgba(242,233,219,0.10)";
+      g.fill();
+
+      // above the line: what never gets through
+      g.fillStyle = "rgba(196,85,47,0.14)";
+      g.fillRect(X(ceiling), Y(1), X(1) - X(ceiling), Y(ceiling) - Y(1));
+
+      // axes
+      g.strokeStyle = "rgba(237,231,220,0.45)";
+      g.lineWidth = 1;
+      g.beginPath();
+      g.moveTo(P.l, Y(0));
+      g.lineTo(P.l + pw, Y(0));
+      g.moveTo(P.l, Y(0));
+      g.lineTo(P.l, Y(1));
+      g.stroke();
+
+      g.font = mono(11);
+      g.fillStyle = "#A79E90";
+      g.textAlign = "center";
+      g.textBaseline = "top";
+      for (let v = 0; v <= 1.0001; v += 0.25) {
+        g.fillText(Math.round(v * 100) + "%", X(v), Y(0) + 10);
+      }
+      g.textAlign = "left";
+      g.fillText("what leaves the phone", P.l - 40, P.t - 12);
+      g.textAlign = "right";
+      g.fillText("what you ask for →", P.l + pw, Y(0) + 26);
+
+      g.fillStyle = "#F0D9BF";
+      g.textAlign = "left";
+      g.textBaseline = "bottom";
+      g.fillText("nothing above " + pct + "%", Math.min(X(ceiling) + 8, P.l + pw - 4), Y(1) + 4);
+    };
+
+    const describe = (pct) => {
+      const note =
+        pct <= 20 ? "whisper territory — the quietest ceiling the app will hold" :
+        pct <= 40 ? "a low ceiling, for a room you already half-trust" :
+        pct <= 70 ? "the everyday range most people land in" :
+        "loud, and the line still holds — the app clamps above it, not the other way round";
+      cRead.innerHTML =
+        "Ceiling at <code>" + pct + "%</code>. Every layer, every automatic move and every queued change is held below the terracotta line — <b>" +
+        note + "</b>. Drag the slider: the flat top is the part of the sound the phone refuses to make.";
+    };
+
+    const range = document.createElement("input");
+    range.type = "range";
+    range.min = "10";
+    range.max = "100";
+    range.step = "5";
+    range.value = "60";
+    range.id = "ceilRange";
+    range.setAttribute("aria-label", "Ceiling, in percent");
+    const out = document.createElement("output");
+    out.setAttribute("for", "ceilRange");
+    const ctl = document.createElement("div");
+    ctl.className = "tool-ctl";
+    const lab = document.createElement("label");
+    lab.setAttribute("for", "ceilRange");
+    lab.textContent = "Ceiling";
+    ctl.appendChild(lab);
+    ctl.appendChild(range);
+    ctl.appendChild(out);
+    cRead.parentNode.insertBefore(ctl, cRead);
+
+    const paint = () => {
+      const v = Number(range.value);
+      out.textContent = v + "%";
+      drawCeiling(v);
+      describe(v);
+    };
+    range.addEventListener("input", paint);
+    paint();
+  }
+
+  const fCan = document.getElementById("toolFader");
+  const tilt = document.getElementById("tilt");
+  const tiltOut = document.getElementById("tiltOut");
+  const fRead = document.getElementById("faderRead");
+  if (fCan && fCan.getContext && tilt && tiltOut && fRead) {
+    const g = fCan.getContext("2d");
+    const W = fCan.width, H = fCan.height;
+    const P = { t: 26, r: 18, b: 44, l: 40 };
+    const pw = W - P.l - P.r, ph = H - P.t - P.b;
+    const EDGES = [80, 160, 315, 630, 1250, 2500, 4000, 6000, 7800];
+    const L0 = Math.log(EDGES[0]);
+    const L1 = Math.log(EDGES[EDGES.length - 1]);
+    const X = (hz) => P.l + ((Math.log(hz) - L0) / (L1 - L0)) * pw;
+    const Y = (db) => P.t + (1 - (db + 12) / 24) * ph;
+    const mono = (px) => px + 'px ui-monospace, "Cascadia Mono", Consolas, monospace';
+
+    const paint = () => {
+      const t = Number(tilt.value);
+      const half = t / 2; // total tilt across the range, in dB
+      g.clearRect(0, 0, W, H);
+
+      // zero line
+      g.strokeStyle = "rgba(237,231,220,0.25)";
+      g.lineWidth = 1;
+      g.setLineDash([4, 4]);
+      g.beginPath();
+      g.moveTo(P.l, Y(0));
+      g.lineTo(P.l + pw, Y(0));
+      g.stroke();
+      g.setLineDash([]);
+
+      // the tilt as a straight ramp across the shipped edges
+      const steps = 240;
+      g.beginPath();
+      for (let i = 0; i <= steps; i++) {
+        const f = i / steps;
+        const hz = Math.exp(L0 + f * (L1 - L0));
+        const db = -half + 2 * half * f;
+        const x = X(hz), y = Y(db);
+        if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
+      }
+      g.strokeStyle = t === 0 ? "#F2E9DB" : (t > 0 ? "#E8B48B" : "#A8C6B2");
+      g.lineWidth = 2.4;
+      g.lineJoin = "round";
+      g.stroke();
+
+      g.lineTo(X(EDGES[EDGES.length - 1]), Y(0));
+      g.lineTo(X(EDGES[0]), Y(0));
+      g.closePath();
+      g.fillStyle = "rgba(242,233,219,0.08)";
+      g.fill();
+
+      // the band numbers, from the same edges the engine ships
+      g.font = mono(10);
+      g.textAlign = "center";
+      g.textBaseline = "top";
+      g.fillStyle = "#8D8478";
+      for (let i = 0; i < EDGES.length - 1; i++) {
+        const mid = Math.sqrt(EDGES[i] * EDGES[i + 1]);
+        g.fillText(String(i + 1), X(mid), P.t + 2);
+      }
+      for (let i = 0; i < EDGES.length; i++) {
+        const x = X(EDGES[i]);
+        g.strokeStyle = "rgba(237,231,220,0.4)";
+        g.lineWidth = 1;
+        g.beginPath();
+        g.moveTo(x, Y(0));
+        g.lineTo(x, Y(0) + 5);
+        g.stroke();
+        g.save();
+        g.translate(x, Y(0) + 8);
+        g.rotate(-Math.PI / 4);
+        g.textAlign = "left";
+        g.textBaseline = "middle";
+        g.fillStyle = "#8D8478";
+        g.font = mono(9);
+        g.fillText(EDGES[i] >= 1000 ? EDGES[i] / 1000 + "k" : String(EDGES[i]), 0, 0);
+        g.restore();
+      }
+
+      g.textAlign = "left";
+      g.textBaseline = "top";
+      g.font = mono(9);
+      g.fillStyle = "#8D8478";
+      g.fillText("+12", 4, P.t - 4);
+      g.fillText("  0", 4, Y(0) - 4);
+      g.fillText("−12", 4, P.t + ph - 10);
+    };
+
+    const describe = () => {
+      const t = Number(tilt.value);
+      const word = t === 0 ? "even" : (t > 0 ? "brighter" : "darker");
+      tiltOut.textContent = word;
+      const note =
+        t === 0 ? "no tilt: the bed is the same everywhere, which is what most people start with" :
+        t > 0 ? "more of the top two octaves, less of the bottom — the classic “thin the rumble, keep the air” shape" :
+        "more weight at the bottom, less at the top — thick, low, and the usual cure for a room that hisses";
+      fRead.innerHTML =
+        "Tilt at <code>" + (t > 0 ? "+" : "") + t + "</code> — <b>" + word + "</b>. This is a sketch of the slope you would ask the engine for, drawn across the eight shipped edges: " +
+        note + ". The app does this with eight bands, not a free EQ curve.";
+    };
+
+    tilt.addEventListener("input", () => { paint(); describe(); });
+    paint();
+    describe();
+  }
+
   /* ---------- Fig. 1: the shipped eight-band layout ---------- */
   const canvas = document.getElementById("figBands");
   if (!canvas || !canvas.getContext) return;

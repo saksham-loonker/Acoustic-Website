@@ -37,6 +37,7 @@
     </a>
     <nav class="nav-links" aria-label="Sections">
       <a href="#how">How it works</a>
+      <a href="#blends">The blends</a>
       <a href="#app">The app</a>
       <a href="#team">The team</a>
       <a href="#questions">Questions</a>
@@ -279,7 +280,32 @@
           </div>
         </div>
       </div>
-      <p style="color:#8D8478; font-size:.85rem; margin-top:var(--sp-4); max-width:46rem">A straight word: the rig demonstrates <em>shaping</em>, not benefit. Whether Acoustic helps you is measured on your phone, with your ears — not by a button in a browser, and never promised here.</p>
+      <div class="tools-grid" id="toolsGrid">
+        <article class="tool" data-tool="ceiling" style="--tilt:-.9deg">
+          <div class="tool-frame">
+            <canvas id="toolCeiling" width="640" height="300" role="img" aria-label="Transfer curve: ceiling level on the horizontal axis, what leaves the phone on the vertical axis, with a flat clipped top"></canvas>
+          </div>
+          <div class="tool-body">
+            <p class="tool-kicker">Try 1 · the ceiling</p>
+            <div class="tool-read" id="ceilRead" role="status" aria-live="polite"></div>
+          </div>
+        </article>
+        <article class="tool" data-tool="fader" style="--tilt:.8deg">
+          <div class="tool-frame">
+            <canvas id="toolFader" width="640" height="300" role="img" aria-label="The eight shipped band edges, with your colour-noise tilt applied as a slope across the range"></canvas>
+          </div>
+          <div class="tool-body">
+            <p class="tool-kicker">Try 2 · the eight bands</p>
+            <div class="tool-ctl">
+              <label for="tilt">Tilt the bed</label>
+              <input type="range" id="tilt" min="-100" max="100" value="0" step="5">
+              <output id="tiltOut" for="tilt">even</output>
+            </div>
+            <div class="tool-read" id="faderRead" role="status" aria-live="polite"></div>
+          </div>
+        </article>
+      </div>
+      <p class="compare-note">A straight word: the rig demonstrates <em>shaping</em>, not benefit. Whether Acoustic helps you is measured on your phone, with your ears — not by a button in a browser, and never promised here.</p>
     </div>
   </section>
 
@@ -358,6 +384,24 @@
           <p>One tap ends sound and listening. No fade of twenty seconds, no &ldquo;are you sure?&rdquo;, no resumed session unless you press Start again.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- the ten blends -->
+  <section class="band band-blend" id="blends">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">The short shelf</p>
+        <h2>Ten blends, and what is actually in&nbsp;them.</h2>
+        <p>Some entries in the library are single recordings. Ten of them are two at once — a bed and one accent, mixed to fixed amounts. Here is the whole set, with both sources named, so nothing about your sound is a mystery. Move the fader: the amounts are the ones the app uses.</p>
+      </div>
+      <div class="blend-grid" id="blendGrid">
+        <div class="blend-list" role="group" aria-label="The ten blends"></div>
+        <div class="blend-detail" id="blendDetail" role="status" aria-live="polite">
+          <p class="blend-hint">Pick a blend on the left — or the buttons above, on a phone.</p>
+        </div>
+      </div>
+      <p class="blend-note">A blend is a recipe, not a measurement: the two amounts are the mix the app ships, and the bar under them is drawn from those numbers. What it sounds like in your room is a different question, and it is yours to answer.</p>
     </div>
   </section>
 
@@ -560,6 +604,7 @@
         <ul>
           <li><a href="#inside">What&rsquo;s in it</a></li>
           <li><a href="#how">How it works</a></li>
+          <li><a href="#blends">The ten blends</a></li>
           <li><a href="#rig">Hear the engine</a></li>
           <li><a href="#team">The team</a></li>
           <li><a href="#questions">Questions</a></li>
