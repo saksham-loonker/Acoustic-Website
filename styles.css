@@ -745,6 +745,40 @@ table.rig-read td:last-child, table.rig-read th:last-child { text-align: right; 
   line-height: 1; float: left; padding: 4px 10px 0 0; color: var(--navy);
 }
 
+/* ---------- QA ledger ---------- */
+.qa-ledger {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r-lg); padding: var(--sp-4) var(--sp-4) calc(var(--sp-4) + 4px);
+  box-shadow: var(--shadow-card); margin-bottom: var(--sp-4);
+  transform: rotate(-.3deg);
+}
+.qa-lede { margin: 0 0 var(--sp-3); color: var(--ink-soft); font-size: .98rem; max-width: 46rem; }
+.ledger { display: grid; gap: 14px; }
+.ledger-item { display: flex; gap: var(--sp-3); align-items: baseline; border-top: 1px solid var(--line); padding-top: 14px; padding-bottom: 2px; }
+.ledger-item:first-child { border-top: 0; padding-top: 0; }
+.ledger-n {
+  flex: none; width: 92px;
+  font-family: var(--display); font-weight: 640; font-size: 2.1rem;
+  line-height: 1; letter-spacing: -0.03em; color: var(--navy); text-align: right;
+}
+.ledger-item:nth-child(2) .ledger-n { color: var(--terra-deep); }
+.ledger-item-off .ledger-n { color: var(--sage); }
+.ledger-l { color: var(--ink-soft); font-size: .94rem; }
+.ledger-l b { color: var(--ink); }
+.ledger-l code {
+  font-family: var(--mono); font-size: .82rem;
+  background: var(--paper-deep); border-radius: 5px; padding: 1px 5px;
+}
+.qa-foot {
+  margin: var(--sp-3) 0 0; padding-top: var(--sp-3);
+  border-top: 1px dashed var(--line-strong);
+  font-size: .88rem; color: var(--ink-soft);
+}
+.qa-foot code { font-family: var(--mono); font-size: .82rem; color: var(--terra-deep); }
+@media (max-width: 600px) {
+  .ledger-n { width: 64px; font-size: 1.7rem; }
+}
+
 /* ---------- the ten blends ---------- */
 .blend-grid { display: grid; grid-template-columns: 300px minmax(0,1fr); gap: var(--sp-4); align-items: start; }
 @media (max-width: 900px) { .blend-grid { grid-template-columns: 1fr; } }

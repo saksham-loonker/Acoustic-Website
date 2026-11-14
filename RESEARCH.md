@@ -158,6 +158,27 @@ The maker asked for more: keep adding until the page is overloaded, and make it 
 
 **What I could not verify.** I cannot view images in this session, so the screenshots (`v6-blends.png`, `v6-rig.png`, `v6-mobile-blends.png`, `v6-mobile-rig.png`) were produced but not eyeballed; I substituted measured geometry, clipping and overflow checks. Those files are for the maker to look at.
 
+## 11. Round four — what the testing actually covers (2026-11-14)
+
+Same standing instruction: keep adding until overloaded, keep it honest, keep it human.
+
+**Source of the new facts.** Read this session, from the instrument repo's own verification output for the version the site advertises (0.23.0, version code 40 — confirmed in `app/build.gradle.kts`):
+- `reports/0.23.0/verification.json` → status `pass`, 17 checks all `pass` (build-jvm-lint-apks, native, native-sanitized, render-regressions, orbit-volume, tool-unit-tests, source-audit, apk-audit, library-decode-audit, content-pipeline, contrast, dependency-notices, plan-package, plan-preservation, release-gate-inventory, device-suite, data-preserving-install); `jvm_tests` core 68 suites / 374 tests / 0 failures and app 3 suites / 13 tests / 0 failures; core counters INSTRUCTION 60,739 covered vs 8,508 missed (89 %) and BRANCH 5,785 vs 3,150 (65 %); `public_release: blocked_pending_external_evidence`; `listening_outcome: not_measured`.
+- `reports/0.23.0/device-tests.json` → 94 effective completed device cases, 3 failed on the first attempt and passed after fixture correction, earlier failures retained, ordinary preferences unchanged through testing and installation, scope note says explicitly that no route qualification or listening outcome is inferred.
+
+**Added.** A QA ledger above the FAQ — four numbers in the report's own terms: 17 host checks, 387 host tests, 94 phone cases (three corrected rather than quietly dropped), and 0 listening outcomes, with the `not_measured` and `blocked_pending_external_evidence` gaps printed rather than smoothed over. It exists because "free for testers" is only credible if a tester can see what was already checked before they spend an evening on it.
+
+**Refused.** No new claims about comfort, sleep, focus, hearing or any other outcome; the ledger's whole job is to mark those as unmeasured. No coverage figure was rounded up (89 % / 65 % are the counters as reported).
+
+**Verification run this session (host render only).**
+- `node --check` site.js/bench.js/engine-smoke.mjs: pass. `node engine-smoke.mjs`: exit 0, peaks 0.073/0.077/0.075 across the three scenes.
+- `verify-v5.mjs`: FIG 54,010-byte data URL, rig `playing · ceiling held at 0.30`, `8 / 8 · max 0.20`, peak 0.069, Street switch `8 / 8 · max 0.22`, 390 px overflow 0, 0 console/page errors.
+- `verify-v8.mjs` (new): ledger renders four numbers, no item clips, sits above the FAQ, and its body text measures 7.53:1 against the card with the numbers at 15.73 / 6.21 / 15.73 / 5.48 : 1 — all above 4.5:1.
+- `sweep-widths.mjs`: 0 px overflow at 360, 390, 430, 600, 768, 820, 980, 1100, 1280 and 1600 px.
+- Python tag-balance parse clean; 0 U+FFFD.
+
+**Still not verified:** no phone was touched this delivery, no listening took place, and I cannot view images in this session — screenshots are generated but unexamined by me.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.
