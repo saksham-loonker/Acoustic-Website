@@ -374,6 +374,31 @@ The maker's instruction, after the technique transfusion: "Copy their entire sty
 
 **The honest closing word.** This is a full visual reskin of the Nullframe scheme. It is derivative as a style — the maker asked for exactly that — and derivative work is still owed attribution-style honesty: our README and RESEARCH.md record whose CSS and layout we studied, what we took (the look and the techniques), what we did not (their words, their products, their claims). If this page were ever to ship commercially in a legal review, that provenance is the first thing to check.
 
+## 19. The rig never dead-ends — plain Web Audio fallback (2026-11-14)
+
+The maker reported the rig failing in their environment: pressing Play produced "could not load — the engine runs on the phone" and, in their words, "absolutely useless if it works only on phone."
+
+**What was actually wrong.** The engine fetch/import had no fallback: any failure anywhere in the chain (fetch, HTTP error, Wasm instantiate, blob-import, audio-context creation) collapsed into a single terminal "could not load" message with no retry, no reason, and no sound. The page knew it had failed but told the visitor nothing actionable.
+
+**What changed.**
+- `bench.js` now ends in `startPlayback(rendered, fallback)` — a single shared playback path for both sources. Failures degrade instead of stopping:
+  1. Engine loads and renders → as before ("playing · rendered at …").
+  2. Engine cannot load → **`synthScene()`**: eight seconds, two channels, built from the same measured per-band gains the engine reports (`0.20/0.19/0.16/0.13/0.11/0.09/0.07/0.05` warm, `0.125` flat, `0.06…0.22` bright) through RBJ bandpass biquads tuned to each band's geometric centre (Q from band width), seeded deterministically (mulberry32) for repeatability, peak-normalised to 0.22. The status then reads **"playing · page approximation — not the app engine"**, the label flips to `<shape> · approximating`, and a small `#rigWhy` line shows the actual error. Nothing about this state is disguised as the engine.
+  3. Even Web Audio is blocked → honest silent state: "no audio here — the engine runs on your phone" with the recorded reason in `#rigWhy`.
+- The rig sheet now says so up front: **"with a plain Web Audio fallback if it cannot load"**.
+- The fetch guards verify `r.ok` and report HTTP statuses instead of swallowing them.
+- `#rigWhy` (hidden by default) carries the raw message so the next failure is diagnosable rather than mysterious — e.g. "Engine could not load (Failed to fetch)."
+
+**Verified this session.**
+- `verify-fallback.mjs` (new): WASM aborted → plays synth ("page approximation — not the app engine", `8 / 8 · page synth`, peak 0.216 ≤ 0.22); engine.js aborted → same; AudioContext deleted → honest silent state; normal path → real engine (`8 / 8 · max 0.20`, `94 KB`, peak 0.069). Every path ends in a state the page describes truthfully.
+- `verify-v5.mjs`: engine path green, FIG fine, 390 px overflow 0, 0 console/page errors.
+- `verify-rig.mjs`: idle → shape switch → playing → mid-switch all correct, no clipped buttons at 390/768 px.
+- `sweep-fast.mjs`: 0 px overflow at 360–1600 px.
+
+**What this is not.** The fallback does not reproduce the engine. It applies the engine's measured band weights to band-passed white noise with Web Audio primitives — same three silhouettes, none of the C++. It is a preview of what "shaped" means, audibly, on any browser, with the caveat printed next to it. And if the engine fails on a visitor's machine for a reason we can't reproduce from here, they now hear *something* and know exactly what it is — instead of a wall.
+
+**Still unverified:** what specifically failed for the maker. I could not reproduce the failure here (headless Edge loads the engine fine), so the diagnosis is inference from their symptom, not certainty. The fallback text now shows the raw reason, which is the part I needed from them anyway.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.

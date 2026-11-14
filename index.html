@@ -267,7 +267,7 @@
             <li><b>Bright</b> — top forward, low end pulled in</li>
           </ul>
           <ul class="rig-facts rig-facts-quiet">
-            <li><b>Engine</b> — the same C++ the phone ships</li>
+            <li><b>Engine</b> — the same C++ the phone ships (wasm), with a plain Web Audio fallback if it cannot load</li>
             <li><b>Download</b> — 94 KB, only if you press play</li>
             <li><b>Capture</b> — none. This page has no microphone</li>
             <li><b>Upload</b> — none. Not now, not later</li>
@@ -287,6 +287,7 @@
               <button type="button" data-scene="2" aria-pressed="false"><b>Bright</b><span>top forward</span></button>
             </div>
             <canvas id="meter" width="480" height="96" aria-hidden="true"></canvas>
+            <p class="rig-why" id="rigWhy" hidden role="status"></p>
             <p class="rig-shape" id="rigShape">Warm &mdash; more of the low end, eased at the top.</p>
             <p class="rig-peak">Loudest sample <span id="roPeak">&mdash;</span>, against the 0.30 this page renders at. Your ceiling is set in the app, not here — the phone clamps every band below it, and this page has no ceiling control to mislead you with.</p>
             <table class="rig-read">
