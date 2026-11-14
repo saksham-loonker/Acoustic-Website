@@ -310,6 +310,36 @@ Maker's verdict: content is acceptable; change the entire layout to make it more
 
 **Still unverified:** no phone, no listening, and — as ever this session — I cannot view the screenshots. The visual judgement call (whether this feels good) belongs to the maker; every mechanical signal I can measure is clean.
 
+## 17. The Nullframe pass (2026-11-14)
+
+The maker asked for the CSS techniques of `https://nullframe3d.vercel.app/` (fetched 2026-11-14, HTML + `css/style.css?v=37`). Reviewed honestly and applied as a *technique transfusion*, not a skin transplant.
+
+**What their site does.** Dark `#050506` "specimen lab dossier": fixed full-screen canvas + SVG-`feTurbulence` film grain at ~5.5% opacity with a `steps(6)` animation, a radial vignette, a `position: fixed` mono 3-column header with backdrop blur, a right-edge dot-led section rail that labels on hover/active, big thin uppercase Inter titles, hairline (`rgba(255,255,255,.08)`) borders, corner reticle ticks on product shots, a left/right fixed HUD, a footer marquee of ghost type, `mix-blend-difference` cursor, `overflow-x: clip`, `100svh` hero.
+
+**What was applied (mechanics, not identity).**
+- `.grain` — the same feTurbulence noise as a fixed full-screen layer at **5% opacity**, `mix-blend-mode: overlay`, with the same `steps(6)` jitter; static under `prefers-reduced-motion: reduce`.
+- `.vignette` — a soft radial edge vignette in warm dark `rgba(31,26,20,.22)` so the paper reads like a laid sheet, not a lit page.
+- Corner reticle ticks on the hero phone plate, the three screenshot plates, Fig. 1 and the two marquee-adjacent panels — injected at runtime by JS (`[data-ticks]`), decorative and `aria-hidden`, so static HTML never carries dead markup.
+- The contents rail was re-set as their dot-led rail: small mono labels in row-reverse, dot before each, active dot scales and glows terracotta. The rail still tracks `aria-current` via IntersectionObserver.
+- `.sec-head` gained their hairline rule pattern (`border-top: 1px solid var(--line-strong)` + padding-top).
+- **A fair use of their HUD**: `.hud-bl` shows a live scroll percentage of "percent of this manual"; `.hud-br` is a `TOP ↑` back link. Both hide below 900 px width and below 820 px height so they never sit on content.
+- **An honest marquee** across the footer — "59 CC0 recordings — 17 public-domain works — one hard ceiling — no INTERNET permission — no account — no ads — free for testers —" — slow ghost serif, `aria-hidden`, static under reduced motion.
+- The nav gained an `.is-scrolled` state toggled by scroll position.
+
+**What was refused.** Their palette (`#050506`, cyan `#00f0ff`), their type (Inter light + JetBrains Mono), the 3D canvas hero, the "LIVE / SPECIMEN" sci-fi framing, the mixed-blend cursor (kept ours: navy dot + terracotta ring), the fake lab HUD copy, their marquee copy, and their `overflow-x: clip` (we keep `hidden`). Acoustic is a comfort tool in warm paper — a dark lab skin would have been a costume, not an instrument.
+
+**Verification run this session (host render only).**
+- `node --check site.js` / `bench.js`: pass. `engine-smoke.mjs`: exit 0.
+- HTML parse clean, 0 U+FFFD.
+- `verify-v5.mjs`: FIG 54,010-byte data URL; rig playing; 0 px mobile overflow; 0 console/page errors.
+- `verify-rig / v6 / v8 / v9 / v10 / v12 / v13 / verify-rail / verify-hud`: all green — rig states, blend shelf, QA ledger, shelf index, spectrum, picker→shelf handoff, rail tracks aria-current, HUD hidden at 750 px height and present at 900 px, 24 corner ticks injected, marquee renders and is static under reduced motion.
+- `sweep-fast.mjs` (new, ignores fixed overlays as overflows cannot scroll): 0 px overflow at 360, 390, 768, 1280, 1600 px. The marquee track is intentionally wider than the viewport but is inside `.marquee { overflow: hidden }`, confirmed 0.
+- Marquee track and grain never affect `scrollWidth` (verified).
+- `audit-v4.mjs`: unchanged — 2 text families + system mono, 14.41:1 body contrast, 3 greys, 7 shadow roles, 12 button variants.
+- Forbidden-claim scan: no positive dBA/ANC/medical/benefit wording (all remaining hits are the negations/disclaimers and column headers).
+
+**Still unverified:** no phone, no listening; and while I *can* view images (the fold shot was reviewed — see `%TEMP%\opencode\nullframe-fold2.png` and `v3-mobile.png`/`v3-full.png`), the full-length page reads as one thumbnail; fine detail beyond the fold deserves your eyes. One fair caveat: at the 1280 px fold the HUD pills sit over the bottom edge of the hero strip on shorter windows — mitigated by hiding them under 820 px height; shorter laptops will not see them.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.

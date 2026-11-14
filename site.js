@@ -10,6 +10,34 @@
   let showOnShelf = null;
   let renderPicker = null;
 
+  /* ---------- specimen corner ticks on the plates (decorative only) ---------- */
+  document.querySelectorAll("[data-ticks]").forEach((el) => {
+    for (const corner of ["tl", "tr", "bl", "br"]) {
+      const tick = document.createElement("span");
+      tick.className = "tick " + corner;
+      tick.setAttribute("aria-hidden", "true");
+      el.appendChild(tick);
+    }
+  });
+
+  /* ---------- the HUD percent + nav is-scrolled ---------- */
+  const hudPct = document.getElementById("hudPct");
+  const nav = document.querySelector(".nav");
+  let hudTick = false;
+  const onScroll = () => {
+    if (hudTick) return;
+    hudTick = true;
+    requestAnimationFrame(() => {
+      hudTick = false;
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - doc.clientHeight;
+      if (hudPct && max > 0) hudPct.textContent = String(Math.round((doc.scrollTop / max) * 100)).padStart(2, "0");
+      if (nav) nav.classList.toggle("is-scrolled", doc.scrollTop > 24);
+    });
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
   /* ---------- the contents rail: which spread is open ---------- */
   const railLinks = document.querySelectorAll('.rail a[href^="#"]');
   if (railLinks.length && "IntersectionObserver" in window) {

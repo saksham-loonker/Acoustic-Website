@@ -19,6 +19,8 @@
 
 <div class="cursor-dot" aria-hidden="true"></div>
 <div class="cursor-ring" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
 
 <div class="ribbon" role="status">
   <div class="wrap ribbon-in">
@@ -96,7 +98,7 @@
       </div>
 
       <div class="hero-visual" aria-hidden="true">
-        <figure class="phone-frame">
+        <figure class="phone-frame specimen-frame" data-ticks>
           <img src="assets/screenshots/now.png" alt="" width="720" height="1447">
         </figure>
         <svg class="badge-circle" viewBox="0 0 120 120" aria-hidden="true">
@@ -256,7 +258,7 @@
             </div>
           </div>
         </div>
-        <figure class="fig-card" style="margin:0; transform: rotate(0.8deg)">
+        <figure class="fig-card specimen-frame" style="margin:0; transform: rotate(0.8deg)" data-ticks>
           <canvas id="figBands" width="900" height="230" role="img" aria-label="Response plot of the eight masking bands, from 80 Hz to 7.8 kHz"></canvas>
           <figcaption class="fig-cap"><b>Fig. 1.</b> The eight bands as shipped (edges: 80&nbsp;Hz &rarr; 7.8&nbsp;kHz, straight from the engine source). A drawing of the layout — not a measurement of your room.</figcaption>
         </figure>
@@ -396,15 +398,15 @@
         <p>Real screenshots from a connected phone running the disposable validation build at fresh defaults — cropped to the frame, scaled down, never redrawn.</p>
       </div>
       <div class="plates">
-        <figure class="plate plate-tilt-l">
+        <figure class="plate plate-tilt-l specimen-frame" data-ticks>
           <img src="assets/screenshots/now.png" alt="The Now screen: current sound, Fixed and Auto choices, transport controls, and volume" loading="lazy" width="720" height="1447">
           <figcaption><b>The Now screen.</b> The sound, your ceiling, one thumb. Microphone off until you ask.</figcaption>
         </figure>
-        <figure class="plate plate-tilt-r">
+        <figure class="plate plate-tilt-r specimen-frame" data-ticks>
           <img src="assets/screenshots/sounds.png" alt="Sounds screen: searchable library of field recordings and music" loading="lazy" width="720" height="1447">
           <figcaption><b>The shelf.</b> All 76 recordings and works, browsable — with credits inside the app.</figcaption>
         </figure>
-        <figure class="plate plate-tilt-l2">
+        <figure class="plate plate-tilt-l2 specimen-frame" data-ticks>
           <img src="assets/screenshots/settings.png" alt="Settings screen in greyscale: appearance, volume limit, daily use" loading="lazy" width="720" height="1447">
           <figcaption><b>The settings.</b> Set the limit once. No wizard, no upsell, no accounts.</figcaption>
         </figure>
@@ -478,7 +480,7 @@
       </div>
       <div class="blend-grid" id="blendGrid">
         <div class="blend-list" role="group" aria-label="The ten blends"></div>
-        <div class="blend-detail" id="blendDetail" role="status" aria-live="polite">
+        <div class="blend-detail specimen-frame" id="blendDetail" role="status" aria-live="polite" data-ticks>
           <p class="blend-hint">Pick a blend on the left — or the buttons above, on a phone.</p>
         </div>
       </div>
@@ -624,7 +626,7 @@
         <p class="eyebrow">Questions</p>
         <h2>Asked before. Answered straight.</h2>
       </div>
-      <div class="qa-ledger">
+      <div class="qa-ledger specimen-frame" data-ticks>
         <p class="qa-lede">A build is only worth testing if you know what was already checked. Here is the 0.23.0 run, in the same words the report uses — including the parts that are deliberately left unproven.</p>
         <div class="ledger">
           <div class="ledger-item"><span class="ledger-n">17</span><span class="ledger-l"><b>host checks pass.</b> Build, JVM tests, lint, native and sanitized native, render regressions, source audit, APK audit, library decode, content pipeline, contrast, dependency notices, plan package and preservation, release-gate inventory, device suite, data-preserving install.</span></div>
@@ -689,8 +691,13 @@
     <p class="fine">Free while testing. Android 10+. arm64-v8a and x86_64. No INTERNET permission, so there is nothing to opt out of — and nothing to sneak past you. Or hop on our list: <a href="mailto:sakshamloonker@gmail.com" style="color:#E8B48B">sakshamloonker@gmail.com</a></p>
   </section>
 
+  <aside class="hud hud-bl" aria-hidden="true"><span id="hudPct" class="hud-pct">00</span><span class="hud-label">percent of this manual</span></aside>
+  <a class="hud hud-br" href="#top">back to the cover<span aria-hidden="true"> &uarr;</span></a>
 </main>
 
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track"><span>59 CC0 recordings — 17 public-domain works — one hard ceiling — no INTERNET permission — no account — no ads — free for testers —&nbsp;</span><span>59 CC0 recordings — 17 public-domain works — one hard ceiling — no INTERNET permission — no account — no ads — free for testers —&nbsp;</span></div>
+</div>
 <footer class="colophon">
   <div class="wrap">
     <div class="imprint">
