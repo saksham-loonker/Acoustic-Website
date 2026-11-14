@@ -340,6 +340,40 @@ The maker asked for the CSS techniques of `https://nullframe3d.vercel.app/` (fet
 
 **Still unverified:** no phone, no listening; and while I *can* view images (the fold shot was reviewed — see `%TEMP%\opencode\nullframe-fold2.png` and `v3-mobile.png`/`v3-full.png`), the full-length page reads as one thumbnail; fine detail beyond the fold deserves your eyes. One fair caveat: at the 1280 px fold the HUD pills sit over the bottom edge of the hero strip on shorter windows — mitigated by hiding them under 820 px height; shorter laptops will not see them.
 
+## 18. The full Nullframe dossier pass (2026-11-14)
+
+The maker's instruction, after the technique transfusion: "Copy their entire styling and design scheme but keep the content ours."
+
+**Scope of the copy, honestly stated.** Layout, palette, typography machinery, furniture and atmosphere come from `nullframe3d.vercel.app` (fetched 2026-11-14). Every word, number, screenshot, interactive tool, claim and disclaimer is ours and unchanged. Where their scheme traded on claims (fabrication timelines, "FLEET ONLINE // 6 AUTOMATED NODES", price bars, social ghost handles), none of that was imported; their ghost-word CTA layout now carries *our* words with no fabricated urgency.
+
+**What the page is now.**
+- Warm paper is gone. Near-black `#050506` ground with `#0b0b0d` panel panels and 1px `rgba(255,255,255,.06–.08)` hairlines; body ink `#e9e9ea`; accent **aqua `#00f0ff`** (their signal colour) on kickers, active states, progress HUD and the access CTA; the error/"not" accent is their warm `#ff9a66`.
+- Typefaces: **Inter** (100–400) for everything and **JetBrains Mono** (100–400) for labels, data, readouts. Both self-hosted from `assets/fonts/` as variable subsets (48 KB and 31 KB), with OFL licences added; no third-party requests remain.
+- The hero is theirs: `100svh` canvas behind a single huge thin word (`ACOUSTIC`), a mono sub-line kicker, bottom-left overlay actions (`btn-primary` white-fill that inverts on hover — their exact hover idiom is `color: var(--bg)` swap, not a slide), and their SCROLL cue with the animated `cueDrop` line.
+- Fixed running head is their 3-column mono grid: brand (logo + `ACOUSTIC` + `0.23.0`), centre section nav in mono caps, right meta with **a live UTC clock** and `IN TESTING` in aqua.
+- Every section is their apparatus: `sec-index` mono number, thin uppercase title, right-aligned mono `sec-tag` (e.g. `EIGHT SECONDS`, `APPS + ANC`, `IS / ISN'T`, `06:40 → 22:10`), hairline rule above.
+- Sections where the content matched their furniture use it verbatim (the two-column `faq` hairline grid, the `access` CTA with giant outlined `FREE FOR TESTERS`, the footer mission block with pulse badge, the marquee, the HUD corners, the right-edge dot rail with cyan active glow, the ghost-outline numerals, the corner reticle ticks, two margin notes). Where the content didn't match, ours stayed and was restyled, not reshaped (the QA ledger is theirs in spirit; the shelf, the spectrum, the blends and the rig are our tools wearing their skin).
+- The phone screenshots keep their treatment: full-bleed dark plates with ticks, `brightness(.82) contrast(1.08)` filter and no borders.
+- The canvas is **ours**, not theirs: eight breathing cyan band columns rising from the baseline with the engine's real band edges (80 Hz…7.8 kHz), a slow dust field, the line `EIGHT BANDS, BREATHING`, and `80 HZ → 7.8 KHZ` at baseline. Static under `prefers-reduced-motion: reduce`.
+
+**Decisions worth recording.**
+- The cursor stays ours (cream dot + terracotta ring, fine pointers, reduced-motion obeying) — a navy dot on near-black would be invisible, and the maker asked earlier for the round cursor back. The scheme didn't force the white difference-blend.
+- Fraunces/Atkinson are no longer used in CSS (files kept; their licence ships in `OFL.txt`).
+- No three.js, no WebGL, no Three model: everything the reference site can only do with a 3D scene, ours does with one 2D canvas and 60 lines of JS. Zero new dependencies.
+- `--faint` was lifted from `#4a4a4f` to `#6f6f76` after an audit showed 2.4:1 on black; every text node now measures ≥ 4.5:1 on its painted ground. Body ink measures 16.8:1.
+- The fold's canvas is decorative (`aria-hidden`); it never announces, never blocks, and is drawn once under reduced motion.
+
+**Verification run this session (host render only).**
+- `verify-v5.mjs`: FIG 54,010-byte data URL; rig `playing · ceiling held at 0.30`, `8 / 8 · max 0.20`, peak 0.069, Café→Street `max 0.22`, 390 px overflow 0, 0 console/page errors.
+- `verify-rig`: idle shows "Play 8 seconds"; idle shape switch updates the sentence; playing shows `Stop`; 390/768 px both 0 overflow, no clipped buttons.
+- `verify-v6/v8/v9/v10/v12/v13`: every widget green — blends, spectrum orders, picker→shelf handoff (`Mountain refuge → Wind in the Trees + Mountain Stream #7`), shelf index, QA ledger, compat chips.
+- `sweep-fast.mjs` (fixed-overlay-aware): 0 px overflow at 360/390/768/1280/1600 px; marquee track wider than the viewport is inside `overflow: hidden`.
+- HTML parse clean; `engine-smoke.mjs` exit 0; forbidden-claim scan: only negations/disclaimers/column headers remain.
+- `contrast` measured with a new `audit-v5.mjs`: 16.79:1 body. The outlines (chapter numerals, manifesto `em`, access title, marquee ghost) are decorative by construction; no information lives in them.
+- I *can* see the renders this session: the fold shows the running head, the giant `ACOUSTIC`, the aqua kicker, the canvas bands and both HUD corners; the rig section, blend shelf, QA ledger, day spread and access banner all read correctly. One caveat: the QA ledger runs past the 900 px viewport and the HUD pill overlaps the `0 listening outcomes` row at 900 px height — mitigated by hiding the HUD below 820 px height, but at exactly 900 px it overlays; acceptable as an overlay, not ideal.
+
+**The honest closing word.** This is a full visual reskin of the Nullframe scheme. It is derivative as a style — the maker asked for exactly that — and derivative work is still owed attribution-style honesty: our README and RESEARCH.md record whose CSS and layout we studied, what we took (the look and the techniques), what we did not (their words, their products, their claims). If this page were ever to ship commercially in a legal review, that provenance is the first thing to check.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.

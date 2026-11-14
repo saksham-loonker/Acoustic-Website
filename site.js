@@ -22,7 +22,7 @@
 
   /* ---------- the HUD percent + nav is-scrolled ---------- */
   const hudPct = document.getElementById("hudPct");
-  const nav = document.querySelector(".nav");
+  const nav = document.querySelector(".site-head");
   let hudTick = false;
   const onScroll = () => {
     if (hudTick) return;
@@ -37,6 +37,111 @@
   };
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
+
+  /* ---------- the hero canvas: eight bands breathing, quietly ---------- */
+  const heroCanvas = document.getElementById("heroCanvas");
+  if (heroCanvas && heroCanvas.getContext) {
+    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const ctx = heroCanvas.getContext("2d");
+    const BAND_COUNT = 8;
+    // the eight band edges shipped by the engine (80 Hz to 7.8 kHz)
+    const EDGES = [80, 160, 315, 630, 1250, 2500, 4000, 6000, 7800];
+
+    let w = 0, h = 0, dpr = 1;
+    let dots = [];
+
+    const resize = () => {
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      w = heroCanvas.clientWidth;
+      h = heroCanvas.clientHeight;
+      heroCanvas.width = Math.round(w * dpr);
+      heroCanvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      dots = [];
+      const step = Math.max(46, Math.floor(w / 30));
+      for (let x = step / 2; x < w; x += step) {
+        for (let y = step / 2; y < h; y += step) {
+          dots.push({ x, y, phase: (x * 0.013 + y * 0.007) % (Math.PI * 2) });
+        }
+      }
+    };
+
+    const frame = (t) => {
+      ctx.clearRect(0, 0, w, h);
+
+      const baseY = h * 0.88;
+      const bandW = w / BAND_COUNT;
+
+      // one soft radial wash so the ember reads behind the wordmark
+      const wash = ctx.createRadialGradient(w / 2, h * 0.78, 20, w / 2, h * 0.78, w * 0.7);
+      wash.addColorStop(0, "rgba(0,240,255,0.5)");
+      wash.addColorStop(0.5, "rgba(0,240,255,0.16)");
+      wash.addColorStop(1, "rgba(0,240,255,0)");
+      ctx.fillStyle = wash;
+      ctx.fillRect(0, 0, w, h);
+
+      // the eight bands as breathing light columns
+      for (let i = 0; i < BAND_COUNT; i++) {
+        const speed = 0.00032 + i * 0.00004;
+        const breath = 0.5 + 0.5 * Math.sin(t * speed * 1000 + i * 0.9);
+        const wave = Math.pow(Math.sin((i + 1) * 0.72 + t * 0.00035), 2);
+        const amp = h * (0.08 + 0.34 * (0.35 + 0.65 * breath) * (0.55 + 0.45 * wave));
+        const x = i * bandW;
+        const grad = ctx.createLinearGradient(0, baseY - amp, 0, baseY);
+        grad.addColorStop(0, "rgba(0,240,255,0)");
+        grad.addColorStop(0.5, "rgba(0,240,255," + (0.45 + 0.24 * breath).toFixed(3) + ")");
+        grad.addColorStop(1, "rgba(0,240,255," + (0.7 + 0.3 * breath).toFixed(3) + ")");
+        ctx.fillStyle = grad;
+        ctx.fillRect(x + bandW * 0.18, baseY - amp, bandW * 0.64, amp);
+      }
+
+      // horizon line — the ceiling
+      ctx.strokeStyle = "rgba(0,240,255,0.8)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, baseY + 0.5);
+      ctx.lineTo(w, baseY + 0.5);
+      ctx.stroke();
+      ctx.fillStyle = "rgba(0,240,255,0.55)";
+      ctx.font = '10px "JetBrains Mono", monospace';
+      ctx.textAlign = "left";
+      ctx.fillText("EIGHT BANDS, BREATHING", 24, baseY + 20);
+      ctx.textAlign = "right";
+      ctx.fillText("80 HZ → 7.8 KHZ", w - 24, baseY + 18);
+
+      // a slow field of dust-like points
+      for (const d of dots) {
+        const drift = Math.sin(t * 0.0004 + d.phase) * 5;
+        ctx.fillStyle = "rgba(233,233,234," + (0.10 + 0.07 * (0.5 + 0.5 * Math.sin(d.phase * 3 + t * 0.0006))).toFixed(3) + ")";
+        ctx.beginPath();
+        ctx.arc(d.x + drift, d.y, 1.1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if (!calm) requestAnimationFrame(frame);
+    };
+
+    resize();
+    window.addEventListener("resize", resize, { passive: true });
+    if (calm) frame(0); else requestAnimationFrame(frame);
+  }
+
+  /* ---------- the UTC clock in the running head ---------- */
+  const clock = document.getElementById("clockUtc");
+  if (clock) {
+    const tick = () => {
+      const d = new Date();
+      clock.textContent =
+        String(d.getUTCHours()).padStart(2, "0") + ":" +
+        String(d.getUTCMinutes()).padStart(2, "0") + ":" +
+        String(d.getUTCSeconds()).padStart(2, "0") + " UTC";
+    };
+    tick();
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setInterval(tick, 1000);
+    }
+  }
 
   /* ---------- the contents rail: which spread is open ---------- */
   const railLinks = document.querySelectorAll('.rail a[href^="#"]');
