@@ -454,6 +454,19 @@ Sensory load audit of the page, item by item, and what was done:
 
 **Note for the maker:** if "calmer" for your audience means "less of the dark theme and more of the warm paper," that is a one-commit revert of the dossier pass, and the file history knows how to do it. What shipped today is the calmest version of the dark dossier that still shipped with your requested scheme.
 
+## 22. Customers don't count tests (2026-11-14)
+
+The maker's instruction: "Don't write the number of tests — a customer won't care about that."
+
+**Removed.** The entire QA ledger from the Questions section — "17 host checks", "387 tests on the host (374 core + 13 app)", "94 cases on a real phone", "0 listening outcomes measured", the `not_measured` code tag, the `blocked_pending_external_evidence` sentence, and all of its styling. Customers do not want a build report; they want to know whether the thing is honest and whether it will ease their day.
+
+**Kept, rewritten.** A single human paragraph under the section head: *Testing means using it in real rooms with real builds — and then dealing with whatever that reveals. Nothing on this page can tell you whether it will ease your evening; only your ears can answer that, in your room. Ask plainly below, get plain answers back.*
+No numbers anywhere. The honesty survives; the accounting does not.
+
+**Not removed.** The internal evidence log (this file), the asset credits and the FAQ — which answers the honest questions with plain words and no figures, as it should.
+
+**Verification run this session.** HTML parse clean; `sweep-fast.mjs` 0 px overflow at 360–1600 px; `node --check site.js` clean; brace-balance clean; 0 console errors. Stale references to the ledger were deleted rather than hidden (CSS included).
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.
