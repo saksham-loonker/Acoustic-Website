@@ -104,6 +104,18 @@ What changed from the v3 datasheet, and why (the user's words governed):
 
 What is still outstanding (unchanged): the unstaged desk photo and the one real first-person incident from critique 1. Neither can be honestly authored without the maker supplying them; nothing was fabricated in their place.
 
+## 8. In testing — the commercial frame (2026-11-14)
+
+The maker changed the frame the same day: Acoustic is a three-person commercial venture in testing — **Saksham Loonker** (CEO & CTO, lead developer), **Mahir Thadani** (COO), **Aum Sonnenblick** (CMO) — and testing builds are **free for people who want to test**. The instrument repository is private, so every public claim about openness was corrected or removed. What was added or corrected:
+
+- **Corrected (private repo):** the "Open source" trust chip, the "Read every line on GitHub" fine-print row, the "Source code / This page / Research notes" footer links, and the app-repo link in the README all went. Nothing on the page now misleads a visitor about where the source lives. The no-trackers, no-third-party-requests stance stands on its own.
+- **Added:** a testing ribbon (navy, pulsing dot) with the email subject for a build; a stats strip (76 bundled recordings/works, 8 bands, 0 network calls, 1 ceiling); a "What's in it" inventory — 59 CC0 field recordings (incl. mountain refuge, cave & stream, ocean with distant whales, soft fireside), 17 public-domain works, live colour noise, and the Like/Love/Not-for-me ratings with an honest "no weights fitted, answers never leave the phone" note; "A day with Acoustic" (four editorial moments + an unattributed manifesto pull-quote with a hand-drawn squiggle); an "Acoustic, side by side" comparison table vs white-noise apps and ANC headphones, hedged honestly; a three-member team section with initials monograms instead of photos; an Android-version compatibility checker (JS; ≥10/API 29, arm64-v8a/x86_64, x86_64 for emulators); three new FAQ answers (testing, cost while testing, deleting your data).
+- **Kept honest:** no dBA, no ANC, no medical claims, no outcome promises — every mention of those is a negation or a disclaimer. The manifesto is the studio's voice, deliberately unattributed to any person. The compare table hedges the competitor columns ("usually freemium", "often yes", "depends on vendor") because it does not measure them. No testimonials, no client counts, no funding claims.
+- **Irregularity pass, per the maker:** rotated screenshot plates (with a straighten-on-hover), an offset card, an offset section head, staggered "day" rows, hand-drawn squiggle underline, rotating circular badge already present. The page now has deliberate irregularities instead of a uniform grid — the opposite failure mode from before.
+- Figures 1 and the rig remain honest drawings/live Wasm, not measurements.
+
+Verification for this pass: HTML parse OK; `node --check` on site.js/bench.js; headless Edge — rig plays, 0 px mobile overflow, 0 console/page errors; compat checker returns the right answer for API 28 and API 34; screenshots re-reviewed at 1280px and 390px.
+
 ## What we deliberately did not do
 
 - No dark pattern for attention (no countdowns, no fake scarcity), no fake testimonials, no generated people.

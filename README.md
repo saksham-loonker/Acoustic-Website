@@ -1,6 +1,6 @@
 # Acoustic-Website
 
-Public website for [Acoustic](https://github.com/saksham-loonker/Acoustic) — an offline Android sound environment for noisy rooms. Static site, no build step; hosted on Netlify.
+The website for Acoustic — an offline Android sound-masking instrument for noisy rooms. Static site, no build step; hosted on Netlify. Source for the instrument itself is private while the venture is in testing (free for testers — email sakshamloonker@gmail.com).
 
 **Coming soon to Google Play Store.** Engineering builds are available on request — see `index.html` (`mailto:sakshamloonker@gmail.com`).
 
