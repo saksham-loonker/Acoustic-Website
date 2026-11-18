@@ -1,0 +1,2 @@
+[functions.windows-beta]
+verify_jwt = false

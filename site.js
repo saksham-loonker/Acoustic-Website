@@ -1,8 +1,4 @@
-/* Acoustic — the round cursor and Fig. 1.
-   The cursor is a small navy dot with a terracotta ring: present only on
-   precise pointers with motion allowed, and it never blocks clicks.
-   Fig. 1 plots the shipped eight-band layout (band edges from the engine
-   source); the curve is a raised-cosine schematic, not a measurement. */
+/* Acoustic website interactions and sound-shaping diagrams. */
 (() => {
   "use strict";
 
@@ -20,210 +16,284 @@
     }
   });
 
-  /* ---------- the HUD percent + nav is-scrolled ---------- */
-  const hudPct = document.getElementById("hudPct");
-  const nav = document.querySelector(".site-head");
-  let hudTick = false;
-  const onScroll = () => {
-    if (hudTick) return;
-    hudTick = true;
-    requestAnimationFrame(() => {
-      hudTick = false;
-      const doc = document.documentElement;
-      const max = doc.scrollHeight - doc.clientHeight;
-      if (hudPct && max > 0) hudPct.textContent = String(Math.round((doc.scrollTop / max) * 100)).padStart(2, "0");
-      if (nav) nav.classList.toggle("is-scrolled", doc.scrollTop > 24);
-    });
-  };
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
+  const root = document.documentElement;
+  const header = document.getElementById("siteHead");
+  const menu = document.getElementById("sectionMenu");
+  const summary = menu.querySelector("summary");
+  const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const sectionLinks = [...header.querySelectorAll("nav a[href^='#']")];
+  const sections = [...document.querySelectorAll("main section[id]")];
+  let currentSection;
+  let scrollFrame;
 
-  /* ---------- theme toggle: remember via localStorage, repaint canvas ---------- */
-  const rootEl = document.documentElement;
-  const toggle = document.getElementById("themeToggle");
-  const setThemeDots = () => {
-    if (!toggle) return;
-    toggle.setAttribute("aria-pressed", String(rootEl.getAttribute("data-theme") === "light"));
-  };
-  let repaint = null;
-  if (toggle) {
-    toggle.addEventListener("click", () => {
-      const next = rootEl.getAttribute("data-theme") === "light" ? "dark" : "light";
-      rootEl.setAttribute("data-theme", next);
-      try { localStorage.setItem("acoustic-theme", next); } catch (_) {}
-      setThemeDots();
-      if (repaint) repaint();
-    });
-    setThemeDots();
-  }
-
-  /* ---------- the hero canvas: eight bands breathing, quietly ---------- */
-  const heroCanvas = document.getElementById("heroCanvas");
-  if (heroCanvas && heroCanvas.getContext) {
-    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const ctx = heroCanvas.getContext("2d");
-    const BAND_COUNT = 8;
-    // the eight band edges shipped by the engine (80 Hz to 7.8 kHz)
-    const EDGES = [80, 160, 315, 630, 1250, 2500, 4000, 6000, 7800];
-
-    let w = 0, h = 0, dpr = 1;
-    let dots = [];
-
-    // Calmer by request: the scene is composed once, never animated.
-    const STILL = true;
-
-    const resize = () => {
-      dpr = Math.min(2, window.devicePixelRatio || 1);
-      w = heroCanvas.clientWidth;
-      h = heroCanvas.clientHeight;
-      heroCanvas.width = Math.round(w * dpr);
-      heroCanvas.height = Math.round(h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      dots = [];
-      const step = Math.max(46, Math.floor(w / 30));
-      for (let x = step / 2; x < w; x += step) {
-        for (let y = step / 2; y < h; y += step) {
-          dots.push({ x, y, phase: (x * 0.013 + y * 0.007) % (Math.PI * 2) });
-        }
+  const updateNavigation = () => {
+    scrollFrame = null;
+    const maxScroll = root.scrollHeight - root.clientHeight;
+    const progress = maxScroll > 0 ? root.scrollTop / maxScroll : 0;
+    header.style.setProperty("--reading-progress", progress);
+    let activeSection = null;
+    const readingLine = header.offsetHeight + 80;
+    for (const section of sections) {
+      if (section.getBoundingClientRect().top > readingLine) break;
+      activeSection = section;
+    }
+    if (activeSection === currentSection) return;
+    currentSection = activeSection;
+    for (const link of sectionLinks) {
+      if (activeSection && link.hash === "#" + activeSection.id) {
+        link.setAttribute("aria-current", "location");
+      } else {
+        link.removeAttribute("aria-current");
       }
+    }
+  };
+  const scheduleNavigation = () => {
+    if (scrollFrame == null) scrollFrame = requestAnimationFrame(updateNavigation);
+  };
+  window.addEventListener("scroll", scheduleNavigation, { passive: true });
+  window.addEventListener("resize", scheduleNavigation, { passive: true });
+  if ("ResizeObserver" in window) new ResizeObserver(scheduleNavigation).observe(document.body);
+  scheduleNavigation();
+
+  menu.addEventListener("click", (event) => {
+    const link = event.target.closest("a");
+    if (!link || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    menu.open = false;
+    const target = link.getAttribute("href").startsWith("#") && document.getElementById(link.hash.slice(1));
+    if (target) {
+      target.setAttribute("tabindex", "-1");
+      target.focus({ preventScroll: true });
+    }
+  });
+  document.addEventListener("click", (event) => {
+    if (menu.open && !menu.contains(event.target)) menu.open = false;
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || !menu.open) return;
+    menu.open = false;
+    summary.focus();
+  });
+
+  const themeToggle = document.getElementById("themeToggle");
+  const updateThemeButton = () => {
+    const light = root.dataset.theme === "light";
+    themeToggle.setAttribute("aria-pressed", String(light));
+    themeToggle.title = light ? "Switch to dark theme" : "Switch to light theme";
+  };
+  themeToggle.addEventListener("click", () => {
+    const next = root.dataset.theme === "light" ? "dark" : "light";
+    root.dataset.theme = next;
+    try { localStorage.setItem("acoustic-theme", next); } catch (_) {}
+    updateThemeButton();
+  });
+  updateThemeButton();
+
+  const precisePointer = matchMedia("(hover: hover) and (pointer: fine)");
+  const cursor = document.querySelector(".circle-cursor");
+  const dot = cursor.querySelector("i");
+  const ring = cursor.querySelector("b");
+  let targetX = 0, targetY = 0, ringX = 0, ringY = 0;
+  let cursorFrame = null;
+
+  const hideCursor = () => {
+    root.classList.remove("has-circle-cursor");
+    cursor.classList.remove("is-link", "is-down");
+    if (cursorFrame !== null) cancelAnimationFrame(cursorFrame);
+    cursorFrame = null;
+  };
+  const place = (element, x, y) => {
+    element.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  };
+  const followCursor = () => {
+    ringX += (targetX - ringX) * .2;
+    ringY += (targetY - ringY) * .2;
+    place(ring, ringX, ringY);
+    const moving = Math.abs(targetX - ringX) + Math.abs(targetY - ringY) > .35;
+    cursorFrame = moving ? requestAnimationFrame(followCursor) : null;
+  };
+  document.addEventListener("pointermove", (event) => {
+    if (motion.matches || !precisePointer.matches || event.pointerType !== "mouse" ||
+        event.target.closest("input, textarea, select, [contenteditable], iframe")) {
+      hideCursor();
+      return;
+    }
+    targetX = event.clientX;
+    targetY = event.clientY;
+    if (!root.classList.contains("has-circle-cursor")) {
+      ringX = targetX;
+      ringY = targetY;
+      root.classList.add("has-circle-cursor");
+    }
+    cursor.classList.toggle("is-link", Boolean(event.target.closest("a, button, summary, label")));
+    place(dot, targetX, targetY);
+    if (cursorFrame === null) followCursor();
+  }, { passive: true });
+  document.addEventListener("pointerdown", () => cursor.classList.add("is-down"), { passive: true });
+  window.addEventListener("pointerup", () => cursor.classList.remove("is-down"), { passive: true });
+  document.addEventListener("pointercancel", hideCursor);
+  document.documentElement.addEventListener("pointerleave", hideCursor);
+  document.addEventListener("keydown", (event) => { if (event.key === "Tab") hideCursor(); });
+  window.addEventListener("blur", hideCursor);
+  precisePointer.addEventListener("change", hideCursor);
+  motion.addEventListener("change", hideCursor);
+
+  const stage = document.querySelector(".phone-stage");
+  if (stage) {
+    const hero = stage.closest(".hero");
+    const canvas = stage.querySelector("canvas");
+    const control = hero.querySelector(".motion-toggle");
+    const ctx = canvas.getContext("2d");
+    let width = 0, height = 0, visible = true, paused = false;
+    let time = 0, lastFrame = 0;
+    let waveFrame = null;
+
+    const resetAngle = () => {
+      stage.style.removeProperty("--tilt-x");
+      stage.style.removeProperty("--tilt-y");
     };
-
-    const frame = (t) => {
-      ctx.clearRect(0, 0, w, h);
-
-      const baseY = h * 0.88;
-      const bandW = w / BAND_COUNT;
-      const light = rootEl.getAttribute("data-theme") === "light";
-      const A = light ? ["rgb(11,142,156", 0.2, 0.06] : ["rgb(0,240,255", 0.16, 0.05];
-      const BAR = light ? ["rgb(11,142,156", 0.16, 0.28] : ["rgb(0,240,255", 0.13, 0.22];
-      const INK = light ? "rgba(38,34,28,0.32)" : "rgba(0,240,255,0.35)";
-      const CAP = light ? "rgba(11,142,156,0.6)" : "rgba(0,240,255,0.45)";
-
-      // one soft radial wash so the ember reads behind the wordmark
-      const wash = ctx.createRadialGradient(w / 2, h * 0.78, 20, w / 2, h * 0.78, w * 0.7);
-      wash.addColorStop(0, A[0] + "," + A[1] + ")");
-      wash.addColorStop(0.5, A[0] + "," + A[2] + ")");
-      wash.addColorStop(1, A[0] + ",0)");
-      ctx.fillStyle = wash;
-      ctx.fillRect(0, 0, w, h);
-
-      // the eight bands as breathing light columns
-      for (let i = 0; i < BAND_COUNT; i++) {
-        const speed = 0.00032 + i * 0.00004;
-        const breath = [0.82, 0.62, 0.44, 0.34, 0.3, 0.24, 0.18, 0.14][i];
-        const wave = [1, 0.86, 0.74, 0.66, 0.6, 0.55, 0.5, 0.46][i];
-        const amp = h * (0.12 + 0.3 * breath * wave);
-        const x = i * bandW;
-        const grad = ctx.createLinearGradient(0, baseY - amp, 0, baseY);
-        grad.addColorStop(0, BAR[0] + ",0)");
-        grad.addColorStop(0.5, BAR[0] + "," + (BAR[1] + 0.07 * breath).toFixed(3) + ")");
-        grad.addColorStop(1, BAR[0] + "," + (BAR[2] + 0.12 * breath).toFixed(3) + ")");
-        ctx.fillStyle = grad;
-        ctx.fillRect(x + bandW * 0.18, baseY - amp, bandW * 0.64, amp);
-      }
-
-      // horizon line — the ceiling
-      ctx.strokeStyle = INK;
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(0, baseY + 0.5);
-      ctx.lineTo(w, baseY + 0.5);
-      ctx.stroke();
-      if (w >= 700) {
-        ctx.fillStyle = CAP;
-        ctx.font = '10px "JetBrains Mono", monospace';
-        ctx.textAlign = "left";
-        ctx.fillText("EIGHT BANDS, BREATHING", 24, baseY + 20);
-        ctx.textAlign = "right";
-        ctx.fillText("80 HZ → 7.8 KHZ", w - 24, baseY + 18);
-      }
-
-      // a slow field of dust-like points
-      for (const d of dots) {
-        ctx.fillStyle = light ? "rgba(38,34,28,0.14)" : "rgba(233,233,234,0.07)";
+    const playing = () => !paused && !motion.matches && visible && !document.hidden;
+    const draw = () => {
+      if (!ctx || !width || !height) return;
+      ctx.clearRect(0, 0, width, height);
+      const radius = Math.min(width * .67, height * .69);
+      const phase = time * .0016;
+      const centerY = height * .62;
+      for (let band = 1; band <= 11; band++) {
+        const distance = band / 11;
         ctx.beginPath();
-        ctx.arc(d.x, d.y, 1.1, 0, Math.PI * 2);
-        ctx.fill();
+        for (let i = 0; i <= 96; i++) {
+          const angle = i / 96 * Math.PI * 2;
+          const wave = Math.sin(distance * 13 - phase + angle * 3) * radius * .075 * distance;
+          const x = width / 2 + Math.cos(angle) * radius * distance;
+          const y = centerY + Math.sin(angle) * radius * .5 * distance + wave;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = `rgba(111, 187, 255, ${.15 + .22 * (1 - distance)})`;
+        ctx.stroke();
       }
-
-      if (!STILL && !calm) requestAnimationFrame(frame);
     };
-
-    repaint = () => { resize(); frame(0); };
-    resize();
-    window.addEventListener("resize", repaint, { passive: true });
-    frame(0); // compose the single still frame; never animate
+    const resizeField = () => {
+      if (!ctx) return;
+      width = canvas.clientWidth;
+      height = canvas.clientHeight;
+      const density = Math.min(devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * density);
+      canvas.height = Math.round(height * density);
+      ctx.setTransform(density, 0, 0, density, 0, 0);
+      draw();
+    };
+    const tick = (now) => {
+      if (lastFrame) time += Math.min(60, now - lastFrame);
+      lastFrame = now;
+      draw();
+      waveFrame = requestAnimationFrame(tick);
+    };
+    const syncMotion = () => {
+      const active = playing();
+      hero.dataset.playing = String(active);
+      hero.dataset.motionPaused = String(paused || motion.matches);
+      control.hidden = motion.matches;
+      control.textContent = paused ? "Play motion" : "Pause motion";
+      if (waveFrame !== null) cancelAnimationFrame(waveFrame);
+      waveFrame = null;
+      lastFrame = 0;
+      if (active && ctx) waveFrame = requestAnimationFrame(tick);
+      if (!active) resetAngle();
+    };
+    control.addEventListener("click", () => {
+      paused = !paused;
+      syncMotion();
+    });
+    stage.addEventListener("pointermove", (event) => {
+      if (!playing() || !precisePointer.matches || event.pointerType !== "mouse") return;
+      const rect = stage.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - .5;
+      const y = (event.clientY - rect.top) / rect.height - .5;
+      stage.style.setProperty("--tilt-x", (-y * 17).toFixed(2) + "deg");
+      stage.style.setProperty("--tilt-y", (x * 26).toFixed(2) + "deg");
+    }, { passive: true });
+    stage.addEventListener("pointerleave", resetAngle);
+    precisePointer.addEventListener("change", resetAngle);
+    motion.addEventListener("change", syncMotion);
+    document.addEventListener("visibilitychange", syncMotion);
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        syncMotion();
+      }).observe(hero);
+    }
+    if ("ResizeObserver" in window) new ResizeObserver(resizeField).observe(stage);
+    else window.addEventListener("resize", resizeField, { passive: true });
+    resizeField();
+    syncMotion();
   }
 
-  /* ---------- the UTC clock in the running head ---------- */
-  const clock = document.getElementById("clockUtc");
-  if (clock) {
-    const tick = () => {
-      const d = new Date();
-      clock.textContent =
-        String(d.getUTCHours()).padStart(2, "0") + ":" +
-        String(d.getUTCMinutes()).padStart(2, "0") + ":" +
-        String(d.getUTCSeconds()).padStart(2, "0") + " UTC";
-    };
-    tick();
-  }
+  /* Preserve links to sections moved from the original one-page website. */
+  const oldAnchors = new Set(["picker", "inside", "blends", "rig", "day", "session", "compare", "fineprint", "team", "compat"]);
+  const followOldAnchor = () => {
+    if (stage && oldAnchors.has(location.hash.slice(1))) location.replace("guide.html" + location.hash);
+  };
+  followOldAnchor();
+  window.addEventListener("hashchange", followOldAnchor);
 
-  /* ---------- the contents rail: which spread is open ---------- */
-  const railLinks = document.querySelectorAll('.rail a[href^="#"]');
-  if (railLinks.length && "IntersectionObserver" in window) {
-    const byId = new Map();
-    railLinks.forEach((a) => byId.set(a.getAttribute("href").slice(1), a));
-    const current = { id: null };
-    const mark = (id) => {
-      if (current.id === id) return;
-      current.id = id;
-      railLinks.forEach((a) => {
-        if (a.getAttribute("href") === "#" + id) a.setAttribute("aria-current", "true");
-        else a.removeAttribute("aria-current");
+  /* Add entrance motion at the viewport edge, keeping the base layout visible. */
+  if ("IntersectionObserver" in window) {
+    const reveal = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in");
+        observer.unobserve(entry.target);
       });
-    };
-    const seen = new Map();
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) seen.set(e.target.id, e.intersectionRatio);
-        let best = null, bestR = 0;
-        for (const [id, r] of seen) if (r > bestR) { bestR = r; best = id; }
-        if (best) mark(best);
-      },
-      { threshold: [0, 0.15, 0.35, 0.6], rootMargin: "-18% 0px -30% 0px" }
-    );
-    byId.forEach((_, id) => {
-      const el = document.getElementById(id);
-      if (el) io.observe(el);
+    });
+    const revealGroups = ".sec-head, .cover-steps li, .cover-guide .wrap, .plate, .how-grid, .picker, .shelf-index, .spectrum, .tools-grid, .day-grid, .anatomy, .blend-grid, .compare-scroll, .fineprint-wrap, .team-triangle, .compat-card";
+    document.querySelectorAll(revealGroups).forEach((element) => {
+      element.classList.add("reveal");
+      const sibling = element.previousElementSibling;
+      if (sibling?.classList.contains("reveal")) {
+        const delay = Math.min(180, (Number(sibling.dataset.revealDelay) || 0) + 75);
+        element.dataset.revealDelay = String(delay);
+        element.style.setProperty("--reveal-delay", delay + "ms");
+      }
+      reveal.observe(element);
     });
   }
 
-  const fine = window.matchMedia("(pointer: fine)").matches;
-  const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  /* ---------- custom round cursor ---------- */
-  const dot = document.querySelector(".cursor-dot");
-  const ring = document.querySelector(".cursor-ring");
-  if (fine && !calm && dot && ring) {
-    document.documentElement.classList.add("has-cursor");
-    let mx = innerWidth / 2, my = innerHeight / 2;
-    let rx = mx, ry = my;
-    window.addEventListener("mousemove", (e) => { mx = e.clientX; my = e.clientY; }, { passive: true });
-
-    const hot = "a, button, summary, input, [data-scene], .rig-row button";
-    document.addEventListener("mouseover", (e) => {
-      ring.classList.toggle("is-active", Boolean(e.target.closest(hot)));
+  const betaForm = document.getElementById("windowsBetaForm");
+  if (betaForm) {
+    const status = document.getElementById("windowsBetaStatus");
+    const download = document.getElementById("windowsBetaDownload");
+    const submit = betaForm.querySelector('button[type="submit"]');
+    submit.disabled = false;
+    betaForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      submit.disabled = true;
+      download.hidden = true;
+      status.textContent = "Signing you up...";
+      try {
+        const response = await fetch(betaForm.action, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(Object.fromEntries(new FormData(betaForm))),
+        });
+        const result = await response.json();
+        if (!response.ok) {
+          status.textContent = result.error || "Signup is temporarily unavailable. Please try again.";
+          return;
+        }
+        const target = new URL(result.download);
+        if (target.origin !== new URL(betaForm.action).origin) throw new Error("Invalid download host");
+        download.href = target.href;
+        download.hidden = false;
+        betaForm.reset();
+        status.textContent = "You?re on the list. Your download should start now.";
+        download.click();
+      } catch {
+        status.textContent = "Could not start the download. Please try again.";
+      } finally {
+        submit.disabled = false;
+      }
     });
-
-    const step = () => {
-      rx += (mx - rx) * 0.16;
-      ry += (my - ry) * 0.16;
-      dot.style.transform = `translate(${mx}px, ${my}px)`;
-      ring.style.transform = `translate(${rx}px, ${ry}px)`;
-      requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
   }
 
   /* ---------- start-sound picker ---------- */
@@ -309,11 +379,11 @@
     const answers = {
       below10: ["no", "This one is a shame: Acoustic needs Android 10 (API 29) or newer, and your phone tops out before that. The install would install but refuse to run — no point sending you the build."],
       "10": ["ok", "Yes — Android 10 is the floor, and it is exactly the build we test against most. Email with the subject Acoustic try-out and you'll usually hear back within a day or two."],
-      "11": ["ok", "Yes — Android 11 runs it cleanly. Email sakshamloonker@gmail.com with the subject Acoustic try-out."],
+      "11": ["ok", "Yes — Android 11 runs it cleanly. Email reachout.acoustic@gmail.com with the subject Acoustic try-out."],
       "12": ["ok", "Yes — Android 12 and 12L are both fully supported (API 31–32). Email for a testing build."],
-      "13": ["ok", "Yes — Android 13 is supported, 64-bit only (arm64-v8a). Email sakshamloonker@gmail.com with the subject Acoustic try-out."],
+      "13": ["ok", "Yes — Android 13 is supported, 64-bit only (arm64-v8a). Email reachout.acoustic@gmail.com with the subject Acoustic try-out."],
       "14": ["ok", "Yes — Android 14 (API 34) is our main test target. Email for a build and you'll be running in minutes."],
-      "15": ["ok", "Yes — Android 15 is supported. Email with the subject Acoustic try-out and mention your model."],
+      "15": ["ok", "Yes — Android 15 is supported. Email with the subject Acoustic try-out to request a build."],
       "16": ["ok", "Yes — Android 16 (API 36) is supported. Email for a testing build; if anything misbehaves on the new platform, we want to know."],
     };
     form.addEventListener("submit", (e) => e.preventDefault());
@@ -725,14 +795,14 @@ if (specBars && specRead) {
     const pw = W - P.l - P.r, ph = H - P.t - P.b;
     const X = (v) => P.l + v * pw;
     const Y = (v) => P.t + (1 - v) * ph;
-    const mono = (px) => px + 'px ui-monospace, "Cascadia Mono", Consolas, monospace';
+    const label = (px) => '600 ' + px + 'px "Instrument Sans", system-ui, sans-serif';
 
     const drawCeiling = (pct) => {
       const ceiling = pct / 100;
       g.clearRect(0, 0, W, H);
 
       // the hard ceiling, drawn as a terracotta wall
-      g.strokeStyle = "rgba(196,85,47,0.85)";
+      g.strokeStyle = "rgba(68,143,218,0.85)";
       g.setLineDash([5, 4]);
       g.lineWidth = 1.5;
       g.beginPath();
@@ -759,7 +829,7 @@ if (specBars && specRead) {
       g.fill();
 
       // above the line: what never gets through
-      g.fillStyle = "rgba(196,85,47,0.14)";
+      g.fillStyle = "rgba(68,143,218,0.14)";
       g.fillRect(X(ceiling), Y(1), X(1) - X(ceiling), Y(ceiling) - Y(1));
 
       // axes
@@ -772,7 +842,7 @@ if (specBars && specRead) {
       g.lineTo(P.l, Y(1));
       g.stroke();
 
-      g.font = mono(11);
+      g.font = label(11);
       g.fillStyle = "#A79E90";
       g.textAlign = "center";
       g.textBaseline = "top";
@@ -845,7 +915,7 @@ if (specBars && specRead) {
     const L1 = Math.log(EDGES[EDGES.length - 1]);
     const X = (hz) => P.l + ((Math.log(hz) - L0) / (L1 - L0)) * pw;
     const Y = (db) => P.t + (1 - (db + 12) / 24) * ph;
-    const mono = (px) => px + 'px ui-monospace, "Cascadia Mono", Consolas, monospace';
+    const label = (px) => '600 ' + px + 'px "Instrument Sans", system-ui, sans-serif';
 
     const paint = () => {
       const t = Number(tilt.value);
@@ -872,7 +942,7 @@ if (specBars && specRead) {
         const x = X(hz), y = Y(db);
         if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
       }
-      g.strokeStyle = t === 0 ? "#F2E9DB" : (t > 0 ? "#E8B48B" : "#A8C6B2");
+      g.strokeStyle = t === 0 ? "#F2E9DB" : (t > 0 ? "#92cbff" : "#A8C6B2");
       g.lineWidth = 2.4;
       g.lineJoin = "round";
       g.stroke();
@@ -884,7 +954,7 @@ if (specBars && specRead) {
       g.fill();
 
       // the band numbers, from the same edges the engine ships
-      g.font = mono(10);
+      g.font = label(10);
       g.textAlign = "center";
       g.textBaseline = "top";
       g.fillStyle = "#8D8478";
@@ -906,14 +976,14 @@ if (specBars && specRead) {
         g.textAlign = "left";
         g.textBaseline = "middle";
         g.fillStyle = "#8D8478";
-        g.font = mono(9);
+        g.font = label(9);
         g.fillText(EDGES[i] >= 1000 ? EDGES[i] / 1000 + "k" : String(EDGES[i]), 0, 0);
         g.restore();
       }
 
       g.textAlign = "left";
       g.textBaseline = "top";
-      g.font = mono(9);
+      g.font = label(9);
       g.fillStyle = "#8D8478";
       g.fillText("+12", 4, P.t - 4);
       g.fillText("  0", 4, Y(0) - 4);
@@ -969,7 +1039,7 @@ if (specBars && specRead) {
     return 0;
   }
 
-  const mono = (px) => `${px}px ui-monospace, "Cascadia Mono", Consolas, monospace`;
+  const label = (px) => `600 ${px}px "Instrument Sans", system-ui, sans-serif`;
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
@@ -993,7 +1063,7 @@ if (specBars && specRead) {
     }
     ctx.lineTo(xOf(F_MAX), yOf(0));
     ctx.closePath();
-    ctx.fillStyle = "rgba(196,85,47,0.13)";
+    ctx.fillStyle = "rgba(68,143,218,0.13)";
     ctx.fill();
 
     // response outline
@@ -1002,7 +1072,7 @@ if (specBars && specRead) {
       const y = yOf(responseAt(hzAt(px)) * 0.9);
       if (px === 0) ctx.moveTo(PAD.left + px, y); else ctx.lineTo(PAD.left + px, y);
     }
-    ctx.strokeStyle = "#C4552F";
+    ctx.strokeStyle = "#1764a8";
     ctx.lineWidth = 2;
     ctx.lineJoin = "round";
     ctx.stroke();
@@ -1018,7 +1088,7 @@ if (specBars && specRead) {
     // band numbers at geometric centres
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
-    ctx.font = mono(10);
+    ctx.font = label(10);
     for (let i = 0; i < EDGES.length - 1; i++) {
       const mid = Math.sqrt(EDGES[i] * EDGES[i + 1]);
       ctx.fillStyle = "rgba(0,35,64,0.8)";
@@ -1041,7 +1111,7 @@ if (specBars && specRead) {
       ctx.textAlign = "left";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#57534B";
-      ctx.font = mono(9);
+      ctx.font = label(9);
       ctx.fillText(EDGES[i] >= 1000 ? EDGES[i] / 1000 + "k" : String(EDGES[i]), 0, 0);
       ctx.restore();
     }
@@ -1049,7 +1119,7 @@ if (specBars && specRead) {
     // axis captions
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
-    ctx.font = mono(9);
+    ctx.font = label(9);
     ctx.fillStyle = "#57534B";
     ctx.fillText("Hz →", PAD.left, PAD.top + plotH + 14);
     ctx.textAlign = "right";
