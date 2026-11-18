@@ -27,7 +27,9 @@ Open http://localhost:8080. The pages are static. The Windows beta form calls th
 
 ## Deploy
 
-Netlify publishes the repository root (see `netlify.toml`). No build command is required.
+Cloudflare Workers deploys the site to `https://acoustic.acst.workers.dev`. Configure the `acoustic` Worker to build from GitHub's `main` branch with no build command and `npx wrangler deploy` as the deploy command. Wrangler serves the files selected by `.assetsignore` and applies `_headers`.
+
+Netlify can also publish the repository root using `netlify.toml`.
 
 ## Windows beta
 
