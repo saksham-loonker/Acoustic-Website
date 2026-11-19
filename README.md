@@ -52,6 +52,14 @@ The installer is stored in ordered parts in the private `acoustic-installers` bu
 4. Test the live signup and saved-code update paths. Verify the complete download’s checksum against the installer you built.
 5. Keep the current release and one earlier verified installer for rollback. Once old downloads have expired, remove older storage prefixes through the Supabase Storage dashboard. Removing an installer frees storage. Each new download still counts toward bandwidth.
 
+### Private GitHub download cutover
+
+The `Acoustic-Windows-Installers` private repository contains the staged release asset. The website Worker at `/windows-installer` checks the download ticket with Supabase and streams the installer from GitHub. Its `GITHUB_INSTALLER_TOKEN` secret needs read-only Contents access to that repository.
+
+Test the Worker with a valid website ticket, including a byte-range request and a full SHA-256 check. Then set `githubDownloadsEnabled` to `true` in the `windows-beta` Edge Function and redeploy it. The previous Supabase download path is available for rollback by setting the flag to `false` while its installer parts remain in Storage.
+
+For future GitHub releases, attach the executable to a prerelease in the private repository. Set `release`, `bytes`, `sha256`, and the numeric `githubAssetId` in the Edge Function.
+
 ## Notes
 
 - Android screenshots are captures from the connected test phone (the disposable `org.acoustic.app.validation` package, 0.23.0, fresh defaults), cropped to the app frame and downscaled. The Windows guide shows the beta activation screen and a [Microsoft Learn SmartScreen example](https://learn.microsoft.com/en-us/power-automate/desktop-flows/dynamics365-cs-rpa#install-and-configure-contoso-crm-app).

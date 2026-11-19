@@ -7,6 +7,9 @@ const release = "0.8.2-beta.5";
 const filename = `Acoustic-Desktop-App-setup-${release}.exe`;
 const bytes = 263277818;
 const sha256 = "0c1fd046b741cd9f96eee6d7b276723346c2bf3fcd4af96f24eabd7841938310";
+const githubAssetId = 767442843;
+const githubDownloadsEnabled = false;
+const githubDownloadUrl = "https://acoustic.acst.workers.dev/windows-installer";
 const partSize = 32 * 1024 * 1024;
 const lifetime = 45 * 60;
 const path = "/functions/v1/windows-beta";
@@ -178,7 +181,18 @@ Deno.serve(async (request) => {
     if (request.method === "GET" && url.pathname.endsWith("/windows-beta/release")) {
       return json({ version: release, filename, bytes, sha256 });
     }
-    if (["GET", "HEAD"].includes(request.method) && url.pathname.endsWith("/download")) return await download(request, url);
+    if (request.method === "GET" && url.pathname.endsWith("/download-authorization")) {
+      if (!await validTicket(url.searchParams.get("ticket"))) return json({ error: "Invalid download link." }, 403);
+      return json({ filename, bytes, assetId: githubAssetId });
+    }
+    if (["GET", "HEAD"].includes(request.method) && url.pathname.endsWith("/download")) {
+      if (!githubDownloadsEnabled) return await download(request, url);
+      const ticket = url.searchParams.get("ticket");
+      if (!await validTicket(ticket)) return json({ error: "Invalid download link." }, 403);
+      const target = new URL(githubDownloadUrl);
+      target.searchParams.set("ticket", ticket!);
+      return new Response(null, { status: 307, headers: { ...baseHeaders, location: target.href } });
+    }
     return json({ error: "Not found." }, 404);
   } catch {
     return json({ error: "The Windows beta is temporarily unavailable. Please try again." }, 503);
