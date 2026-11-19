@@ -7,6 +7,7 @@ const bucket = "acoustic-installers";
 const release = "0.8.2-beta.4";
 const filename = `Acoustic-Desktop-App-setup-${release}.exe`;
 const bytes = 263277702;
+const sha256 = "a1143435652bf67bd9405ea08258c1db3560061c3214a3d1808c8f8971224c88";
 const partSize = 32 * 1024 * 1024;
 const lifetime = 45 * 60;
 const path = "/functions/v1/windows-beta";
@@ -172,6 +173,9 @@ Deno.serve(async (request) => {
       } });
     }
     if (request.method === "POST" && url.pathname.endsWith("/windows-beta")) return await installerRequest(request);
+    if (request.method === "GET" && url.pathname.endsWith("/windows-beta/release")) {
+      return json({ version: release, filename, bytes, sha256 });
+    }
     if (["GET", "HEAD"].includes(request.method) && url.pathname.endsWith("/download")) return await download(request, url);
     return json({ error: "Not found." }, 404);
   } catch {

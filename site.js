@@ -259,6 +259,25 @@
     });
   }
 
+  const releaseLabels = document.querySelectorAll("[data-windows-version]");
+  if (releaseLabels.length) {
+    const releaseEndpoint = "https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta/release";
+    fetch(releaseEndpoint, { signal: AbortSignal.timeout(8000) })
+      .then((response) => {
+        if (!response.ok) throw Error("Release details unavailable");
+        return response.json();
+      })
+      .then(({ version, bytes, sha256 }) => {
+        if (typeof version !== "string" || !/^\d+\.\d+\.\d+(?:-[\w.-]+)?$/.test(version) ||
+            !Number.isSafeInteger(bytes) || bytes <= 0) return;
+        const size = Math.round(bytes / (1024 * 1024));
+        releaseLabels.forEach((label) => { label.textContent = `Version ${version} · x64 · ${size} MiB`; });
+        const checksum = document.querySelector("[data-windows-checksum]");
+        if (checksum && typeof sha256 === "string" && /^[0-9a-f]{64}$/.test(sha256)) checksum.textContent = sha256;
+      })
+      .catch(() => {});
+  }
+
   async function requestWindowsInstaller(form, payload) {
     const response = await fetch(form.action, {
       method: "POST",

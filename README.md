@@ -35,16 +35,21 @@ Netlify can also publish the repository root using `netlify.toml`.
 
 The homepage sends Windows beta signups to the `windows-beta` Supabase Edge Function and displays the activation code on the page. Returning testers can use their saved code at [Install the latest Windows update](https://acoustic.acst.workers.dev/#windows-update) without entering their name or email again. The main list is `public.beta_mailing_list`. A separate private table stores code hashes and access cutoffs. Duplicate signups cannot replace a code or reset a cutoff.
 
-The installer is stored in eight ordered parts in the private `acoustic-installers` bucket. After a successful signup, the function issues a 45-minute download link and streams the original x64 installer as a single file with resume support. The source installer is not committed or served as a public website asset.
+The installer is stored in ordered parts in the private `acoustic-installers` bucket. After a successful signup or access check, the function issues a 45-minute download link and streams the original x64 installer with resume support.
 
-- Current release: `Acoustic-Desktop-App-setup-0.8.2-beta.4.exe` (263,277,702 bytes)
-- SHA-256: `a1143435652bf67bd9405ea08258c1db3560061c3214a3d1808c8f8971224c88`
+- [Current Windows version, filename, file size, and SHA-256](https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta/release)
 - Start a tester’s final week in the Supabase SQL Editor with `select public.begin_windows_beta_final_week('tester@example.com');`
 - Stop a tester in the Supabase SQL Editor with `select public.stop_windows_beta_access('tester@example.com');`
-- The Supabase migration and Edge Function source live under `supabase/`. Upload the parts under a new version prefix before changing the function to serve a newer installer.
+
+### Publish a newer Windows installer
+
+1. Set the managed beta version in the Desktop App repository’s `scripts/build_installer.mjs` and run `npm run desktop:installer -- --managed-beta` on Windows x64.
+2. Test the packaged app. Record the exact installer byte count and SHA-256. Upload the installer to the private `acoustic-installers` bucket in 32 MiB parts named `<version>/part-0`, `<version>/part-1`, and so on.
+3. Set `release`, `bytes`, and `sha256` in `supabase/functions/windows-beta/index.ts`. Deploy the `windows-beta` Edge Function with its existing public routing settings. The same version powers signup downloads, update downloads, and the version and checksum shown on the website.
+4. Test the live signup and saved-code update paths. Verify the complete download’s checksum against the installer you built.
 
 ## Notes
 
-- Screenshots are unaltered captures from the connected test phone (the disposable `org.acoustic.app.validation` package, 0.23.0, fresh defaults), cropped to the app frame and downscaled.
+- Android screenshots are captures from the connected test phone (the disposable `org.acoustic.app.validation` package, 0.23.0, fresh defaults), cropped to the app frame and downscaled. The Windows guide shows the beta activation screen and a [Microsoft Learn SmartScreen example](https://learn.microsoft.com/en-us/power-automate/desktop-flows/dynamics365-cs-rpa#install-and-configure-contoso-crm-app).
 - The site intentionally has no third-party fonts, analytics or embeds. The Windows form uses Supabase only for beta signup and delivery.
 - Acoustic is a comfort-focused sound environment, not a medical device, not hearing protection and not active noise cancellation.

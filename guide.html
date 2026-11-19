@@ -324,6 +324,42 @@
       <p class="compare-note">ANC and masking solve different problems — ANC subtracts, Acoustic adds. Many testers carry both: ANC for planes, Acoustic for the desk. On your phone, swipe the table sideways.</p>
     </div>
   </section>
+  <section class="band band-tight" id="windows-install">
+    <div class="wrap">
+      <div class="sec-head"><h2>Install Acoustic on Windows</h2></div>
+      <p class="sec-strap">Acoustic is a student project, and we haven&rsquo;t been able to sign the Windows installer yet. You may see a Microsoft Defender SmartScreen prompt when you open it.</p>
+      <ol class="windows-install-steps">
+        <li>
+          <h3>Download Acoustic</h3>
+          <p><a href="index.html#windows-beta">Get the Windows beta</a> and save your activation code. For an update, <a href="index.html#windows-update">use your saved code</a> and quit Acoustic before running the installer.</p>
+        </li>
+        <li>
+          <h3>Open the installer from Downloads</h3>
+          <p>If you see <strong>Windows protected your PC</strong>, select <strong>More info</strong>. Check that the file is the Acoustic installer you downloaded from this site, then select <strong>Run anyway</strong> if Windows offers it. If your device blocks the install, check with its administrator.</p>
+          <figure>
+            <img src="assets/screenshots/windows-smartscreen.png" alt="Microsoft Defender SmartScreen warning with the More info link highlighted." width="479" height="460" loading="lazy" decoding="async">
+            <figcaption>SmartScreen example from <a href="https://learn.microsoft.com/en-us/power-automate/desktop-flows/dynamics365-cs-rpa#install-and-configure-contoso-crm-app">Microsoft Learn</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></figcaption>
+          </figure>
+        </li>
+        <li>
+          <h3>Open Acoustic and activate</h3>
+          <p>When setup finishes, open <strong>Acoustic Desktop App</strong> from the Start menu. If prompted, paste the code from the website and select <strong>Check access</strong>.</p>
+          <figure>
+            <img src="assets/screenshots/windows-beta-activation.png" alt="Acoustic Windows beta activation screen with the code field and Check access button." width="560" height="410" loading="lazy" decoding="async">
+            <figcaption>The Acoustic beta activation screen.</figcaption>
+          </figure>
+        </li>
+      </ol>
+      <details class="windows-install-checksum">
+        <summary>Verify the installer with SHA-256</summary>
+        <p>In PowerShell, replace the path below with the path to your downloaded installer and run the command. Compare the output to the published SHA-256.</p>
+        <p><code>Get-FileHash -Algorithm SHA256 -LiteralPath "C:\path\to\installer.exe"</code></p>
+        <p data-windows-version>Windows x64</p>
+        <p><code data-windows-checksum></code></p>
+        <p><a href="https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta/release">View current release details</a></p>
+      </details>
+    </div>
+  </section>
   <section class="band" id="fineprint">
     <div class="wrap">
       <div class="sec-head"><h2>The honest fine print.</h2></div>
