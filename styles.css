@@ -818,6 +818,7 @@ ol.cover-steps li::before {
 }
 .beta-option button { justify-self: start; text-align: left; }
 .beta-option button:disabled { opacity: .65; cursor: wait; }
+.beta-activation { grid-template-columns: minmax(0, 35rem); margin-top: 24px; }
 .beta-status:empty { display: none; }
 .beta-option .beta-status { margin: 4px 0 0; }
 @media (max-width: 650px) { .beta-options { grid-template-columns: minmax(0, 1fr); } }
