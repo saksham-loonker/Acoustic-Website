@@ -164,7 +164,7 @@
         </li>
         <li class="contents-row">
           <p class="contents-n">17</p>
-          <div class="contents-body"><h3>public-domain works</h3><p>Plain works chosen for calm — piano at the default, more in the shelf. Public domain, so there is no licensing fuss and no rights-holder to answer to. Credits ship in the app, not on this page.</p></div>
+          <div class="contents-body"><h3>music recordings, all CC0</h3><p>Piano is the default. The library includes other instruments, with source and creator credits in the app.</p></div>
           <span class="contents-tag">music</span>
         </li>
         <li class="contents-row">
@@ -174,7 +174,7 @@
         </li>
         <li class="contents-row">
           <p class="contents-n">You</p>
-          <div class="contents-body"><h3>rate it; it listens — to you, not your room</h3><p>Like, Love or Not for me on any sound. The app orders what surfaces next using a fixed rule set on the phone. Nothing is trained, nothing fitted, and the answers never leave the device — clearing your ratings clears the profile.</p></div>
+          <div class="contents-body"><h3>Rate the sounds you try</h3><p>Like, Love or Not for me on any sound. Acoustic uses your ratings to order suggestions on your device. You can clear the ratings in the app.</p></div>
           <span class="contents-tag">choices</span>
         </li>
       </ul>
@@ -202,7 +202,7 @@
             <div class="step-no">1</div>
             <div>
               <h3>Pick your sound</h3>
-              <p>59 CC0 field recordings — rain, caf&eacute;s, rivers, rooms — 17 public-domain music works, or steady colour noise, generated live on the phone. Your taste, your call.</p>
+              <p>59 CC0 ambience recordings, 17 CC0 music recordings, and steady colour noise generated in real time.</p>
             </div>
           </div>
           <div class="step">
@@ -230,7 +230,7 @@
   <section class="rig-band" id="rig">
     <div class="wrap">
       <div class="sec-head"><h2>Two honest benches. No install, no engine.</h2></div>
-      <p class="sec-strap">The live engine demo is gone — it needed your browser to fetch a 95 KB WebAssembly blob on demand, and too many real machines couldn't. What remains here always works: two drawings built from the real shipped values. The actual engine plays on your phone, after you ask for it.</p>
+      <p class="sec-strap">These two diagrams use settings from the app. The sound engine runs in the Windows and Android apps when you start playback.</p>
       <div class="tools-grid" id="toolsGrid">
         <article class="tool" data-tool="ceiling">
           <div class="tool-frame">
@@ -285,8 +285,8 @@
         </div>
         <div class="anatomy-step">
           <code>2 · Listen</code>
-          <h3>Only while you'd notice.</h3>
-          <p>In an Auto session the phone samples the room briefly, only then — a few seconds at a time, never otherwise. Leave, lock or stop, and listening ends.</p>
+          <h3>Auto and calibration use the mic.</h3>
+          <p>Fixed playback leaves the microphone off. Auto can sample the room in short intervals or listen continuously if you enable that option. You can also start a brief calibration separately.</p>
         </div>
         <div class="anatomy-step">
           <code>3 · Shape</code>
@@ -303,25 +303,24 @@
   </section>
   <section class="band" id="compare">
     <div class="wrap">
-      <div class="sec-head"><h2>What you give up for silence — usually.</h2></div>
-      <p class="sec-strap">Other tools exist. Some are for hardware, some are for your ears, some are for your wallet. Here is where Acoustic sits, hedged honestly because the comparison is complicated.</p>
-      <div class="compare-scroll">
+      <div class="sec-head"><h2 id="compare-heading">Sound masking, sleep apps and ANC</h2></div>
+      <div class="compare-scroll" role="region" aria-labelledby="compare-heading" tabindex="0">
         <table class="compare">
           <thead>
-            <tr><th scope="col"></th><th scope="col">Acoustic <span>in testing</span></th><th scope="col">White-noise &amp; sleep apps</th><th scope="col">ANC headphones</th></tr>
+            <tr><th scope="col">Feature</th><th scope="col">Acoustic <span>in testing</span></th><th scope="col">White-noise &amp; sleep apps</th><th scope="col">ANC headphones</th></tr>
           </thead>
           <tbody>
-            <tr><th scope="row">What it is</th><td>Steady <b>shaped</b> masking on the phone</td><td>Plays noise or loops</td><td>Cancels incoming sound</td></tr>
-            <tr><th scope="row">Price now</th><td><b>Free</b> for testers</td><td>Usually freemium or subscription</td><td>Hardware, one-time cost</td></tr>
-            <tr><th scope="row">Internet required</th><td><b>Never</b> — no INTERNET permission</td><td>Often yes</td><td>No</td></tr>
-            <tr><th scope="row">Account</th><td><b>None, ever</b></td><td>Frequently required</td><td>—</td></tr>
-            <tr><th scope="row">Sound you get</th><td>59 CC0 recordings, 17 PD works, colour noise</td><td>Company-owned beds, ads in free tier</td><td>Nothing added — it subtracts</td></tr>
-            <tr><th scope="row">Hears your room</th><td>Only in a session you start (Auto)</td><td>Some apps do, always</td><td>No</td></tr>
-            <tr><th scope="row">Privacy posture</th><td>Phone-only; preferences excluded from backup</td><td>Depends on vendor</td><td>Hardware, no data</td></tr>
+            <tr><th scope="row">How it works</th><td>Plays a masking sound on Windows or Android</td><td>Plays sounds for rest or sleep</td><td>Produces anti-noise to reduce some of the sound reaching your ears</td></tr>
+            <tr><th scope="row">Price</th><td>Free during beta</td><td>Free, one-time purchase or subscription, depending on the app</td><td>Depends on the headphones</td></tr>
+            <tr><th scope="row">Internet</th><td>Android runs offline. The Windows beta needs internet to activate and check access. Sounds are bundled on both.</td><td>Depends on whether sounds are bundled, downloaded or streamed</td><td>ANC can work offline. Setup and updates depend on the model.</td></tr>
+            <tr><th scope="row">Sign-up</th><td>Sign up with a name and email for Windows. Request an Android build by email.</td><td>Depends on the app</td><td>Depends on the headphones and companion app</td></tr>
+            <tr><th scope="row">Sound library</th><td>59 ambience recordings, 17 music works and generated colour noise</td><td>May include noise, nature sounds, music or guided audio</td><td>Depends on the model and companion app</td></tr>
+            <tr><th scope="row">Microphone use</th><td>Auto or a room calibration you start. Fixed playback leaves the mic off.</td><td>Depends on the features you enable</td><td>ANC uses microphones while enabled. They can pick up ambient sound, including voices.</td></tr>
+            <tr><th scope="row">Audio and data</th><td>Room audio is processed on your device. Windows sends its activation credential to check access.</td><td>Check the app&rsquo;s permissions and privacy policy</td><td>ANC uses microphone input to produce anti-noise. Data handling for other features depends on the model and app.</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="compare-note">ANC and masking solve different problems — ANC subtracts, Acoustic adds. Many testers carry both: ANC for planes, Acoustic for the desk. On your phone, swipe the table sideways.</p>
+      <p class="compare-note">Swipe or scroll the table sideways on smaller screens. <a href="https://support.apple.com/en-us/108918">How headphone microphones support ANC, explained by Apple</a></p>
     </div>
   </section>
   <section class="band band-tight" id="windows-install">
@@ -369,11 +368,11 @@
         <div class="promise-card good">
           <h3>What it is</h3>
           <ul class="promise-list">
-            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>An offline masking instrument.</b> The phone plays steady, shaped sound; that is all.</span></li>
-            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>All bundled.</b> 59 CC0 field recordings and 17 public-domain works, inside the install. No streaming.</span></li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>Sound masking on your device.</b> The Android app runs offline. The Windows beta checks access online.</span></li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>All bundled.</b> 59 ambience recordings and 17 music works are included with the app.</span></li>
             <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>One ceiling you set.</b> Every automatic move is clamped below it — in the audio path, not just the UI.</span></li>
-            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>Private by construction.</b> Preferences stay on the phone, excluded from backup and transfer.</span></li>
-            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>In testing, free.</b> Three people behind it, no ads to sell, no account to feed.</span></li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>Local preferences.</b> Windows also lets you export settings yourself.</span></li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>Free during beta.</b> Windows testers sign up for an activation code.</span></li>
           </ul>
         </div>
         <div class="promise-card bad">
@@ -383,7 +382,7 @@
             <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span><b>Not a medical device.</b> A comfort tool. Not treatment, not hearing protection, not a diagnostic.</span></li>
             <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span><b>Not calibrated in dBA.</b> Levels are percentages of your ceiling — the app says so on screen.</span></li>
             <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span><b>Not outcome evidence.</b> Whether it helps is yours to judge, on your phone, with your ears.</span></li>
-            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span><b>Not a hidden listener.</b> The mic listens only while a session you started is running — never otherwise.</span></li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span><b>Microphone use is optional.</b> Auto and room calibration use it on your device. Fixed playback leaves it off.</span></li>
           </ul>
         </div>
       </div>
@@ -395,7 +394,7 @@
       <div class="compat-card">
         <div>
           <h2>Will Acoustic run on my phone?</h2>
-          <p class="sec-strap" style="margin:14px 0 0">Acoustic needs Android 10 or newer and a 64-bit processor (arm64-v8a; x86_64 for emulators). Nothing else. If your answer is &ldquo;yes&rdquo;, email for a build and it runs today.</p>
+          <p class="sec-strap" style="margin:14px 0 0">The beta requires Android 10 or newer and a 64-bit Android system. The APK includes arm64-v8a and x86_64 builds. This checker covers the Android version requirement.</p>
         </div>
         <form class="compat-form" id="compatForm">
           <label for="androidVersion">Your Android version</label>
@@ -446,8 +445,8 @@
       <div class="sec-head"><h2>Privacy and Auto questions</h2></div>
       <div class="qa">
         <details>
-          <summary><span>Will my phone be spied on?</span><span class="pm" aria-hidden="true">+</span></summary>
-          <p>No. The manifest declares no INTERNET permission — the operating system refuses the request before the app can even try. Preferences live on the phone, excluded from backup. The mic listens only during a session you start.</p>
+          <summary><span>Does Acoustic upload microphone audio?</span><span class="pm" aria-hidden="true">+</span></summary>
+          <p>Acoustic processes microphone input on your device. The Android app has no internet permission. The Windows beta connects to check access. Read the <a href="legal.html#privacy">Privacy Policy</a> for details.</p>
         </details>
         <details>
           <summary><span>Is this a medical device?</span><span class="pm" aria-hidden="true">+</span></summary>
@@ -455,11 +454,11 @@
         </details>
         <details>
           <summary><span>What does Auto actually measure?</span><span class="pm" aria-hidden="true">+</span></summary>
-          <p>The level and rough spectral shape of the room, in short windows, only while a session you started is running. A phone on a desk is not a probe at your ear — which is why the app calls the result provisional, not cancellation.</p>
+          <p>Auto measures the room&rsquo;s sound level and how its energy is distributed across frequencies. It uses those measurements to adjust the masking sound within your volume limit. These measurements describe sound at the device&rsquo;s microphone.</p>
         </details>
         <details>
           <summary><span>Can I delete everything?</span><span class="pm" aria-hidden="true">+</span></summary>
-          <p>Yes. Ratings clear from inside the app — the profile is a fixed rule set, not a vault. Uninstalling removes your preferences with the app. There is no export to worry about because there is nothing to upload in the first place.</p>
+          <p>You can clear ratings and reset preferences in the app. Windows keeps its settings when you uninstall, so reset them in the app first if you want to clear them. Delete any settings files you exported separately. To request deletion of your beta signup record, use the <a href="legal.html#privacy">Privacy Policy contact details</a>.</p>
         </details>
       </div>
     </div>

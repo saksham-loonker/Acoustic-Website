@@ -362,6 +362,7 @@ figure.specimen-frame .tick, .blend-detail .tick, .fig-card .tick { border-color
 .compare tbody tr:last-child th, .compare tbody tr:last-child td { border-bottom: 0; }
 .compare tbody tr:nth-child(even) { background: var(--tint); }
 .compare-note { margin-top: var(--sp-3); color: var(--dim); font-size: 13px; max-width: 46rem; }
+.compare-note a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 
 /* ============ fine print: the dossier card ============ */
 .fineprint-wrap::before {

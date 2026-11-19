@@ -470,22 +470,16 @@
   const result = document.getElementById("compatResult");
   if (form && result) {
     const verSelect = form.querySelector("select");
-    const answers = {
-      below10: ["no", "This one is a shame: Acoustic needs Android 10 (API 29) or newer, and your phone tops out before that. The install would install but refuse to run — no point sending you the build."],
-      "10": ["ok", "Yes — Android 10 is the floor, and it is exactly the build we test against most. Email with the subject Acoustic try-out and you'll usually hear back within a day or two."],
-      "11": ["ok", "Yes — Android 11 runs it cleanly. Email reachout.acoustic@gmail.com with the subject Acoustic try-out."],
-      "12": ["ok", "Yes — Android 12 and 12L are both fully supported (API 31–32). Email for a testing build."],
-      "13": ["ok", "Yes — Android 13 is supported, 64-bit only (arm64-v8a). Email reachout.acoustic@gmail.com with the subject Acoustic try-out."],
-      "14": ["ok", "Yes — Android 14 (API 34) is our main test target. Email for a build and you'll be running in minutes."],
-      "15": ["ok", "Yes — Android 15 is supported. Email with the subject Acoustic try-out to request a build."],
-      "16": ["ok", "Yes — Android 16 (API 36) is supported. Email for a testing build; if anything misbehaves on the new platform, we want to know."],
-    };
     form.addEventListener("submit", (e) => e.preventDefault());
     verSelect.addEventListener("change", () => {
-      const a = answers[verSelect.value];
-      if (!a) { result.textContent = ""; result.className = "compat-result"; return; }
-      result.textContent = (a[0] === "ok" ? "Good news: " : "Straight answer: ") + a[1];
-      result.className = "compat-result " + a[0];
+      const version = verSelect.value;
+      const eligible = Number(version) >= 10;
+      result.textContent = !version
+        ? ""
+        : eligible
+          ? "This meets the Android version requirement. Your phone also needs a 64-bit Android system. Email reachout.acoustic@gmail.com to request a beta build."
+          : "The beta requires Android 10 (API 29) or newer.";
+      result.className = version ? "compat-result " + (eligible ? "ok" : "no") : "compat-result";
     });
   }
 

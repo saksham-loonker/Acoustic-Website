@@ -1,6 +1,6 @@
 # Acoustic-Website
 
-The website for Acoustic — an offline Windows and Android sound-masking instrument for noisy rooms. Static site, no build step; hosted on Netlify. Source for the instrument itself is private while the venture is in testing (free for testers — email reachout.acoustic@gmail.com).
+The website for Acoustic, a sound-masking app for Windows and Android. Audio processing is local. Android runs offline and the Windows beta checks access online. The static website deploys to Cloudflare Workers. The beta is free.
 
 **Coming soon to Google Play Store.** Engineering builds are available on request — see the contact address at the bottom of the homepage.
 
