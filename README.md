@@ -35,7 +35,7 @@ Netlify can also publish the repository root using `netlify.toml`.
 
 The homepage sends Windows beta signups to the `windows-beta` Supabase Edge Function and displays the activation code on the page. Returning testers can use their saved code at [Install the latest Windows update](https://acoustic.acst.workers.dev/#windows-update) without entering their name or email again. The main list is `public.beta_mailing_list`. A separate private table stores code hashes and access cutoffs. Duplicate signups cannot replace a code or reset a cutoff.
 
-The installer is stored in ordered parts in the private `acoustic-installers` bucket. After a successful signup or access check, the function issues a 45-minute download link and streams the original x64 installer with resume support.
+The installer is a release asset in the private `Acoustic-Windows-Installers` GitHub repository. After signup or an access check, Supabase issues a 45-minute download ticket. The Cloudflare Worker verifies the ticket with Supabase and streams the installer from GitHub with resume support.
 
 - [Current Windows version, filename, file size, and SHA-256](https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta/release)
 - Start a tester’s final week in the Supabase SQL Editor with `select public.begin_windows_beta_final_week('tester@example.com');`
@@ -47,18 +47,16 @@ The installer is stored in ordered parts in the private `acoustic-installers` bu
 ### Publish a newer Windows installer
 
 1. Set the managed beta version in the Desktop App repository’s `scripts/build_installer.mjs` and run `npm run desktop:installer -- --managed-beta` on Windows x64.
-2. Test the packaged app. Record the exact installer byte count and SHA-256. Upload the installer to the private `acoustic-installers` bucket in 32 MiB parts named `<version>/part-0`, `<version>/part-1`, and so on.
-3. Set `release`, `bytes`, and `sha256` in `supabase/functions/windows-beta/index.ts`. Deploy the `windows-beta` Edge Function with its existing public routing settings. The same version powers signup downloads, update downloads, and the version and checksum shown on the website.
+2. Test the packaged app and record the exact installer byte count and SHA-256. Attach the executable to a prerelease in the private `Acoustic-Windows-Installers` repository.
+3. Set `release`, `bytes`, `sha256`, and the numeric `githubAssetId` from the GitHub release asset API response in `supabase/functions/windows-beta/index.ts`. Deploy the `windows-beta` Edge Function with its existing public routing settings. These fields control the signup and update downloads and the version and checksum displayed on the website.
 4. Test the live signup and saved-code update paths. Verify the complete download’s checksum against the installer you built.
-5. Keep the current release and one earlier verified installer for rollback. Once old downloads have expired, remove older storage prefixes through the Supabase Storage dashboard. Removing an installer frees storage. Each new download still counts toward bandwidth.
+5. Keep the current release and one earlier verified installer for rollback. Restore the Edge Function metadata for the retained GitHub asset when rolling back.
 
-### Private GitHub download cutover
+### Installer delivery credentials and rollback
 
-The `Acoustic-Windows-Installers` private repository contains the staged release asset. The website Worker at `/windows-installer` checks the download ticket with Supabase and streams the installer from GitHub. Its `GITHUB_INSTALLER_TOKEN` secret needs read-only Contents access to that repository.
+The website Worker at `/windows-installer` uses the `GITHUB_INSTALLER_TOKEN` secret. Give the token read-only Contents access to the private installer repository.
 
-Test the Worker with a valid website ticket, including a byte-range request and a full SHA-256 check. Then set `githubDownloadsEnabled` to `true` in the `windows-beta` Edge Function and redeploy it. The previous Supabase download path is available for rollback by setting the flag to `false` while its installer parts remain in Storage.
-
-For future GitHub releases, attach the executable to a prerelease in the private repository. Set `release`, `bytes`, `sha256`, and the numeric `githubAssetId` in the Edge Function.
+For versions that still have matching parts in the Supabase `acoustic-installers` bucket, you can restore the previous download path by setting `githubDownloadsEnabled` to `false` and redeploying the Edge Function. Verify signup, saved-code updates, and the complete download after changing providers.
 
 ## Notes
 
