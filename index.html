@@ -156,7 +156,7 @@
         </details>
         <details>
           <summary><span>What does testing involve?</span><span class="pm" aria-hidden="true">+</span></summary>
-          <p>For Windows, enter your name and email to join the beta list and download the installer. For Android, email us with the subject <b>Acoustic try-out</b> and include your name. You can stop testing at any time.</p>
+          <p>For Windows, sign up to get your activation code and installer. For Android, email us with the subject <b>Acoustic try-out</b> and include your name. You can stop testing at any time.</p>
         </details>
         <details>
           <summary><span>How much does it cost?</span><span class="pm" aria-hidden="true">+</span></summary>
@@ -175,7 +175,7 @@
     <div class="beta-options">
       <div class="beta-option" id="windows-beta">
         <h3>Windows</h3>
-        <p>Version 0.8.1 &middot; x64 &middot; 251 MiB</p>
+        <p>Version 0.8.2 beta &middot; x64 &middot; 251 MiB</p>
         <form id="windowsBetaForm" method="post" action="https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta">
           <label for="betaName">Name</label>
           <input id="betaName" name="name" autocomplete="name" maxlength="120" required>
@@ -183,9 +183,15 @@
           <input id="betaEmail" name="email" type="email" autocomplete="email" maxlength="254" required>
           <div hidden><input name="website" tabindex="-1" autocomplete="off"></div>
           <p>Signing up adds your name and email to the beta mailing list. <a href="legal.html#privacy">Privacy Policy</a></p>
-          <button class="btn-primary" type="submit" disabled>Join the beta and download <span aria-hidden="true">&darr;</span></button>
+          <button class="btn-primary" type="submit" disabled>Get your activation code <span aria-hidden="true">&darr;</span></button>
           <p class="beta-status" id="windowsBetaStatus" role="status"></p>
-          <a id="windowsBetaDownload" hidden>Download the Windows installer again</a>
+          <div id="windowsBetaResult" hidden>
+            <label for="windowsBetaCode">Your activation code</label>
+            <input id="windowsBetaCode" type="text" readonly spellcheck="false">
+            <button id="windowsBetaCopy" type="button">Copy code</button>
+            <p>Save this code somewhere private. After installing, paste it into Acoustic and choose <b>Check access</b>.</p>
+            <a id="windowsBetaDownload" class="btn-primary">Download the Windows installer <span aria-hidden="true">&darr;</span></a>
+          </div>
           <noscript><p>Enable JavaScript to sign up and download the Windows beta.</p></noscript>
         </form>
       </div>

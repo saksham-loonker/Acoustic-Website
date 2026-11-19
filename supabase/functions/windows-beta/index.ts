@@ -3,9 +3,9 @@ const credentials = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const authHeaders = { apikey: credentials, authorization: "Bearer " + credentials };
 const encoder = new TextEncoder();
 const bucket = "acoustic-installers";
-const filename = "Acoustic-Desktop-App-setup-0.8.1.exe";
-const release = "0.8.1";
-const bytes = 263274077;
+const filename = "Acoustic-Desktop-App-setup-0.8.2-beta.3.exe";
+const release = "0.8.2-beta.3";
+const bytes = 263277585;
 const partSize = 32 * 1024 * 1024;
 const lifetime = 45 * 60;
 const path = "/functions/v1/windows-beta";
@@ -46,22 +46,32 @@ async function signup(request: Request) {
   try { info = JSON.parse(raw); } catch { return json({ error: "Enter your name and email address." }, 400); }
   const name = typeof info?.name === "string" ? info.name.trim() : "";
   const email = typeof info?.email === "string" ? info.email.trim().toLowerCase() : "";
+  const activationCode = info?.activationCode;
   if (!name || name.length > 120 || /[\u0000-\u001f\u007f]/.test(name) ||
       email.length > 254 || !/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email) || info?.website) {
     return json({ error: "Enter your name and a valid email address." }, 400);
   }
-  const saved = await fetch(project + "/rest/v1/beta_mailing_list?on_conflict=email", {
+  if (typeof activationCode !== "string" || !/^[0-9a-f]{48}$/.test(activationCode))
+    return json({ error: "Reload the Windows beta page and submit the updated signup form." }, 400);
+  const saved = await fetch(project + "/rest/v1/rpc/enroll_windows_beta", {
     method: "POST",
-    headers: { ...authHeaders, "content-type": "application/json", prefer: "resolution=ignore-duplicates,return=minimal" },
-    body: JSON.stringify({ name, email }),
+    headers: { ...authHeaders, "content-type": "application/json" },
+    body: JSON.stringify({ tester_name: name, tester_email: email, activation_code: activationCode }),
   });
   if (!saved.ok) return json({ error: "We couldn’t save your signup. Please try again." }, 503);
+  const enrollment = await saved.json();
+  if (enrollment === "existing")
+    return json({ error: "This email already has a code. Use the one you saved, or contact Acoustic for help." }, 409);
+  if (enrollment === "ended")
+    return json({ error: "Your Windows beta access has ended." }, 403);
+  if (enrollment !== "active")
+    return json({ error: "We couldn’t prepare your code. Check the signup details and try again." }, 400);
   // Use the incoming public host. SUPABASE_URL may be an internal runtime address.
   const location = new URL(request.url);
   const download = new URL(path + "/download", location.origin);
   download.protocol = "https:";
   download.searchParams.set("ticket", await makeTicket());
-  return json({ download: download.href });
+  return json({ download: download.href, activationCode });
 }
 
 function byteRange(value: string | null) {

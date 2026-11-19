@@ -262,19 +262,32 @@
   const betaForm = document.getElementById("windowsBetaForm");
   if (betaForm) {
     const status = document.getElementById("windowsBetaStatus");
+    const details = document.getElementById("windowsBetaResult");
+    const code = document.getElementById("windowsBetaCode");
+    const copy = document.getElementById("windowsBetaCopy");
     const download = document.getElementById("windowsBetaDownload");
     const submit = betaForm.querySelector('button[type="submit"]');
+    const draftCodes = new Map();
+
     submit.disabled = false;
     betaForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       submit.disabled = true;
-      download.hidden = true;
-      status.textContent = "Signing you up...";
+      details.hidden = true;
+      status.textContent = "Preparing your beta access...";
       try {
+        const payload = Object.fromEntries(new FormData(betaForm));
+        const email = payload.email.trim().toLowerCase();
+        if (!draftCodes.has(email)) {
+          const random = crypto.getRandomValues(new Uint8Array(24));
+          draftCodes.set(email, Array.from(random, (byte) => byte.toString(16).padStart(2, "0")).join(""));
+        }
+        payload.activationCode = draftCodes.get(email);
         const response = await fetch(betaForm.action, {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify(Object.fromEntries(new FormData(betaForm))),
+          body: JSON.stringify(payload),
+          signal: AbortSignal.timeout(15000),
         });
         const result = await response.json();
         if (!response.ok) {
@@ -282,16 +295,26 @@
           return;
         }
         const target = new URL(result.download);
-        if (target.origin !== new URL(betaForm.action).origin) throw new Error("Invalid download host");
+        if (target.origin !== new URL(betaForm.action).origin || result.activationCode !== payload.activationCode)
+          throw Error("Invalid enrollment response");
+        code.value = result.activationCode;
         download.href = target.href;
-        download.hidden = false;
-        betaForm.reset();
-        status.textContent = "You?re on the list. Your download should start now.";
-        download.click();
+        details.hidden = false;
+        status.textContent = "Your activation code and installer are ready.";
       } catch {
-        status.textContent = "Could not start the download. Please try again.";
+        status.textContent = "Could not prepare your beta access. Please try again on this page.";
       } finally {
         submit.disabled = false;
+      }
+    });
+
+    copy.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(code.value);
+        status.textContent = "Activation code copied.";
+      } catch {
+        code.select();
+        status.textContent = "Copy the selected activation code.";
       }
     });
   }
