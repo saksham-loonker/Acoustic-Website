@@ -259,12 +259,27 @@
     });
   }
 
+  async function requestWindowsInstaller(form, payload) {
+    const response = await fetch(form.action, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(15000),
+    });
+    const result = await response.json();
+    if (!response.ok) return { error: result.error || "The Windows installer is temporarily unavailable." };
+    const endpoint = new URL(form.action);
+    const target = new URL(result.download);
+    if (target.origin !== endpoint.origin || target.pathname !== endpoint.pathname + "/download")
+      throw Error("Invalid download link");
+    return { ...result, download: target.href };
+  }
+
   const betaForm = document.getElementById("windowsBetaForm");
   if (betaForm) {
     const status = document.getElementById("windowsBetaStatus");
     const details = document.getElementById("windowsBetaResult");
     const code = document.getElementById("windowsBetaCode");
-    const existingCode = document.getElementById("windowsBetaExistingCode");
     const copy = document.getElementById("windowsBetaCopy");
     const download = document.getElementById("windowsBetaDownload");
     const submit = betaForm.querySelector('button[type="submit"]');
@@ -279,33 +294,20 @@
       try {
         const payload = Object.fromEntries(new FormData(betaForm));
         const email = payload.email.trim().toLowerCase();
-        const saved = existingCode.value.trim().toLowerCase();
-        if (saved && !/^[0-9a-f]{48}$/.test(saved)) {
-          status.textContent = "Paste the full 48-character activation code.";
-          existingCode.focus();
-          return;
-        }
-        if (!saved && !draftCodes.has(email)) {
+        if (!draftCodes.has(email)) {
           const random = crypto.getRandomValues(new Uint8Array(24));
           draftCodes.set(email, Array.from(random, (byte) => byte.toString(16).padStart(2, "0")).join(""));
         }
-        payload.activationCode = saved || draftCodes.get(email);
-        const response = await fetch(betaForm.action, {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify(payload),
-          signal: AbortSignal.timeout(15000),
-        });
-        const result = await response.json();
-        if (!response.ok) {
-          status.textContent = result.error || "Signup is temporarily unavailable. Please try again.";
+        payload.activationCode = draftCodes.get(email);
+        const result = await requestWindowsInstaller(betaForm, payload);
+        if (result.error) {
+          status.textContent = result.error;
           return;
         }
-        const target = new URL(result.download);
-        if (target.origin !== new URL(betaForm.action).origin || result.activationCode !== payload.activationCode)
+        if (result.activationCode !== payload.activationCode)
           throw Error("Invalid enrollment response");
         code.value = result.activationCode;
-        download.href = target.href;
+        download.href = result.download;
         details.hidden = false;
         status.textContent = "Your activation code and installer are ready.";
       } catch {
@@ -322,6 +324,49 @@
       } catch {
         code.select();
         status.textContent = "Copy the selected activation code.";
+      }
+    });
+  }
+
+  const updateForm = document.getElementById("windowsUpdateForm");
+  if (updateForm) {
+    const updateDetails = document.getElementById("windows-update");
+    const code = document.getElementById("windowsUpdateCode");
+    const status = document.getElementById("windowsUpdateStatus");
+    const download = document.getElementById("windowsUpdateDownload");
+    const submit = updateForm.querySelector('button[type="submit"]');
+    const openUpdate = () => {
+      if (location.hash === "#windows-update") updateDetails.open = true;
+    };
+    openUpdate();
+    window.addEventListener("hashchange", openUpdate);
+    submit.disabled = false;
+    updateForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const activationCode = code.value.trim().toLowerCase();
+      download.hidden = true;
+      download.removeAttribute("href");
+      if (!/^[0-9a-f]{48}$/.test(activationCode)) {
+        status.textContent = "Paste the full 48-character activation code.";
+        code.focus();
+        return;
+      }
+      status.textContent = "Checking your beta access...";
+      submit.disabled = true;
+      try {
+        const result = await requestWindowsInstaller(updateForm, { action: "update", activationCode });
+        if (result.error) {
+          status.textContent = result.error;
+          return;
+        }
+        download.href = result.download;
+        download.hidden = false;
+        code.value = "";
+        status.textContent = "Your update is ready to download.";
+      } catch {
+        status.textContent = "Could not prepare your update. Please try again.";
+      } finally {
+        submit.disabled = false;
       }
     });
   }

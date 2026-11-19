@@ -1,5 +1,6 @@
 const project = Deno.env.get("SUPABASE_URL")!;
 const credentials = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 const authHeaders = { apikey: credentials, authorization: "Bearer " + credentials };
 const encoder = new TextEncoder();
 const bucket = "acoustic-installers";
@@ -35,7 +36,29 @@ async function validTicket(value: string | null) {
   return crypto.subtle.verify("HMAC", await ticketKey, signature, encoder.encode(filename + ":" + ticket[1]));
 }
 
-async function signup(request: Request) {
+async function installerLink(request: Request) {
+  // SUPABASE_URL may be an internal runtime address.
+  const download = new URL(path + "/download", request.url);
+  download.protocol = "https:";
+  download.searchParams.set("ticket", await makeTicket());
+  return download.href;
+}
+
+async function update(request: Request, activationCode: string) {
+  const checked = await fetch(project + "/rest/v1/rpc/check_windows_beta_access", {
+    method: "POST",
+    headers: { apikey: anonKey, "content-type": "application/json" },
+    body: JSON.stringify({ activation_code: activationCode }),
+  });
+  if (!checked.ok) return json({ error: "Could not check your beta access. Please try again." }, 503);
+  const { status } = await checked.json();
+  if (status === "ended") return json({ error: "Your Windows beta access has ended." }, 403);
+  if (status === "invalid") return json({ error: "This activation code was not recognized." }, 403);
+  if (status !== "active") return json({ error: "Could not check your beta access. Please try again." }, 503);
+  return json({ download: await installerLink(request) });
+}
+
+async function installerRequest(request: Request) {
   if (!request.headers.get("content-type")?.startsWith("application/json")) {
     return json({ error: "Submit the signup form to get the installer." }, 415);
   }
@@ -44,15 +67,17 @@ async function signup(request: Request) {
   if (raw.length > 2048) return json({ error: "Signup is too long." }, 413);
   let info;
   try { info = JSON.parse(raw); } catch { return json({ error: "Enter your name and email address." }, 400); }
+  const activationCode = info?.activationCode;
+  if (typeof activationCode !== "string" || !/^[0-9a-f]{48}$/.test(activationCode))
+    return json({ error: "Submit the Windows beta form with a valid activation code." }, 400);
+  if (info?.action === "update") return update(request, activationCode);
+
   const name = typeof info?.name === "string" ? info.name.trim() : "";
   const email = typeof info?.email === "string" ? info.email.trim().toLowerCase() : "";
-  const activationCode = info?.activationCode;
   if (!name || name.length > 120 || /[\u0000-\u001f\u007f]/.test(name) ||
       email.length > 254 || !/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email) || info?.website) {
     return json({ error: "Enter your name and a valid email address." }, 400);
   }
-  if (typeof activationCode !== "string" || !/^[0-9a-f]{48}$/.test(activationCode))
-    return json({ error: "Reload the Windows beta page and submit the updated signup form." }, 400);
   const saved = await fetch(project + "/rest/v1/rpc/enroll_windows_beta", {
     method: "POST",
     headers: { ...authHeaders, "content-type": "application/json" },
@@ -61,17 +86,12 @@ async function signup(request: Request) {
   if (!saved.ok) return json({ error: "We couldn’t save your signup. Please try again." }, 503);
   const enrollment = await saved.json();
   if (enrollment === "existing")
-    return json({ error: "This email already has a code. Open “Already have an activation code?” and paste your saved code, or contact Acoustic for help." }, 409);
+    return json({ error: "This email already has a code. Use your saved code in the Windows update form, or contact Acoustic for help." }, 409);
   if (enrollment === "ended")
     return json({ error: "Your Windows beta access has ended." }, 403);
   if (enrollment !== "active")
     return json({ error: "We couldn’t prepare your code. Check the signup details and try again." }, 400);
-  // Use the incoming public host. SUPABASE_URL may be an internal runtime address.
-  const location = new URL(request.url);
-  const download = new URL(path + "/download", location.origin);
-  download.protocol = "https:";
-  download.searchParams.set("ticket", await makeTicket());
-  return json({ download: download.href, activationCode });
+  return json({ download: await installerLink(request), activationCode });
 }
 
 function byteRange(value: string | null) {
@@ -151,7 +171,7 @@ Deno.serve(async (request) => {
         "access-control-allow-headers": "content-type",
       } });
     }
-    if (request.method === "POST" && url.pathname.endsWith("/windows-beta")) return await signup(request);
+    if (request.method === "POST" && url.pathname.endsWith("/windows-beta")) return await installerRequest(request);
     if (["GET", "HEAD"].includes(request.method) && url.pathname.endsWith("/download")) return await download(request, url);
     return json({ error: "Not found." }, 404);
   } catch {

@@ -588,6 +588,7 @@ figure.specimen-frame .tick, .blend-detail .tick, .fig-card .tick { border-color
 .btn-secondary:hover { border-bottom-color: #a9d5ff; }
 .hero a:focus-visible { outline-color: #92cbff; }
 .hero-note { margin-top: 18px; color: #b5c9e2; font-size: 13px; }
+.hero-note a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .hero-visual { margin: 0; min-width: 0; }
 .phone-stage {
   display: grid; place-items: center; position: relative; isolation: isolate;
@@ -818,8 +819,11 @@ ol.cover-steps li::before {
 }
 .beta-option button { justify-self: start; text-align: left; }
 .beta-option button:disabled { opacity: .65; cursor: wait; }
-#windowsBetaForm summary { cursor: pointer; font-size: 14px; }
-#windowsBetaForm details label { display: block; margin-block: 7px 3px; }
+.beta-update { border-block: 1px solid var(--line); padding-block: 10px; margin-bottom: 18px; }
+.beta-update summary { cursor: pointer; font-size: 14px; font-weight: 600; }
+.beta-update > p { margin: 10px 0; }
+.beta-update form a { justify-self: start; }
+.beta-update form a[hidden] { display: none; }
 #windowsBetaResult > p { margin-block: 10px; }
 #windowsBetaCode { font-family: ui-monospace, monospace; }
 .beta-status:empty { display: none; }

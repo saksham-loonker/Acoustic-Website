@@ -33,7 +33,7 @@ Netlify can also publish the repository root using `netlify.toml`.
 
 ## Windows beta
 
-The homepage sends Windows beta signups to the `windows-beta` Supabase Edge Function and displays the activation code on the page. Returning testers can use their saved code to get a fresh download link. The main list is `public.beta_mailing_list`. A separate private table stores code hashes and access cutoffs. Duplicate signups cannot replace a code or reset a cutoff.
+The homepage sends Windows beta signups to the `windows-beta` Supabase Edge Function and displays the activation code on the page. Returning testers can use their saved code at [Install the latest Windows update](https://acoustic.acst.workers.dev/#windows-update) without entering their name or email again. The main list is `public.beta_mailing_list`. A separate private table stores code hashes and access cutoffs. Duplicate signups cannot replace a code or reset a cutoff.
 
 The installer is stored in eight ordered parts in the private `acoustic-installers` bucket. After a successful signup, the function issues a 45-minute download link and streams the original x64 installer as a single file with resume support. The source installer is not committed or served as a public website asset.
 
