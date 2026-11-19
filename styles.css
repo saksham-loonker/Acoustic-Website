@@ -818,6 +818,8 @@ ol.cover-steps li::before {
 }
 .beta-option button { justify-self: start; text-align: left; }
 .beta-option button:disabled { opacity: .65; cursor: wait; }
+#windowsBetaForm summary { cursor: pointer; font-size: 14px; }
+#windowsBetaForm details label { display: block; margin-block: 7px 3px; }
 #windowsBetaResult > p { margin-block: 10px; }
 #windowsBetaCode { font-family: ui-monospace, monospace; }
 .beta-status:empty { display: none; }

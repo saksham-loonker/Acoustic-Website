@@ -3,9 +3,9 @@ const credentials = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const authHeaders = { apikey: credentials, authorization: "Bearer " + credentials };
 const encoder = new TextEncoder();
 const bucket = "acoustic-installers";
-const filename = "Acoustic-Desktop-App-setup-0.8.2-beta.3.exe";
-const release = "0.8.2-beta.3";
-const bytes = 263277585;
+const release = "0.8.2-beta.4";
+const filename = `Acoustic-Desktop-App-setup-${release}.exe`;
+const bytes = 263277702;
 const partSize = 32 * 1024 * 1024;
 const lifetime = 45 * 60;
 const path = "/functions/v1/windows-beta";
@@ -61,7 +61,7 @@ async function signup(request: Request) {
   if (!saved.ok) return json({ error: "We couldn’t save your signup. Please try again." }, 503);
   const enrollment = await saved.json();
   if (enrollment === "existing")
-    return json({ error: "This email already has a code. Use the one you saved, or contact Acoustic for help." }, 409);
+    return json({ error: "This email already has a code. Open “Already have an activation code?” and paste your saved code, or contact Acoustic for help." }, 409);
   if (enrollment === "ended")
     return json({ error: "Your Windows beta access has ended." }, 403);
   if (enrollment !== "active")

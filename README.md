@@ -33,12 +33,13 @@ Netlify can also publish the repository root using `netlify.toml`.
 
 ## Windows beta
 
-The homepage sends Windows beta signups to the `windows-beta` Supabase Edge Function and displays the activation code on the page. The main list is `public.beta_mailing_list`. A separate private table stores code hashes and access cutoffs. Duplicate signups cannot replace a code or reset a cutoff.
+The homepage sends Windows beta signups to the `windows-beta` Supabase Edge Function and displays the activation code on the page. Returning testers can use their saved code to get a fresh download link. The main list is `public.beta_mailing_list`. A separate private table stores code hashes and access cutoffs. Duplicate signups cannot replace a code or reset a cutoff.
 
 The installer is stored in eight ordered parts in the private `acoustic-installers` bucket. After a successful signup, the function issues a 45-minute download link and streams the original x64 installer as a single file with resume support. The source installer is not committed or served as a public website asset.
 
-- Current release: `Acoustic-Desktop-App-setup-0.8.2-beta.3.exe` (263,277,585 bytes)
-- SHA-256: `15034c877950fa9b2712797e25d580ebeb6d31f0666de8ddd09f89229d07991c`
+- Current release: `Acoustic-Desktop-App-setup-0.8.2-beta.4.exe` (263,277,702 bytes)
+- SHA-256: `a1143435652bf67bd9405ea08258c1db3560061c3214a3d1808c8f8971224c88`
+- Start a tester’s final week in the Supabase SQL Editor with `select public.begin_windows_beta_final_week('tester@example.com');`
 - Stop a tester in the Supabase SQL Editor with `select public.stop_windows_beta_access('tester@example.com');`
 - The Supabase migration and Edge Function source live under `supabase/`. Upload the parts under a new version prefix before changing the function to serve a newer installer.
 

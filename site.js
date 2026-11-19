@@ -264,6 +264,7 @@
     const status = document.getElementById("windowsBetaStatus");
     const details = document.getElementById("windowsBetaResult");
     const code = document.getElementById("windowsBetaCode");
+    const existingCode = document.getElementById("windowsBetaExistingCode");
     const copy = document.getElementById("windowsBetaCopy");
     const download = document.getElementById("windowsBetaDownload");
     const submit = betaForm.querySelector('button[type="submit"]');
@@ -278,11 +279,17 @@
       try {
         const payload = Object.fromEntries(new FormData(betaForm));
         const email = payload.email.trim().toLowerCase();
-        if (!draftCodes.has(email)) {
+        const saved = existingCode.value.trim().toLowerCase();
+        if (saved && !/^[0-9a-f]{48}$/.test(saved)) {
+          status.textContent = "Paste the full 48-character activation code.";
+          existingCode.focus();
+          return;
+        }
+        if (!saved && !draftCodes.has(email)) {
           const random = crypto.getRandomValues(new Uint8Array(24));
           draftCodes.set(email, Array.from(random, (byte) => byte.toString(16).padStart(2, "0")).join(""));
         }
-        payload.activationCode = draftCodes.get(email);
+        payload.activationCode = saved || draftCodes.get(email);
         const response = await fetch(betaForm.action, {
           method: "POST",
           headers: { "content-type": "application/json" },
