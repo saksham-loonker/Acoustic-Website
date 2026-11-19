@@ -1,13 +1,12 @@
 const project = Deno.env.get("SUPABASE_URL")!;
 const credentials = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 const authHeaders = { apikey: credentials, authorization: "Bearer " + credentials };
 const encoder = new TextEncoder();
 const bucket = "acoustic-installers";
-const release = "0.8.2-beta.4";
+const release = "0.8.2-beta.5";
 const filename = `Acoustic-Desktop-App-setup-${release}.exe`;
-const bytes = 263277702;
-const sha256 = "a1143435652bf67bd9405ea08258c1db3560061c3214a3d1808c8f8971224c88";
+const bytes = 263277818;
+const sha256 = "0c1fd046b741cd9f96eee6d7b276723346c2bf3fcd4af96f24eabd7841938310";
 const partSize = 32 * 1024 * 1024;
 const lifetime = 45 * 60;
 const path = "/functions/v1/windows-beta";
@@ -48,7 +47,7 @@ async function installerLink(request: Request) {
 async function update(request: Request, activationCode: string) {
   const checked = await fetch(project + "/rest/v1/rpc/check_windows_beta_access", {
     method: "POST",
-    headers: { apikey: anonKey, "content-type": "application/json" },
+    headers: { ...authHeaders, "content-type": "application/json" },
     body: JSON.stringify({ activation_code: activationCode }),
   });
   if (!checked.ok) return json({ error: "Could not check your beta access. Please try again." }, 503);
@@ -72,6 +71,9 @@ async function installerRequest(request: Request) {
   if (typeof activationCode !== "string" || !/^[0-9a-f]{48}$/.test(activationCode))
     return json({ error: "Submit the Windows beta form with a valid activation code." }, 400);
   if (info?.action === "update") return update(request, activationCode);
+  if (Deno.env.get("WINDOWS_BETA_SIGNUPS_PAUSED") === "true") {
+    return json({ error: "New Windows beta signups are paused. If you already have a code, you can still get updates." }, 503);
+  }
 
   const name = typeof info?.name === "string" ? info.name.trim() : "";
   const email = typeof info?.email === "string" ? info.email.trim().toLowerCase() : "";

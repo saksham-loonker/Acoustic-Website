@@ -40,6 +40,9 @@ The installer is stored in ordered parts in the private `acoustic-installers` bu
 - [Current Windows version, filename, file size, and SHA-256](https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta/release)
 - Start a tester’s final week in the Supabase SQL Editor with `select public.begin_windows_beta_final_week('tester@example.com');`
 - Stop a tester in the Supabase SQL Editor with `select public.stop_windows_beta_access('tester@example.com');`
+- Look up a code’s tester email, device count, and cutoff with `select public.find_windows_beta_code_owner('code');`. In the table `acoustic_beta.windows_beta_access`, each email has one code hash and up to three device hashes.
+- To clear the three registered device slots for a tester, use `select public.reset_windows_beta_devices('tester@example.com');`. Their current code and cutoff stay in effect.
+- To pause new signups while existing testers can still activate and get updates, set the Edge Function secret `WINDOWS_BETA_SIGNUPS_PAUSED` to `true`. Unset it or set it to `false` to resume signups.
 
 ### Publish a newer Windows installer
 
@@ -47,6 +50,7 @@ The installer is stored in ordered parts in the private `acoustic-installers` bu
 2. Test the packaged app. Record the exact installer byte count and SHA-256. Upload the installer to the private `acoustic-installers` bucket in 32 MiB parts named `<version>/part-0`, `<version>/part-1`, and so on.
 3. Set `release`, `bytes`, and `sha256` in `supabase/functions/windows-beta/index.ts`. Deploy the `windows-beta` Edge Function with its existing public routing settings. The same version powers signup downloads, update downloads, and the version and checksum shown on the website.
 4. Test the live signup and saved-code update paths. Verify the complete download’s checksum against the installer you built.
+5. Keep the current release and one earlier verified installer for rollback. Once old downloads have expired, remove older storage prefixes through the Supabase Storage dashboard. Removing an installer frees storage. Each new download still counts toward bandwidth.
 
 ## Notes
 

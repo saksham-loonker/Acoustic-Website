@@ -181,7 +181,7 @@
         <p>Acoustic is a student project, and we haven&rsquo;t been able to sign the Windows installer yet. <a href="guide.html#windows-install">See the installation guide with screenshots</a>.</p>
         <details class="beta-update" id="windows-update">
           <summary>Install the latest Windows update</summary>
-          <p>Use your saved activation code to download the latest installer. Quit Acoustic, then run the installer to update your existing copy.</p>
+          <p>Use your saved activation code to download the latest installer. Quit Acoustic, then run the installer. If an older build rejects your code, update and use the same code again.</p>
           <form id="windowsUpdateForm" method="post" action="https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta">
             <label for="windowsUpdateCode">Saved activation code</label>
             <input id="windowsUpdateCode" name="activationCode" type="text" autocomplete="off" spellcheck="false" autocapitalize="off" maxlength="64" required>
@@ -197,7 +197,7 @@
           <label for="betaEmail">Email address</label>
           <input id="betaEmail" name="email" type="email" autocomplete="email" maxlength="254" required>
           <div hidden><input name="website" tabindex="-1" autocomplete="off"></div>
-          <p>Signing up adds your name and email to the beta mailing list. <a href="legal.html#privacy">Privacy Policy</a></p>
+          <p>Signing up adds your name and email to the beta mailing list. Each code supports up to three Windows devices. <a href="legal.html#privacy">Privacy Policy</a></p>
           <button class="btn-primary" type="submit" disabled>Get your activation code <span aria-hidden="true">&darr;</span></button>
           <p class="beta-status" id="windowsBetaStatus" role="status"></p>
           <div id="windowsBetaResult" hidden>
