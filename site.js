@@ -314,7 +314,9 @@
             !Number.isSafeInteger(bytes) || bytes <= 0) return;
         if (macChecksum && typeof sha256 === "string" && /^[0-9a-f]{64}$/.test(sha256)) {
           macChecksum.textContent = sha256;
-          document.getElementById("mac-install").hidden = false;
+          const installGuide = document.getElementById("mac-install");
+          installGuide.hidden = false;
+          if (location.hash === "#mac-install") installGuide.scrollIntoView({ behavior: "instant" });
         }
         if (!macNote) return;
         macDownloadAvailable = true;

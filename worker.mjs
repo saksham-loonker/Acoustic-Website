@@ -1,6 +1,12 @@
 const installerPath = "/windows-installer";
 const macInstallerPath = "/mac-installer";
-const macRelease = null;
+const macRelease = {
+  version: "0.8.2-beta.6",
+  filename: "Acoustic-Desktop-App-0.8.2-beta.6-macos-universal.dmg",
+  bytes: 369983706,
+  sha256: "711c8adda7ead9c3d2249f7f38c0a5988bf062b407d261d69410a52f0be989c6",
+  assetId: 772029076,
+};
 const authorizeUrl = "https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta/download-authorization";
 const githubAssets = "https://api.github.com/repos/saksham-loonker/Acoustic-Windows-Installers/releases/assets/";
 const githubDownloadHosts = new Set(["release-assets.githubusercontent.com", "objects.githubusercontent.com"]);
