@@ -578,6 +578,7 @@ figure.specimen-frame .tick, .blend-detail .tick, .fig-card .tick { border-color
 .hero-title em { color: #92cbff; }
 .hero-sub { max-width: 43ch; margin: 24px 0; color: #cfdeef; font-size: clamp(16px, 1.42vw, 19px); line-height: 1.58; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; }
+[data-mac-entry][hidden] { display: none; }
 .btn-primary, .btn-secondary {
   display: inline-flex; align-items: center; justify-content: space-between; gap: 14px;
   min-height: 48px; border: 1px solid transparent;

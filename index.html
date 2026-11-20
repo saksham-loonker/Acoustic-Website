@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Acoustic — a quieter room for noisy places</title>
-  <meta name="description" content="Acoustic is a sound-masking app for Windows and Android with bundled recordings, generated noise, and a volume limit you set. Free during beta.">
+  <meta name="description" content="Acoustic is a sound-masking app for Windows, Mac, and Android with bundled recordings, generated noise, and a volume limit you set. Free during beta.">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f5f9">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b1019">
 <script>
@@ -22,7 +22,7 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Acoustic — a quieter room for noisy places">
-  <meta property="og:description" content="Sound masking for Windows and Android. Bundled sounds, optional Auto, and free beta access.">
+  <meta property="og:description" content="Sound masking for Windows, Mac, and Android. Bundled sounds, optional Auto, and free beta access.">
   <meta property="og:image" content="assets/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="styles.css">
@@ -54,6 +54,7 @@
           <a href="guide.html">Sound guide</a>
           <a href="guide.html#picker">Find your sound</a>
           <a href="#windows-update">Install latest Windows update</a>
+          <a href="#mac-update" data-mac-entry hidden>Install latest Mac update</a>
           <a href="#get">Join testing</a>
         </nav>
       </details>
@@ -71,15 +72,16 @@
   <section class="hero" aria-labelledby="heroTitle">
     <div class="hero-content">
       <div class="hero-brand">
-        <p class="hero-kicker">Acoustic <span aria-hidden="true"></span> Sound masking for Windows and Android</p>
+        <p class="hero-kicker">Acoustic <span aria-hidden="true"></span> Sound masking for Windows<span data-mac-entry hidden>, Mac,</span> and Android</p>
         <h1 class="hero-title" id="heroTitle">Some rooms don&rsquo;t<br>come with a <em>door.</em></h1>
         <p class="hero-sub">A call at the next desk. A bus outside. Acoustic gives those sounds a steady backdrop. Pick a sound, set your volume limit, and get back to what you were doing.</p>
         <div class="hero-actions">
-          <a class="btn-primary" href="#windows-beta"><span data-desktop-hero-signup>Get the Windows beta</span> <span aria-hidden="true">&nearr;</span></a>
+          <a class="btn-primary" href="#windows-beta">Get the Windows beta <span aria-hidden="true">&nearr;</span></a>
+          <a class="btn-primary" href="#mac-beta" data-mac-entry hidden>Get the Mac beta <span aria-hidden="true">&nearr;</span></a>
           <a class="btn-secondary" href="guide.html#picker">Find your sound <span aria-hidden="true">&nearr;</span></a>
         </div>
         <p class="hero-note hero-install-note"><strong>The Windows installer is unsigned.</strong> Acoustic is a student project, and we haven&rsquo;t been able to sign it yet. If Windows shows a SmartScreen warning, <a href="guide.html#windows-install">see the steps with screenshots</a>.</p>
-        <p class="hero-note">Free while we test &middot; <a href="#windows-update" data-desktop-hero-update>Install latest Windows update</a></p>
+        <p class="hero-note">Free while we test &middot; Latest updates for <a href="#windows-update">Windows</a><span data-mac-entry hidden> and <a href="#mac-update">Mac</a></span></p>
       </div>
       <figure class="hero-visual">
         <div class="phone-stage">
@@ -182,13 +184,13 @@
       <div class="beta-option" id="windows-beta">
         <h3 data-desktop-beta-title>Windows</h3>
         <p data-windows-version>Windows x64</p>
-        <p data-mac-beta-note hidden><span data-mac-version></span> &middot; <a href="guide.html#mac-install">Mac installation guide</a></p>
+        <p data-mac-beta-note hidden><span data-mac-version></span> &middot; <a href="#mac-beta">Get the Mac beta</a> &middot; <a href="guide.html#mac-install">Mac installation guide</a></p>
         <p>Acoustic is a student project, and we haven&rsquo;t been able to sign the Windows installer yet. <a href="guide.html#windows-install">See the installation guide with screenshots</a>.</p>
         <details class="beta-update" id="windows-update">
           <summary data-desktop-update-title>Install the latest Windows update</summary>
           <p>Use your saved activation code to download the latest installer. Quit Acoustic, then run the installer. If an older build rejects your code, update and use the same code again.</p>
           <form id="windowsUpdateForm" method="post" action="https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta">
-            <div class="beta-platform" data-platform-choice hidden>
+            <div class="beta-platform" id="mac-update" data-platform-choice hidden>
               <label for="betaUpdatePlatform">Operating system</label>
               <select id="betaUpdatePlatform" name="platform">
                 <option value="windows">Windows</option>
@@ -204,7 +206,7 @@
           <p>Need an activation code? <a href="#windowsBetaForm">Sign up below</a>.</p>
         </details>
         <form id="windowsBetaForm" method="post" action="https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta">
-          <div class="beta-platform" data-platform-choice hidden>
+          <div class="beta-platform" id="mac-beta" data-platform-choice hidden>
             <label for="betaSignupPlatform">Operating system</label>
             <select id="betaSignupPlatform" name="platform">
               <option value="windows">Windows</option>

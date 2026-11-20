@@ -281,6 +281,28 @@
   let macDownloadAvailable = false;
   const macNote = document.querySelector("[data-mac-beta-note]");
   const macChecksum = document.querySelector("[data-mac-checksum]");
+  function openPlatformEntry() {
+    if (!macDownloadAvailable) return;
+    const match = /^#(mac|windows)-(beta|update)$/.exec(location.hash);
+    if (!match) return;
+    const [, platform, action] = match;
+    const update = action === "update";
+    const isMac = platform === "mac";
+    const select = document.getElementById(update ? "betaUpdatePlatform" : "betaSignupPlatform");
+    select.value = isMac ? "macos" : "windows";
+    if (update) document.getElementById("windows-update").open = true;
+    if (isMac) document.getElementById(`mac-${action}`).scrollIntoView({ behavior: "instant" });
+  }
+
+  if (macNote) {
+    window.addEventListener("hashchange", openPlatformEntry);
+    document.querySelectorAll('a[href="#mac-beta"], a[href="#mac-update"], a[href="#windows-beta"], a[href="#windows-update"]').forEach((link) => {
+      link.addEventListener("click", () => {
+        if (link.hash === location.hash) openPlatformEntry();
+      });
+    });
+  }
+
   if (macNote || macChecksum) {
     fetch("/mac-release", { signal: AbortSignal.timeout(8000) })
       .then((response) => {
@@ -299,8 +321,7 @@
           `macOS ${version} · Apple Silicon and Intel · ${size} MiB`;
         macNote.hidden = false;
         document.querySelector("[data-desktop-beta-title]").textContent = "Windows and Mac";
-        document.querySelector("[data-desktop-hero-signup]").textContent = "Get the desktop beta";
-        document.querySelector("[data-desktop-hero-update]").textContent = "Install latest desktop update";
+        document.querySelectorAll("[data-mac-entry]").forEach((entry) => { entry.hidden = false; });
         document.querySelector("[data-desktop-update-title]").textContent = "Install the latest desktop update";
         document.querySelector("[data-beta-device-copy]").textContent = "devices across Windows and Mac";
         document.querySelector("[data-beta-cost]").textContent = "The Windows, Mac, and Android betas are free.";
@@ -313,6 +334,7 @@
           choice.querySelector("select").value = preferred;
           choice.hidden = false;
         });
+        openPlatformEntry();
       })
       .catch(() => {});
   }
