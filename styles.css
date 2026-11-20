@@ -816,10 +816,11 @@ ol.cover-steps li::before {
 .beta-option p { color: var(--dim); font-size: 14px; margin-bottom: 14px; }
 .beta-option a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .beta-option form { display: grid; gap: 7px; }
-.beta-option input {
+.beta-option input, .beta-option select {
   width: 100%; padding: 9px 11px; margin-bottom: 5px; border: 1px solid var(--line-strong);
   border-radius: 4px; background: var(--bg); color: var(--ink); font: inherit;
 }
+.beta-platform:not([hidden]) { display: grid; gap: 7px; }
 .beta-option button { justify-self: start; text-align: left; }
 .beta-option button:disabled { opacity: .65; cursor: wait; }
 .beta-update { border-block: 1px solid var(--line); padding-block: 10px; margin-bottom: 18px; }
@@ -838,7 +839,7 @@ ol.cover-steps li::before {
 .windows-install-checksum summary { cursor: pointer; margin-bottom: 12px; }
 .windows-install-checksum code { overflow-wrap: anywhere; }
 .windows-install-checksum p:has(code:empty) { display: none; }
-#windows-install a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+#windows-install a, #mac-install a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 #windowsBetaResult > p { margin-block: 10px; }
 #windowsBetaCode { font-family: ui-monospace, monospace; }
 .beta-status:empty { display: none; }

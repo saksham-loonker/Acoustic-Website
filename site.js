@@ -278,7 +278,47 @@
       .catch(() => {});
   }
 
-  async function requestWindowsInstaller(form, payload) {
+  let macDownloadAvailable = false;
+  const macNote = document.querySelector("[data-mac-beta-note]");
+  const macChecksum = document.querySelector("[data-mac-checksum]");
+  if (macNote || macChecksum) {
+    fetch("/mac-release", { signal: AbortSignal.timeout(8000) })
+      .then((response) => {
+        if (!response.ok) throw Error("Mac release details unavailable");
+        return response.json();
+      })
+      .then(({ version, bytes, sha256 }) => {
+        if (typeof version !== "string" || !/^\d+\.\d+\.\d+(?:-[\w.-]+)?$/.test(version) ||
+            !Number.isSafeInteger(bytes) || bytes <= 0) return;
+        if (macChecksum && typeof sha256 === "string" && /^[0-9a-f]{64}$/.test(sha256))
+          macChecksum.textContent = sha256;
+        if (!macNote) return;
+        macDownloadAvailable = true;
+        const size = Math.round(bytes / (1024 * 1024));
+        macNote.querySelector("[data-mac-version]").textContent =
+          `macOS ${version} · Apple Silicon and Intel · ${size} MiB`;
+        macNote.hidden = false;
+        document.querySelector("[data-desktop-beta-title]").textContent = "Windows and Mac";
+        document.querySelector("[data-desktop-hero-signup]").textContent = "Get the desktop beta";
+        document.querySelector("[data-desktop-hero-update]").textContent = "Install latest desktop update";
+        document.querySelector("[data-desktop-update-title]").textContent = "Install the latest desktop update";
+        document.querySelector("[data-beta-device-copy]").textContent = "devices across Windows and Mac";
+        document.querySelector("[data-beta-cost]").textContent = "The Windows, Mac, and Android betas are free.";
+        document.querySelector("[data-desktop-network]").textContent =
+          "The Windows and Mac betas need internet to activate and check access periodically.";
+        document.querySelector("[data-mac-faq]").textContent =
+          "The Mac beta is available below for Apple Silicon and Intel. A Linux version is planned.";
+        const preferred = navigator.platform.startsWith("Mac") ? "macos" : "windows";
+        document.querySelectorAll("[data-platform-choice]").forEach((choice) => {
+          choice.querySelector("select").value = preferred;
+          choice.hidden = false;
+        });
+      })
+      .catch(() => {});
+  }
+
+  async function requestDesktopInstaller(form, payload) {
+    const mac = macDownloadAvailable && form.elements.platform.value === "macos";
     const response = await fetch(form.action, {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -286,12 +326,20 @@
       signal: AbortSignal.timeout(15000),
     });
     const result = await response.json();
-    if (!response.ok) return { error: result.error || "The Windows installer is temporarily unavailable." };
+    if (!response.ok) {
+      const message = typeof result.error === "string" ? result.error : "The installer is temporarily unavailable.";
+      return { error: mac ? message.replace("Windows beta", "desktop beta") : message };
+    }
     const endpoint = new URL(form.action);
     const target = new URL(result.download);
     if (target.origin !== endpoint.origin || target.pathname !== endpoint.pathname + "/download")
       throw Error("Invalid download link");
-    return { ...result, download: target.href };
+    if (!mac) return { ...result, download: target.href };
+    const ticket = target.searchParams.get("ticket");
+    if (!ticket) throw Error("Invalid Mac download link");
+    const download = new URL("/mac-installer", location.href);
+    download.searchParams.set("ticket", ticket);
+    return { ...result, download: download.href, mac: true };
   }
 
   const betaForm = document.getElementById("windowsBetaForm");
@@ -312,13 +360,14 @@
       status.textContent = "Preparing your beta access...";
       try {
         const payload = Object.fromEntries(new FormData(betaForm));
+        delete payload.platform;
         const email = payload.email.trim().toLowerCase();
         if (!draftCodes.has(email)) {
           const random = crypto.getRandomValues(new Uint8Array(24));
           draftCodes.set(email, Array.from(random, (byte) => byte.toString(16).padStart(2, "0")).join(""));
         }
         payload.activationCode = draftCodes.get(email);
-        const result = await requestWindowsInstaller(betaForm, payload);
+        const result = await requestDesktopInstaller(betaForm, payload);
         if (result.error) {
           status.textContent = result.error;
           return;
@@ -327,6 +376,8 @@
           throw Error("Invalid enrollment response");
         code.value = result.activationCode;
         download.href = result.download;
+        download.querySelector("[data-installer-name]").textContent =
+          result.mac ? "Download the Mac installer" : "Download the Windows installer";
         details.hidden = false;
         status.textContent = "Your activation code and installer are ready.";
       } catch {
@@ -373,7 +424,7 @@
       status.textContent = "Checking your beta access...";
       submit.disabled = true;
       try {
-        const result = await requestWindowsInstaller(updateForm, { action: "update", activationCode });
+        const result = await requestDesktopInstaller(updateForm, { action: "update", activationCode });
         if (result.error) {
           status.textContent = result.error;
           return;

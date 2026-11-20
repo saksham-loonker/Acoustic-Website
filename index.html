@@ -75,11 +75,11 @@
         <h1 class="hero-title" id="heroTitle">Some rooms don&rsquo;t<br>come with a <em>door.</em></h1>
         <p class="hero-sub">A call at the next desk. A bus outside. Acoustic gives those sounds a steady backdrop. Pick a sound, set your volume limit, and get back to what you were doing.</p>
         <div class="hero-actions">
-          <a class="btn-primary" href="#windows-beta">Get the Windows beta <span aria-hidden="true">&nearr;</span></a>
+          <a class="btn-primary" href="#windows-beta"><span data-desktop-hero-signup>Get the Windows beta</span> <span aria-hidden="true">&nearr;</span></a>
           <a class="btn-secondary" href="guide.html#picker">Find your sound <span aria-hidden="true">&nearr;</span></a>
         </div>
         <p class="hero-note hero-install-note"><strong>The Windows installer is unsigned.</strong> Acoustic is a student project, and we haven&rsquo;t been able to sign it yet. If Windows shows a SmartScreen warning, <a href="guide.html#windows-install">see the steps with screenshots</a>.</p>
-        <p class="hero-note">Free while we test &middot; <a href="#windows-update">Install latest Windows update</a></p>
+        <p class="hero-note">Free while we test &middot; <a href="#windows-update" data-desktop-hero-update>Install latest Windows update</a></p>
       </div>
       <figure class="hero-visual">
         <div class="phone-stage">
@@ -158,7 +158,7 @@
         </details>
         <details>
           <summary><span>Is Acoustic coming to Mac and Linux?</span><span class="pm" aria-hidden="true">+</span></summary>
-          <p>Yes. We plan to release Acoustic for macOS and Linux. We&rsquo;ll post beta download links here when those builds are ready.</p>
+          <p data-mac-faq>Yes. We plan to release Acoustic for macOS and Linux. We&rsquo;ll post beta download links here when those builds are ready.</p>
         </details>
         <details>
           <summary><span>What does testing involve?</span><span class="pm" aria-hidden="true">+</span></summary>
@@ -166,11 +166,11 @@
         </details>
         <details>
           <summary><span>How much does it cost?</span><span class="pm" aria-hidden="true">+</span></summary>
-          <p>The Windows and Android betas are free.</p>
+          <p data-beta-cost>The Windows and Android betas are free.</p>
         </details>
         <details>
           <summary><span>Does it need a connection?</span><span class="pm" aria-hidden="true">+</span></summary>
-          <p>Android runs offline. The Windows beta needs internet to activate and check access periodically. Playback and sound processing happen on your device, and the sounds are bundled with the app.</p>
+          <p>Android runs offline. <span data-desktop-network>The Windows beta needs internet to activate and check access periodically.</span> Playback and sound processing happen on your device, and the sounds are bundled with the app.</p>
         </details>
       </div>
       <p class="guide-link"><a href="guide.html#questions">More questions about privacy and Auto &rarr;</a></p>
@@ -180,13 +180,21 @@
     <h2 class="access-title">Try the Acoustic beta</h2>
     <div class="beta-options">
       <div class="beta-option" id="windows-beta">
-        <h3>Windows</h3>
+        <h3 data-desktop-beta-title>Windows</h3>
         <p data-windows-version>Windows x64</p>
+        <p data-mac-beta-note hidden><span data-mac-version></span> &middot; <a href="guide.html#mac-install">Mac installation guide</a></p>
         <p>Acoustic is a student project, and we haven&rsquo;t been able to sign the Windows installer yet. <a href="guide.html#windows-install">See the installation guide with screenshots</a>.</p>
         <details class="beta-update" id="windows-update">
-          <summary>Install the latest Windows update</summary>
+          <summary data-desktop-update-title>Install the latest Windows update</summary>
           <p>Use your saved activation code to download the latest installer. Quit Acoustic, then run the installer. If an older build rejects your code, update and use the same code again.</p>
           <form id="windowsUpdateForm" method="post" action="https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta">
+            <div class="beta-platform" data-platform-choice hidden>
+              <label for="betaUpdatePlatform">Operating system</label>
+              <select id="betaUpdatePlatform" name="platform">
+                <option value="windows">Windows</option>
+                <option value="macos">macOS</option>
+              </select>
+            </div>
             <label for="windowsUpdateCode">Saved activation code</label>
             <input id="windowsUpdateCode" name="activationCode" type="text" autocomplete="off" spellcheck="false" autocapitalize="off" maxlength="64" required>
             <button class="btn-primary" type="submit" disabled>Get the update <span aria-hidden="true">&darr;</span></button>
@@ -196,12 +204,19 @@
           <p>Need an activation code? <a href="#windowsBetaForm">Sign up below</a>.</p>
         </details>
         <form id="windowsBetaForm" method="post" action="https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta">
+          <div class="beta-platform" data-platform-choice hidden>
+            <label for="betaSignupPlatform">Operating system</label>
+            <select id="betaSignupPlatform" name="platform">
+              <option value="windows">Windows</option>
+              <option value="macos">macOS</option>
+            </select>
+          </div>
           <label for="betaName">Name</label>
           <input id="betaName" name="name" autocomplete="name" maxlength="120" required>
           <label for="betaEmail">Email address</label>
           <input id="betaEmail" name="email" type="email" autocomplete="email" maxlength="254" required>
           <div hidden><input name="website" tabindex="-1" autocomplete="off"></div>
-          <p>Signing up adds your name and email to the beta mailing list. Each code supports up to three Windows devices. <a href="legal.html#privacy">Privacy Policy</a></p>
+          <p>Signing up adds your name and email to the beta mailing list. Each code supports up to three <span data-beta-device-copy>Windows devices</span>. <a href="legal.html#privacy">Privacy Policy</a></p>
           <button class="btn-primary" type="submit" disabled>Get your activation code <span aria-hidden="true">&darr;</span></button>
           <p class="beta-status" id="windowsBetaStatus" role="status"></p>
           <div id="windowsBetaResult" hidden>
@@ -209,7 +224,7 @@
             <input id="windowsBetaCode" type="text" readonly spellcheck="false">
             <button id="windowsBetaCopy" type="button">Copy code</button>
             <p>Save this code somewhere private. After installing, paste it into Acoustic and choose <b>Check access</b>.</p>
-            <a id="windowsBetaDownload" class="btn-primary">Download the Windows installer <span aria-hidden="true">&darr;</span></a>
+            <a id="windowsBetaDownload" class="btn-primary"><span data-installer-name>Download the Windows installer</span> <span aria-hidden="true">&darr;</span></a>
           </div>
           <noscript><p>Enable JavaScript to sign up and download the Windows beta.</p></noscript>
         </form>

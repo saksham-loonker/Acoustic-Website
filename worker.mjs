@@ -1,9 +1,18 @@
 const installerPath = "/windows-installer";
+const macInstallerPath = "/mac-installer";
+const macRelease = {
+  version: "0.8.2-beta.5",
+  filename: "Acoustic-Desktop-App-0.8.2-beta.5-macos-universal.dmg",
+  bytes: 369983698,
+  sha256: "8ebf000b2eb23bf1f1ce1a98f66f929608ef500a782d34b2437948ef0ebb0fb8",
+  assetId: 771865445,
+};
 const authorizeUrl = "https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta/download-authorization";
 const githubAssets = "https://api.github.com/repos/saksham-loonker/Acoustic-Windows-Installers/releases/assets/";
 const githubDownloadHosts = new Set(["release-assets.githubusercontent.com", "objects.githubusercontent.com"]);
 const ticketPattern = /^\d{10}\.[0-9a-f]{64}$/;
-const installerName = /^Acoustic-Desktop-App-setup-\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?\.exe$/;
+const windowsInstallerName = /^Acoustic-Desktop-App-setup-\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?\.exe$/;
+const macInstallerName = /^Acoustic-Desktop-App-\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?-macos-universal\.dmg$/;
 const downloadHeaders = {
   "cache-control": "private, no-store",
   "access-control-allow-origin": "*",
@@ -67,7 +76,9 @@ async function downloadInstaller(request, url, token) {
   if (authorization.status === 403) return errorResponse(request, invalid, 403);
   if (!authorization.ok) throw Error("Installer authorization returned " + authorization.status);
   if (!token) throw Error("Installer GitHub secret unavailable");
-  const { filename, bytes, assetId } = await authorization.json();
+  const mac = url.pathname === macInstallerPath;
+  const { filename, bytes, assetId } = mac ? macRelease : await authorization.json();
+  const installerName = mac ? macInstallerName : windowsInstallerName;
   if (typeof filename !== "string" || !installerName.test(filename) ||
       !Number.isSafeInteger(bytes) || bytes <= 0 ||
       !Number.isSafeInteger(assetId) || assetId <= 0) throw Error("Invalid installer metadata");
@@ -107,12 +118,19 @@ async function downloadInstaller(request, url, token) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (url.pathname !== installerPath) return env.ASSETS.fetch(request);
+    if (url.pathname === "/mac-release" && request.method === "GET") {
+      if (!macRelease) return errorResponse(request, "The Mac beta is not available yet.", 404);
+      const { version, filename, bytes, sha256 } = macRelease;
+      return Response.json({ version, filename, bytes, sha256 }, { headers: downloadHeaders });
+    }
+    if (url.pathname !== installerPath && url.pathname !== macInstallerPath) return env.ASSETS.fetch(request);
+    if (url.pathname === macInstallerPath && !macRelease)
+      return errorResponse(request, "The Mac beta is not available yet.", 404);
     try {
       return await downloadInstaller(request, url, env.GITHUB_INSTALLER_TOKEN);
     } catch (error) {
-      console.error("Windows installer delivery failed", error.name);
-      return errorResponse(request, "The Windows installer is temporarily unavailable. Please try again.", 503);
+      console.error("Desktop installer delivery failed", error.name);
+      return errorResponse(request, "The installer is temporarily unavailable. Please try again.", 503);
     }
   },
 };

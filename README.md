@@ -42,7 +42,7 @@ The installer is a release asset in the private `Acoustic-Windows-Installers` Gi
 - Stop a tester in the Supabase SQL Editor with `select public.stop_windows_beta_access('tester@example.com');`
 - Look up a code’s tester email, device count, and cutoff with `select public.find_windows_beta_code_owner('code');`. In the table `acoustic_beta.windows_beta_access`, each email has one code hash and up to three device hashes.
 - To clear the three registered device slots for a tester, use `select public.reset_windows_beta_devices('tester@example.com');`. Their current code and cutoff stay in effect.
-- To pause new signups while existing testers can still activate and get updates, set the Edge Function secret `WINDOWS_BETA_SIGNUPS_PAUSED` to `true`. Unset it or set it to `false` to resume signups.
+- To pause new Windows and Mac signups while existing testers can still activate and get updates, set the Edge Function secret `WINDOWS_BETA_SIGNUPS_PAUSED` to `true`. Unset it or set it to `false` to resume signups.
 
 ### Publish a newer Windows installer
 
@@ -55,6 +55,12 @@ The installer is a release asset in the private `Acoustic-Windows-Installers` Gi
 ### Installer delivery credentials and rollback
 
 The website Worker at `/windows-installer` uses the `GITHUB_INSTALLER_TOKEN` secret. Give the token read-only Contents access to the private installer repository.
+
+### Publish a Mac beta installer
+
+1. Run **Build managed Mac beta** in the Desktop App repository's GitHub Actions. Download the `managed-macos-installer` artifact and verify its SHA-256.
+2. Attach the universal DMG to a private release in the same `Acoustic-Windows-Installers` repository. Set `macRelease` in `worker.mjs` to its version, filename, exact byte count, SHA-256, and numeric GitHub asset ID.
+3. Deploy the website Worker. It serves Mac releases through `/mac-installer` using the same Supabase download ticket and activation code as Windows. The three-device limit is shared across both platforms.
 
 For versions that still have matching parts in the Supabase `acoustic-installers` bucket, you can restore the previous download path by setting `githubDownloadsEnabled` to `false` and redeploying the Edge Function. Verify signup, saved-code updates, and the complete download after changing providers.
 
