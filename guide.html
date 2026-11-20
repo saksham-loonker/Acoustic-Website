@@ -359,15 +359,17 @@
       </details>
     </div>
   </section>
-  <section class="band band-tight" id="mac-install">
+  <section class="band band-tight" id="mac-install" hidden>
     <div class="wrap">
       <div class="sec-head"><h2>Install Acoustic on Mac</h2></div>
       <p class="sec-strap">Requires macOS 13 Ventura or later. The universal installer supports Apple Silicon and Intel Macs.</p>
       <ol class="windows-install-steps">
         <li><p><a href="index.html#mac-beta">Get the Mac beta</a> and save the activation code shown on the website. If you already have a code, <a href="index.html#mac-update">use it to download the latest Mac installer</a>.</p></li>
-        <li><p>Open the downloaded <strong>.dmg</strong> and drag Acoustic Desktop App into <strong>Applications</strong>. The beta is distributed without Apple notarization. If macOS shows a warning, follow Apple&rsquo;s <a href="https://support.apple.com/en-us/102445">guide to opening apps from a trusted source</a>.</p></li>
-        <li><p>Open Acoustic from Applications, paste your activation code, and select <strong>Check access</strong>. Your code covers up to three devices across Windows and Mac.</p></li>
+        <li><p>Quit any open copy of Acoustic. Open the downloaded <strong>.dmg</strong> and drag Acoustic Desktop App into <strong>Applications</strong>. Choose <strong>Replace</strong> if Finder asks. Then eject the disk image.</p></li>
+        <li><p>Open Acoustic from <strong>Applications</strong>. This beta is distributed without Apple notarization. If macOS says it can&rsquo;t verify the developer, go to <strong>System Settings &rarr; Privacy &amp; Security &rarr; Open Anyway</strong> and confirm. Follow <a href="https://support.apple.com/en-us/102445">Apple&rsquo;s guidance</a> for any other warning.</p></li>
+        <li><p>Paste your activation code and select <strong>Check access</strong>. Your code covers up to three devices across Windows and Mac.</p></li>
       </ol>
+      <p>If Acoustic still won&rsquo;t open after approval, email <a href="mailto:reachout.acoustic@gmail.com">reachout.acoustic@gmail.com</a> with your macOS version and what you see when you try to open it.</p>
       <details class="windows-install-checksum">
         <summary>Verify the Mac installer with SHA-256</summary>
         <p>Run <code>shasum -a 256 /path/to/installer.dmg</code> in Terminal with the path to your downloaded file. Compare the result to the published SHA-256.</p>

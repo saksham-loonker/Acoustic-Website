@@ -312,8 +312,10 @@
       .then(({ version, bytes, sha256 }) => {
         if (typeof version !== "string" || !/^\d+\.\d+\.\d+(?:-[\w.-]+)?$/.test(version) ||
             !Number.isSafeInteger(bytes) || bytes <= 0) return;
-        if (macChecksum && typeof sha256 === "string" && /^[0-9a-f]{64}$/.test(sha256))
+        if (macChecksum && typeof sha256 === "string" && /^[0-9a-f]{64}$/.test(sha256)) {
           macChecksum.textContent = sha256;
+          document.getElementById("mac-install").hidden = false;
+        }
         if (!macNote) return;
         macDownloadAvailable = true;
         const size = Math.round(bytes / (1024 * 1024));
