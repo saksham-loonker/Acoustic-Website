@@ -6,4 +6,4 @@ main = "worker.mjs"
 [assets]
 directory = "."
 binding = "ASSETS"
-run_worker_first = ["/windows-installer", "/mac-installer", "/mac-release"]
+run_worker_first = ["/windows-installer"]
