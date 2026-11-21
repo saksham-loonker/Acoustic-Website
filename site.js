@@ -261,7 +261,7 @@
 
   const releaseLabels = document.querySelectorAll("[data-windows-version]");
   if (releaseLabels.length) {
-    const releaseEndpoint = "https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta/release";
+    const releaseEndpoint = "/windows-release";
     fetch(releaseEndpoint, { signal: AbortSignal.timeout(8000) })
       .then((response) => {
         if (!response.ok) throw Error("Release details unavailable");

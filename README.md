@@ -37,7 +37,7 @@ The homepage sends Windows beta signups to the `windows-beta` Supabase Edge Func
 
 The installer is a release asset in the private `Acoustic-Windows-Installers` GitHub repository. After signup or an access check, Supabase issues a 45-minute download ticket. The Cloudflare Worker verifies the ticket with Supabase and streams the installer from GitHub with resume support.
 
-- [Current Windows version, filename, file size, and SHA-256](https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta/release)
+- [Current Windows version, filename, file size, and SHA-256](https://acoustic.acst.workers.dev/windows-release)
 - Start a tester’s final week in the Supabase SQL Editor with `select public.begin_windows_beta_final_week('tester@example.com');`
 - Stop a tester in the Supabase SQL Editor with `select public.stop_windows_beta_access('tester@example.com');`
 - Look up a code’s tester email, device count, and cutoff with `select public.find_windows_beta_code_owner('code');`. In the table `acoustic_beta.windows_beta_access`, each email has one code hash and up to three device hashes.
@@ -48,9 +48,9 @@ The installer is a release asset in the private `Acoustic-Windows-Installers` Gi
 
 1. Set the managed beta version in the Desktop App repository’s `scripts/build_installer.mjs` and run `npm run desktop:installer -- --managed-beta` on Windows x64.
 2. Test the packaged app and record the exact installer byte count and SHA-256. Attach the executable to a prerelease in the private `Acoustic-Windows-Installers` repository.
-3. Set `release`, `bytes`, `sha256`, and the numeric `githubAssetId` from the GitHub release asset API response in `supabase/functions/windows-beta/index.ts`. Deploy the `windows-beta` Edge Function with its existing public routing settings. These fields control the signup and update downloads and the version and checksum displayed on the website.
+3. Update `windowsRelease` in `worker.mjs` with the version, filename, byte count, SHA-256, and numeric GitHub asset ID. Deploy the Worker. Supabase issues and validates download tickets, and the Worker selects the current installer and serves its public release metadata.
 4. Test the live signup and saved-code update paths. Verify the complete download’s checksum against the installer you built.
-5. Keep the current release and one earlier verified installer for rollback. Restore the Edge Function metadata for the retained GitHub asset when rolling back.
+5. Keep the current release and one earlier verified installer for rollback. Restore the Worker's `windowsRelease` metadata for that asset when rolling back.
 
 ### Installer delivery credentials and rollback
 

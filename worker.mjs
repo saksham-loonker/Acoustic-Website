@@ -1,4 +1,11 @@
 const installerPath = "/windows-installer";
+const windowsRelease = {
+  version: "0.8.2-beta.7",
+  filename: "Acoustic-Desktop-App-setup-0.8.2-beta.7.exe",
+  bytes: 263278167,
+  sha256: "e9e385ee2740fb44f9d20efc85e458c6ab90c6b2191aa5017ee034a418aabd27",
+  assetId: 774790707,
+};
 const authorizeUrl = "https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta/download-authorization";
 const githubAssets = "https://api.github.com/repos/saksham-loonker/Acoustic-Windows-Installers/releases/assets/";
 const githubDownloadHosts = new Set(["release-assets.githubusercontent.com", "objects.githubusercontent.com"]);
@@ -66,11 +73,13 @@ async function downloadInstaller(request, url, token) {
   const authorization = await fetch(endpoint.href, { redirect: "manual", signal: AbortSignal.timeout(8000) });
   if (authorization.status === 403) return errorResponse(request, invalid, 403);
   if (!authorization.ok) throw Error("Installer authorization returned " + authorization.status);
+  const authorized = await authorization.json();
+  if (typeof authorized?.filename !== "string" || !installerName.test(authorized.filename) ||
+      !Number.isSafeInteger(authorized.bytes) || authorized.bytes <= 0 ||
+      !Number.isSafeInteger(authorized.assetId) || authorized.assetId <= 0)
+    throw Error("Invalid installer authorization");
   if (!token) throw Error("Installer GitHub secret unavailable");
-  const { filename, bytes, assetId } = await authorization.json();
-  if (typeof filename !== "string" || !installerName.test(filename) ||
-      !Number.isSafeInteger(bytes) || bytes <= 0 ||
-      !Number.isSafeInteger(assetId) || assetId <= 0) throw Error("Invalid installer metadata");
+  const { filename, bytes, assetId } = windowsRelease;
 
   const rangeHeader = request.headers.get("range");
   const range = rangeHeader === null ? null : rangeFor(rangeHeader, bytes);
@@ -107,6 +116,10 @@ async function downloadInstaller(request, url, token) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname === "/windows-release" && request.method === "GET") {
+      const { version, filename, bytes, sha256 } = windowsRelease;
+      return Response.json({ version, filename, bytes, sha256 }, { headers: downloadHeaders });
+    }
     if (url.pathname !== installerPath) return env.ASSETS.fetch(request);
     try {
       return await downloadInstaller(request, url, env.GITHUB_INSTALLER_TOKEN);
