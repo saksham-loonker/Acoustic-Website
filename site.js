@@ -294,6 +294,37 @@
     return { ...result, download: target.href };
   }
 
+  const neurodivergentForm = document.getElementById("windowsNeurodivergentForm");
+  if (neurodivergentForm) {
+    const status = document.getElementById("windowsNeurodivergentStatus");
+    const download = document.getElementById("windowsNeurodivergentDownload");
+    const submit = neurodivergentForm.querySelector('button[type="submit"]');
+
+    submit.disabled = false;
+    neurodivergentForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      submit.disabled = true;
+      download.hidden = true;
+      download.removeAttribute("href");
+      status.textContent = "Preparing your installer...";
+      try {
+        const payload = Object.fromEntries(new FormData(neurodivergentForm));
+        const result = await requestWindowsInstaller(neurodivergentForm, payload);
+        if (result.error) {
+          status.textContent = result.error;
+          return;
+        }
+        download.href = result.download;
+        download.hidden = false;
+        status.textContent = "Your installer is ready to download.";
+      } catch {
+        status.textContent = "Could not prepare your installer. Please try again.";
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  }
+
   const betaForm = document.getElementById("windowsBetaForm");
   if (betaForm) {
     const status = document.getElementById("windowsBetaStatus");

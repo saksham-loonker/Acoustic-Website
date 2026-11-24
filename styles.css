@@ -827,8 +827,8 @@ ol.cover-steps li::before {
 .beta-update { border-block: 1px solid var(--line); padding-block: 10px; margin-bottom: 18px; }
 .beta-update summary { cursor: pointer; font-size: 14px; font-weight: 600; }
 .beta-update > p { margin: 10px 0; }
-.beta-update form a { justify-self: start; }
-.beta-update form a[hidden] { display: none; }
+.beta-option form > a.btn-primary { justify-self: start; }
+.beta-option form > a[hidden] { display: none; }
 .windows-install-steps { display: grid; gap: 24px; padding-inline-start: 1.6rem; }
 .windows-install-steps li::marker { color: var(--accent); font-weight: 700; }
 .windows-install-steps h3 { margin-block: 0 6px; }

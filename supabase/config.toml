@@ -1,2 +1,5 @@
 [functions.windows-beta]
 verify_jwt = false
+
+[functions.windows-neurodivergent]
+verify_jwt = false

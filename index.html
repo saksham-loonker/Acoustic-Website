@@ -163,7 +163,7 @@
         </details>
         <details>
           <summary><span>What does testing involve?</span><span class="pm" aria-hidden="true">+</span></summary>
-          <p><a href="#windows-neurodivergent">Download Acoustic Neurodivergent</a> for Windows, or <a href="#android-beta">request an Android build</a> by email. For the <a href="#windows-beta">managed Windows beta</a>, sign up to get an activation code and installer. You can stop testing at any time.</p>
+          <p>Sign up to download <a href="#windows-neurodivergent">Acoustic Neurodivergent</a> or the <a href="#windows-beta">managed Windows beta</a>. The managed beta also gives you an activation code. <a href="#android-beta">Request Android builds</a> by email. You can stop testing at any time.</p>
         </details>
         <details>
           <summary><span>How much does it cost?</span><span class="pm" aria-hidden="true">+</span></summary>
@@ -186,7 +186,18 @@
         <p>Version 0.9.3 &middot; Windows x64</p>
         <p>The current desktop app includes Quiet break, sound avoidance preferences, and controls that are easier to distinguish. It can run offline.</p>
         <p>The installer is unsigned. <a href="guide.html#windows-neurodivergent-install">Installation and checksum</a></p>
-        <a class="btn-primary" href="/windows-neurodivergent-installer">Download Acoustic Neurodivergent</a>
+        <form id="windowsNeurodivergentForm" method="post" action="https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-neurodivergent">
+          <label for="neurodivergentName">Name</label>
+          <input id="neurodivergentName" name="name" autocomplete="name" maxlength="120" required>
+          <label for="neurodivergentEmail">Email address</label>
+          <input id="neurodivergentEmail" name="email" type="email" autocomplete="email" maxlength="254" required>
+          <div hidden><input name="website" tabindex="-1" autocomplete="off"></div>
+          <p>Signing up adds your name and email to the Neurodivergent signup list. <a href="legal.html#privacy">Privacy Policy</a></p>
+          <button class="btn-primary" type="submit" disabled>Get the installer</button>
+          <p class="beta-status" id="windowsNeurodivergentStatus" role="status"></p>
+          <a id="windowsNeurodivergentDownload" class="btn-primary" hidden>Download Acoustic Neurodivergent</a>
+          <noscript><p>Enable JavaScript to sign up and download Acoustic Neurodivergent.</p></noscript>
+        </form>
       </div>
       <div class="beta-option" id="windows-beta">
         <h4>Acoustic Managed Beta 7</h4>

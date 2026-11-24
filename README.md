@@ -23,23 +23,25 @@ The website for Acoustic, a sound-masking app for Windows and Android. Audio pro
 python -m http.server 8080
 ```
 
-Open http://localhost:8080. The pages are static. The Windows beta form calls the hosted Supabase function, so submitting it creates a real beta signup.
+Open http://localhost:8080. The pages are static. The Windows forms call hosted Supabase functions, so submitting them creates real signups.
 
 ## Deploy
 
 Cloudflare Workers deploys the site to `https://acoustic.acst.workers.dev`. Configure the `acoustic` Worker to build from GitHub's `main` branch with no build command and `npx wrangler deploy` as the deploy command. Wrangler serves the files selected by `.assetsignore` and applies `_headers`.
 
+Apply the Neurodivergent mailing-list migration and deploy the `windows-neurodivergent` Edge Function before deploying the site's Neurodivergent signup flow.
+
 Netlify can also publish the repository root using `netlify.toml`.
 
 ## Windows desktop apps
 
-The homepage offers a [direct download of Acoustic Neurodivergent 0.9.3](https://acoustic.acst.workers.dev/windows-neurodivergent-installer) (`3976f22`) and activation-code access to Managed Beta 7 (`0.8.2-beta.7`, `c10264a`).
+The homepage offers [Acoustic Neurodivergent 0.9.3](https://acoustic.acst.workers.dev/#windows-neurodivergent) (`3976f22`) and Managed Beta 7 (`0.8.2-beta.7`, `c10264a`). The `windows-neurodivergent` Supabase Edge Function records names and normalized email addresses in `public.neurodivergent_mailing_list` and issues a 45-minute download ticket. Repeat signups get a new ticket and retain the original name. Only the managed beta issues an app activation code.
 
 Build the Neurodivergent installer with `npm run desktop:installer -- --offline-pilot` on Windows x64. Upload the verified `.exe` to a prerelease in the private `Acoustic-Windows-Installers` repository. Update `neurodivergentRelease` in `worker.mjs` with the filename, byte count, and numeric GitHub asset ID. Update the version and checksum in the site and verify the complete download after deployment.
 
 The homepage sends managed beta signups to the `windows-beta` Supabase Edge Function and displays the activation code on the page. Returning testers can [download the managed beta with a saved code](https://acoustic.acst.workers.dev/#windows-update) without entering their name or email again. The main list is `public.beta_mailing_list`. A separate private table stores code hashes and access cutoffs. Duplicate signups cannot replace a code or reset a cutoff.
 
-The installer is a release asset in the private `Acoustic-Windows-Installers` GitHub repository. After signup or an access check, Supabase issues a 45-minute download ticket. The Cloudflare Worker verifies the ticket with Supabase and streams the installer from GitHub with resume support.
+Both installers are release assets in the private `Acoustic-Windows-Installers` GitHub repository. The Cloudflare Worker verifies each 45-minute ticket with the corresponding Supabase function and streams the installer from GitHub with resume support.
 
 - [Managed beta version, filename, file size, and SHA-256](https://acoustic.acst.workers.dev/windows-release)
 - Start a tester’s final week in the Supabase SQL Editor with `select public.begin_windows_beta_final_week('tester@example.com');`

@@ -14,7 +14,7 @@ const installerReleases = new Map([
   ["/windows-installer", windowsRelease],
   ["/windows-neurodivergent-installer", neurodivergentRelease],
 ]);
-const authorizeUrl = "https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta/download-authorization";
+const windowsFunctionsUrl = "https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/";
 const githubAssets = "https://api.github.com/repos/saksham-loonker/Acoustic-Windows-Installers/releases/assets/";
 const githubDownloadHosts = new Set(["release-assets.githubusercontent.com", "objects.githubusercontent.com"]);
 const ticketPattern = /^\d{10}\.[0-9a-f]{64}$/;
@@ -62,17 +62,22 @@ async function fetchAsset(assetId, token, range) {
   return fetch(target.href, { redirect: "manual", headers });
 }
 
-async function authorizeBetaInstaller(request, url) {
+async function authorizeInstaller(request, url, release) {
   const ticket = url.searchParams.get("ticket");
   const invalid = "This download link has expired. Request a new installer link on the Acoustic website.";
   if (!ticketPattern.test(ticket ?? "") || Number(ticket.slice(0, 10)) < Math.floor(Date.now() / 1000))
     return errorResponse(request, invalid, 403);
 
-  const endpoint = new URL(authorizeUrl);
+  const edgeFunction = release === windowsRelease ? "windows-beta" : "windows-neurodivergent";
+  const endpoint = new URL(edgeFunction + "/download-authorization", windowsFunctionsUrl);
   endpoint.searchParams.set("ticket", ticket);
   const authorization = await fetch(endpoint.href, { redirect: "manual", signal: AbortSignal.timeout(8000) });
   if (authorization.status === 403) return errorResponse(request, invalid, 403);
   if (!authorization.ok) throw Error("Installer authorization returned " + authorization.status);
+  if (release === neurodivergentRelease) {
+    if (authorization.status !== 204) throw Error("Invalid installer authorization");
+    return null;
+  }
   const authorized = await authorization.json();
   if (typeof authorized?.filename !== "string" || !installerName.test(authorized.filename) ||
       !Number.isSafeInteger(authorized.bytes) || authorized.bytes <= 0 ||
@@ -90,10 +95,8 @@ async function downloadInstaller(request, url, token, release) {
   }
   if (request.method !== "GET" && request.method !== "HEAD")
     return errorResponse(request, "Method not allowed.", 405);
-  if (release === windowsRelease) {
-    const denied = await authorizeBetaInstaller(request, url);
-    if (denied) return denied;
-  }
+  const denied = await authorizeInstaller(request, url, release);
+  if (denied) return denied;
   if (!token) throw Error("Installer GitHub secret unavailable");
   const { filename, bytes, assetId } = release;
 
