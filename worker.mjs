@@ -1,4 +1,3 @@
-const installerPath = "/windows-installer";
 const windowsRelease = {
   version: "0.8.2-beta.7",
   filename: "Acoustic-Desktop-App-setup-0.8.2-beta.7.exe",
@@ -6,6 +5,15 @@ const windowsRelease = {
   sha256: "e9e385ee2740fb44f9d20efc85e458c6ab90c6b2191aa5017ee034a418aabd27",
   assetId: 774790707,
 };
+const neurodivergentRelease = {
+  filename: "Acoustic-Desktop-App-offline-setup-0.9.3.exe",
+  bytes: 263005865,
+  assetId: 787163658,
+};
+const installerReleases = new Map([
+  ["/windows-installer", windowsRelease],
+  ["/windows-neurodivergent-installer", neurodivergentRelease],
+]);
 const authorizeUrl = "https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta/download-authorization";
 const githubAssets = "https://api.github.com/repos/saksham-loonker/Acoustic-Windows-Installers/releases/assets/";
 const githubDownloadHosts = new Set(["release-assets.githubusercontent.com", "objects.githubusercontent.com"]);
@@ -54,15 +62,7 @@ async function fetchAsset(assetId, token, range) {
   return fetch(target.href, { redirect: "manual", headers });
 }
 
-async function downloadInstaller(request, url, token) {
-  if (request.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: {
-      ...downloadHeaders, "access-control-allow-methods": "GET, HEAD, OPTIONS",
-      "access-control-allow-headers": "range",
-    } });
-  }
-  if (request.method !== "GET" && request.method !== "HEAD")
-    return errorResponse(request, "Method not allowed.", 405);
+async function authorizeBetaInstaller(request, url) {
   const ticket = url.searchParams.get("ticket");
   const invalid = "This download link has expired. Request a new installer link on the Acoustic website.";
   if (!ticketPattern.test(ticket ?? "") || Number(ticket.slice(0, 10)) < Math.floor(Date.now() / 1000))
@@ -78,8 +78,24 @@ async function downloadInstaller(request, url, token) {
       !Number.isSafeInteger(authorized.bytes) || authorized.bytes <= 0 ||
       !Number.isSafeInteger(authorized.assetId) || authorized.assetId <= 0)
     throw Error("Invalid installer authorization");
+  return null;
+}
+
+async function downloadInstaller(request, url, token, release) {
+  if (request.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: {
+      ...downloadHeaders, "access-control-allow-methods": "GET, HEAD, OPTIONS",
+      "access-control-allow-headers": "range",
+    } });
+  }
+  if (request.method !== "GET" && request.method !== "HEAD")
+    return errorResponse(request, "Method not allowed.", 405);
+  if (release === windowsRelease) {
+    const denied = await authorizeBetaInstaller(request, url);
+    if (denied) return denied;
+  }
   if (!token) throw Error("Installer GitHub secret unavailable");
-  const { filename, bytes, assetId } = windowsRelease;
+  const { filename, bytes, assetId } = release;
 
   const rangeHeader = request.headers.get("range");
   const range = rangeHeader === null ? null : rangeFor(rangeHeader, bytes);
@@ -120,9 +136,10 @@ export default {
       const { version, filename, bytes, sha256 } = windowsRelease;
       return Response.json({ version, filename, bytes, sha256 }, { headers: downloadHeaders });
     }
-    if (url.pathname !== installerPath) return env.ASSETS.fetch(request);
+    const release = installerReleases.get(url.pathname);
+    if (!release) return env.ASSETS.fetch(request);
     try {
-      return await downloadInstaller(request, url, env.GITHUB_INSTALLER_TOKEN);
+      return await downloadInstaller(request, url, env.GITHUB_INSTALLER_TOKEN, release);
     } catch (error) {
       console.error("Windows installer delivery failed", error.name);
       return errorResponse(request, "The Windows installer is temporarily unavailable. Please try again.", 503);

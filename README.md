@@ -33,7 +33,9 @@ Netlify can also publish the repository root using `netlify.toml`.
 
 ## Windows desktop apps
 
-The homepage lists Acoustic Neurodivergent 0.9.3 (`3976f22`) with an email request link and Managed Beta 7 (`0.8.2-beta.7`, `c10264a`) with installer access.
+The homepage offers a [direct download of Acoustic Neurodivergent 0.9.3](https://acoustic.acst.workers.dev/windows-neurodivergent-installer) (`3976f22`) and activation-code access to Managed Beta 7 (`0.8.2-beta.7`, `c10264a`).
+
+Build the Neurodivergent installer with `npm run desktop:installer -- --offline-pilot` on Windows x64. Upload the verified `.exe` to a prerelease in the private `Acoustic-Windows-Installers` repository. Update `neurodivergentRelease` in `worker.mjs` with the filename, byte count, and numeric GitHub asset ID. Update the version and checksum in the site and verify the complete download after deployment.
 
 The homepage sends managed beta signups to the `windows-beta` Supabase Edge Function and displays the activation code on the page. Returning testers can [download the managed beta with a saved code](https://acoustic.acst.workers.dev/#windows-update) without entering their name or email again. The main list is `public.beta_mailing_list`. A separate private table stores code hashes and access cutoffs. Duplicate signups cannot replace a code or reset a cutoff.
 
@@ -56,7 +58,7 @@ The installer is a release asset in the private `Acoustic-Windows-Installers` Gi
 
 ### Installer delivery credentials and rollback
 
-The website Worker at `/windows-installer` uses the `GITHUB_INSTALLER_TOKEN` secret. Give the token read-only Contents access to the private installer repository.
+The website Worker uses the `GITHUB_INSTALLER_TOKEN` secret for both installer routes. Give the token read-only Contents access to the private installer repository.
 
 For versions that still have matching parts in the Supabase `acoustic-installers` bucket, you can restore the previous download path by setting `githubDownloadsEnabled` to `false` and redeploying the Edge Function. Verify signup, saved-code updates, and the complete download after changing providers.
 
