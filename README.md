@@ -31,13 +31,15 @@ Cloudflare Workers deploys the site to `https://acoustic.acst.workers.dev`. Conf
 
 Netlify can also publish the repository root using `netlify.toml`.
 
-## Windows beta
+## Windows desktop apps
 
-The homepage sends Windows beta signups to the `windows-beta` Supabase Edge Function and displays the activation code on the page. Returning testers can use their saved code at [Install the latest Windows update](https://acoustic.acst.workers.dev/#windows-update) without entering their name or email again. The main list is `public.beta_mailing_list`. A separate private table stores code hashes and access cutoffs. Duplicate signups cannot replace a code or reset a cutoff.
+The homepage lists Acoustic Neurodivergent 0.9.3 (`3976f22`) with an email request link and Managed Beta 7 (`0.8.2-beta.7`, `c10264a`) with installer access.
+
+The homepage sends managed beta signups to the `windows-beta` Supabase Edge Function and displays the activation code on the page. Returning testers can [download the managed beta with a saved code](https://acoustic.acst.workers.dev/#windows-update) without entering their name or email again. The main list is `public.beta_mailing_list`. A separate private table stores code hashes and access cutoffs. Duplicate signups cannot replace a code or reset a cutoff.
 
 The installer is a release asset in the private `Acoustic-Windows-Installers` GitHub repository. After signup or an access check, Supabase issues a 45-minute download ticket. The Cloudflare Worker verifies the ticket with Supabase and streams the installer from GitHub with resume support.
 
-- [Current Windows version, filename, file size, and SHA-256](https://acoustic.acst.workers.dev/windows-release)
+- [Managed beta version, filename, file size, and SHA-256](https://acoustic.acst.workers.dev/windows-release)
 - Start a tester’s final week in the Supabase SQL Editor with `select public.begin_windows_beta_final_week('tester@example.com');`
 - Stop a tester in the Supabase SQL Editor with `select public.stop_windows_beta_access('tester@example.com');`
 - Look up a code’s tester email, device count, and cutoff with `select public.find_windows_beta_code_owner('code');`. In the table `acoustic_beta.windows_beta_access`, each email has one code hash and up to three device hashes.
@@ -48,7 +50,7 @@ The installer is a release asset in the private `Acoustic-Windows-Installers` Gi
 
 1. Set the managed beta version in the Desktop App repository’s `scripts/build_installer.mjs` and run `npm run desktop:installer -- --managed-beta` on Windows x64.
 2. Test the packaged app and record the exact installer byte count and SHA-256. Attach the executable to a prerelease in the private `Acoustic-Windows-Installers` repository.
-3. Update `windowsRelease` in `worker.mjs` with the version, filename, byte count, SHA-256, and numeric GitHub asset ID. Deploy the Worker. Supabase issues and validates download tickets, and the Worker selects the current installer and serves its public release metadata.
+3. Update `windowsRelease` in `worker.mjs` with the version, filename, byte count, SHA-256, and numeric GitHub asset ID. Update the managed beta heading and fallback version on the homepage and the fallback version in the guide. Deploy the Worker. Supabase issues and validates download tickets, and the Worker selects the current installer and serves its public release metadata.
 4. Test the live signup and saved-code update paths. Verify the complete download’s checksum against the installer you built.
 5. Keep the current release and one earlier verified installer for rollback. Restore the Worker's `windowsRelease` metadata for that asset when rolling back.
 

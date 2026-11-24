@@ -590,8 +590,6 @@ figure.specimen-frame .tick, .blend-detail .tick, .fig-card .tick { border-color
 .hero a:focus-visible { outline-color: #92cbff; }
 .hero-note { margin-top: 18px; color: #b5c9e2; font-size: 13px; }
 .hero-note a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
-.hero-install-note { max-width: 50ch; padding-inline-start: 12px; border-inline-start: 2px solid #92cbff; }
-.hero-install-note strong { color: #eff5ff; }
 .hero-visual { margin: 0; min-width: 0; }
 .phone-stage {
   display: grid; place-items: center; position: relative; isolation: isolate;
@@ -808,12 +806,16 @@ ol.cover-steps li::before {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px;
   width: min(100%, 790px); margin-bottom: 12px; text-align: left;
 }
+.desktop-options-title, #android-beta { grid-column: 1 / -1; }
+.desktop-options-title { font: 400 30px/1.1 var(--serif); }
 .beta-option {
   min-width: 0; padding: clamp(18px, 4vw, 31px); border: 1px solid var(--line-strong);
   border-radius: 8px; background: var(--panel);
 }
-.beta-option h3 { font: 400 36px/1.1 var(--serif); margin-bottom: 5px; }
-.beta-option p { color: var(--dim); font-size: 14px; margin-bottom: 14px; }
+.beta-option h3, .beta-option h4 {
+  font: 400 clamp(28px, 4vw, 36px)/1.1 var(--serif); margin-bottom: 8px;
+}
+.beta-option p { color: var(--dim); font-size: 1rem; margin-bottom: 14px; }
 .beta-option a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .beta-option form { display: grid; gap: 7px; }
 .beta-option input {

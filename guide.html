@@ -312,11 +312,11 @@
           <tbody>
             <tr><th scope="row">How it works</th><td>Plays a masking sound on Windows or Android</td><td>Plays sounds for rest or sleep</td><td>Produces anti-noise to reduce some of the sound reaching your ears</td></tr>
             <tr><th scope="row">Price</th><td>Free during beta</td><td>Free, one-time purchase or subscription, depending on the app</td><td>Depends on the headphones</td></tr>
-            <tr><th scope="row">Internet</th><td>Android runs offline. The Windows beta needs internet to activate and check access. Sounds are bundled on both.</td><td>Depends on whether sounds are bundled, downloaded or streamed</td><td>ANC can work offline. Setup and updates depend on the model.</td></tr>
-            <tr><th scope="row">Sign-up</th><td>Sign up with a name and email for Windows. Request an Android build by email.</td><td>Depends on the app</td><td>Depends on the headphones and companion app</td></tr>
+            <tr><th scope="row">Internet</th><td>Android and Acoustic Neurodivergent can run offline. The managed Windows beta needs internet to activate and check access. Sounds are bundled.</td><td>Depends on whether sounds are bundled, downloaded or streamed</td><td>ANC can work offline. Setup and updates depend on the model.</td></tr>
+            <tr><th scope="row">Sign-up</th><td>Sign up with a name and email for the managed Windows beta. Request Neurodivergent and Android builds by email.</td><td>Depends on the app</td><td>Depends on the headphones and companion app</td></tr>
             <tr><th scope="row">Sound library</th><td>59 ambience recordings, 17 music works and generated colour noise</td><td>May include noise, nature sounds, music or guided audio</td><td>Depends on the model and companion app</td></tr>
             <tr><th scope="row">Microphone use</th><td>Auto or a room calibration you start. Fixed playback leaves the mic off.</td><td>Depends on the features you enable</td><td>ANC uses microphones while enabled. They can pick up ambient sound, including voices.</td></tr>
-            <tr><th scope="row">Audio and data</th><td>Room audio is processed on your device. Windows sends its activation credential to check access.</td><td>Check the app&rsquo;s permissions and privacy policy</td><td>ANC uses microphone input to produce anti-noise. Data handling for other features depends on the model and app.</td></tr>
+            <tr><th scope="row">Audio and data</th><td>Room audio is processed on your device. The managed Windows beta sends its activation credential to check access.</td><td>Check the app&rsquo;s permissions and privacy policy</td><td>ANC uses microphone input to produce anti-noise. Data handling for other features depends on the model and app.</td></tr>
           </tbody>
         </table>
       </div>
@@ -325,12 +325,12 @@
   </section>
   <section class="band band-tight" id="windows-install">
     <div class="wrap">
-      <div class="sec-head"><h2>Install Acoustic on Windows</h2></div>
-      <p class="sec-strap">Acoustic is a student project, and we haven&rsquo;t been able to sign the Windows installer yet. You may see a Microsoft Defender SmartScreen prompt when you open it.</p>
+      <div class="sec-head"><h2>Install the managed Windows beta</h2></div>
+      <p class="sec-strap">The managed beta installer is unsigned, so you may see a Microsoft Defender SmartScreen prompt when you open it. For the current desktop app, <a href="index.html#windows-neurodivergent">request the Acoustic Neurodivergent build</a>.</p>
       <ol class="windows-install-steps">
         <li>
           <h3>Download Acoustic</h3>
-          <p><a href="index.html#windows-beta">Get the Windows beta</a> and save your activation code. For an update, <a href="index.html#windows-update">use your saved code</a> and quit Acoustic before running the installer.</p>
+          <p><a href="index.html#windows-beta">Get the managed beta</a> and save your activation code. If you already have a code, <a href="index.html#windows-update">use it to download the installer</a>. Quit Acoustic before running the installer.</p>
         </li>
         <li>
           <h3>Open the installer from Downloads</h3>
@@ -353,9 +353,9 @@
         <summary>Verify the installer with SHA-256</summary>
         <p>In PowerShell, replace the path below with the path to your downloaded installer and run the command. Compare the output to the published SHA-256.</p>
         <p><code>Get-FileHash -Algorithm SHA256 -LiteralPath "C:\path\to\installer.exe"</code></p>
-        <p data-windows-version>Windows x64</p>
+        <p data-windows-version>Version 0.8.2-beta.7 &middot; x64</p>
         <p><code data-windows-checksum></code></p>
-        <p><a href="https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta/release">View current release details</a></p>
+        <p><a href="/windows-release">View managed beta release details</a></p>
       </details>
     </div>
   </section>
@@ -368,11 +368,11 @@
         <div class="promise-card good">
           <h3>What it is</h3>
           <ul class="promise-list">
-            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>Sound masking on your device.</b> The Android app runs offline. The Windows beta checks access online.</span></li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>Sound masking on your device.</b> Android and Acoustic Neurodivergent can run offline. The managed Windows beta checks access online.</span></li>
             <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>All bundled.</b> 59 ambience recordings and 17 music works are included with the app.</span></li>
             <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>One ceiling you set.</b> Every automatic move is clamped below it — in the audio path, not just the UI.</span></li>
             <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>Local preferences.</b> Windows also lets you export settings yourself.</span></li>
-            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>Free during beta.</b> Windows testers sign up for an activation code.</span></li>
+            <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg><span><b>Free during beta.</b> Managed Windows beta testers sign up for an activation code.</span></li>
           </ul>
         </div>
         <div class="promise-card bad">
@@ -446,7 +446,7 @@
       <div class="qa">
         <details>
           <summary><span>Does Acoustic upload microphone audio?</span><span class="pm" aria-hidden="true">+</span></summary>
-          <p>Acoustic processes microphone input on your device. The Android app has no internet permission. The Windows beta connects to check access. Read the <a href="legal.html#privacy">Privacy Policy</a> for details.</p>
+          <p>Acoustic processes microphone input on your device. The Android app has no internet permission. The managed Windows beta connects to check access. Read the <a href="legal.html#privacy">Privacy Policy</a> for details.</p>
         </details>
         <details>
           <summary><span>Is this a medical device?</span><span class="pm" aria-hidden="true">+</span></summary>

@@ -53,7 +53,8 @@
           <a href="#questions">Common questions</a>
           <a href="guide.html">Sound guide</a>
           <a href="guide.html#picker">Find your sound</a>
-          <a href="#windows-update">Install latest Windows update</a>
+          <a href="#windows-desktop">Windows desktop apps</a>
+          <a href="#windows-update">Update the managed beta</a>
           <a href="#get">Join testing</a>
         </nav>
       </details>
@@ -75,11 +76,10 @@
         <h1 class="hero-title" id="heroTitle">Some rooms don&rsquo;t<br>come with a <em>door.</em></h1>
         <p class="hero-sub">A call at the next desk. A bus outside. Acoustic gives those sounds a steady backdrop. Pick a sound, set your volume limit, and get back to what you were doing.</p>
         <div class="hero-actions">
-          <a class="btn-primary" href="#windows-beta">Get the Windows beta <span aria-hidden="true">&nearr;</span></a>
+          <a class="btn-primary" href="#windows-desktop">See Windows desktop apps</a>
           <a class="btn-secondary" href="guide.html#picker">Find your sound <span aria-hidden="true">&nearr;</span></a>
         </div>
-        <p class="hero-note hero-install-note"><strong>The Windows installer is unsigned.</strong> Acoustic is a student project, and we haven&rsquo;t been able to sign it yet. If Windows shows a SmartScreen warning, <a href="guide.html#windows-install">see the steps with screenshots</a>.</p>
-        <p class="hero-note">Free while we test &middot; <a href="#windows-update">Install latest Windows update</a></p>
+        <p class="hero-note">Free while we test &middot; <a href="#windows-update">Update the managed beta</a></p>
       </div>
       <figure class="hero-visual">
         <div class="phone-stage">
@@ -163,7 +163,7 @@
         </details>
         <details>
           <summary><span>What does testing involve?</span><span class="pm" aria-hidden="true">+</span></summary>
-          <p>For Windows, sign up to get your activation code and installer. For Android, email us with the subject <b>Acoustic try-out</b> and include your name. You can stop testing at any time.</p>
+          <p>Request the <a href="#windows-neurodivergent">Neurodivergent build</a> or an <a href="#android-beta">Android build</a> by email. For the <a href="#windows-beta">managed Windows beta</a>, sign up to get an activation code and installer. You can stop testing at any time.</p>
         </details>
         <details>
           <summary><span>How much does it cost?</span><span class="pm" aria-hidden="true">+</span></summary>
@@ -171,7 +171,7 @@
         </details>
         <details>
           <summary><span>Does it need a connection?</span><span class="pm" aria-hidden="true">+</span></summary>
-          <p>Android runs offline. The Windows beta needs internet to activate and check access periodically. Playback and sound processing happen on your device, and the sounds are bundled with the app.</p>
+          <p>Acoustic Neurodivergent and Android can run offline. The managed Windows beta needs internet to activate and check access periodically. Playback and sound processing happen on your device, and sounds are bundled with the app.</p>
         </details>
       </div>
       <p class="guide-link"><a href="guide.html#questions">More questions about privacy and Auto &rarr;</a></p>
@@ -180,19 +180,28 @@
   <section class="access" id="get">
     <h2 class="access-title">Try the Acoustic beta</h2>
     <div class="beta-options">
+      <h3 class="desktop-options-title" id="windows-desktop">Windows desktop apps</h3>
+      <div class="beta-option" id="windows-neurodivergent">
+        <h4>Acoustic Neurodivergent</h4>
+        <p>Version 0.9.3 &middot; Windows x64</p>
+        <p>The current desktop app includes Quiet break, sound avoidance preferences, and controls that are easier to distinguish. It can run offline.</p>
+        <p>Include your name when you email us to request a build.</p>
+        <a class="btn-secondary" href="mailto:reachout.acoustic@gmail.com?subject=Acoustic%20Neurodivergent%200.9.3%20Windows%20build">Request the Neurodivergent build</a>
+      </div>
       <div class="beta-option" id="windows-beta">
-        <h3>Windows</h3>
-        <p data-windows-version>Windows x64</p>
-        <p>Acoustic is a student project, and we haven&rsquo;t been able to sign the Windows installer yet. <a href="guide.html#windows-install">See the installation guide with screenshots</a>.</p>
+        <h4>Acoustic Managed Beta 7</h4>
+        <p data-windows-version>Version 0.8.2-beta.7 &middot; x64</p>
+        <p>The earlier desktop build uses an activation code and checks beta access online.</p>
+        <p><strong>The beta installer is unsigned.</strong> <a href="guide.html#windows-install">See the installation guide with screenshots</a>.</p>
         <details class="beta-update" id="windows-update">
-          <summary>Install the latest Windows update</summary>
-          <p>Use your saved activation code to download the latest installer. Quit Acoustic, then run the installer. If an older build rejects your code, update and use the same code again.</p>
+          <summary>Download the managed beta with a saved code</summary>
+          <p>Use your saved activation code to download the managed beta installer. Quit Acoustic before running the installer. If an older beta build rejects your code, update and use the same code again.</p>
           <form id="windowsUpdateForm" method="post" action="https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta">
             <label for="windowsUpdateCode">Saved activation code</label>
             <input id="windowsUpdateCode" name="activationCode" type="text" autocomplete="off" spellcheck="false" autocapitalize="off" maxlength="64" required>
-            <button class="btn-primary" type="submit" disabled>Get the update <span aria-hidden="true">&darr;</span></button>
+            <button class="btn-primary" type="submit" disabled>Get the installer</button>
             <p class="beta-status" id="windowsUpdateStatus" role="status"></p>
-            <a id="windowsUpdateDownload" class="btn-primary" hidden>Download the update <span aria-hidden="true">&darr;</span></a>
+            <a id="windowsUpdateDownload" class="btn-primary" hidden>Download the managed beta</a>
           </form>
           <p>Need an activation code? <a href="#windowsBetaForm">Sign up below</a>.</p>
         </details>
@@ -203,19 +212,19 @@
           <input id="betaEmail" name="email" type="email" autocomplete="email" maxlength="254" required>
           <div hidden><input name="website" tabindex="-1" autocomplete="off"></div>
           <p>Signing up adds your name and email to the beta mailing list. Each code supports up to three devices. <a href="legal.html#privacy">Privacy Policy</a></p>
-          <button class="btn-primary" type="submit" disabled>Get your activation code <span aria-hidden="true">&darr;</span></button>
+          <button class="btn-primary" type="submit" disabled>Get your activation code</button>
           <p class="beta-status" id="windowsBetaStatus" role="status"></p>
           <div id="windowsBetaResult" hidden>
             <label for="windowsBetaCode">Your activation code</label>
             <input id="windowsBetaCode" type="text" readonly spellcheck="false">
             <button id="windowsBetaCopy" type="button">Copy code</button>
             <p>Save this code somewhere private. After installing, paste it into Acoustic and choose <b>Check access</b>.</p>
-            <a id="windowsBetaDownload" class="btn-primary">Download the Windows installer <span aria-hidden="true">&darr;</span></a>
+            <a id="windowsBetaDownload" class="btn-primary">Download the managed beta</a>
           </div>
-          <noscript><p>Enable JavaScript to sign up and download the Windows beta.</p></noscript>
+          <noscript><p>Enable JavaScript to sign up and download the managed beta.</p></noscript>
         </form>
       </div>
-      <div class="beta-option">
+      <div class="beta-option" id="android-beta">
         <h3>Android</h3>
         <p>Android 10+ &middot; Free while we test</p>
         <p>Include your name when you request a build. Check your phone in the <a href="guide.html#compat">Sound Guide</a>.</p>
