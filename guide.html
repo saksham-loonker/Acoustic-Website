@@ -323,53 +323,85 @@
       <p class="compare-note">Swipe or scroll the table sideways on smaller screens. <a href="https://support.apple.com/en-us/108918">How headphone microphones support ANC, explained by Apple</a></p>
     </div>
   </section>
+  <section class="band band-tight" id="windows-before-install">
+    <div class="wrap">
+      <div class="sec-head"><h2>Before you install Acoustic on Windows</h2></div>
+      <ul class="windows-install-steps">
+        <li>Both installers are built for Windows x64. In <strong>Settings &gt; System &gt; About</strong>, check that <strong>System type</strong> lists a 64-bit operating system and an x64-based processor. <a href="https://support.microsoft.com/en-us/windows/experience/compatibility/32-bit-and-64-bit-windows-frequently-asked-questions">Find your system type</a>.</li>
+        <li>Each build appears in Start as <strong>Acoustic Desktop App</strong>. Installing one replaces the other. Before switching builds, open <strong>Settings &gt; Settings transfer</strong>, choose <strong>Export settings</strong>, and quit Acoustic.</li>
+        <li>Choose the current <a href="#windows-neurodivergent-install">Acoustic Neurodivergent</a> build for offline use or the <a href="#windows-install">managed beta</a> for access with a beta code.</li>
+      </ul>
+    </div>
+  </section>
   <section class="band band-tight" id="windows-neurodivergent-install">
     <div class="wrap">
       <div class="sec-head"><h2>Install Acoustic Neurodivergent on Windows</h2></div>
-      <p class="sec-strap"><a href="index.html#windows-neurodivergent">Sign up to download the 0.9.3 installer for Windows x64</a>. Quit Acoustic, then open the installer from Downloads. Setup replaces an existing Acoustic Desktop App installation. After setup, open Acoustic Desktop App from the Start menu.</p>
-      <p>The installer is unsigned. If you see a SmartScreen prompt, <a href="#windows-smartscreen">check the illustrated steps below</a>.</p>
-      <details class="windows-install-checksum">
-        <summary>Verify the installer with SHA-256</summary>
-        <p>In PowerShell, compare the output of this command with the checksum below. Adjust the path if you saved the installer elsewhere.</p>
-        <p><code>Get-FileHash -Algorithm SHA256 -LiteralPath "$env:USERPROFILE\Downloads\Acoustic-Desktop-App-offline-setup-0.9.3.exe"</code></p>
-        <p><code>1bb84ae2b4418785c2144e451bd1e97a30950172d7250177c992e590ce6eb244</code></p>
-      </details>
+      <ol class="windows-install-steps">
+        <li>
+          <h3>Sign up and download</h3>
+          <p><a href="index.html#windows-neurodivergent">Enter your name and email</a> to get the download link on the page. If it expires, submit the same details again.</p>
+        </li>
+        <li>
+          <h3>Verify and run the installer</h3>
+          <p>Quit Acoustic if it is running. Compare the checksum below before opening the installer from Downloads. If Windows prompts you, follow the <a href="#windows-smartscreen">SmartScreen steps</a>.</p>
+          <details class="windows-install-checksum">
+            <summary>Verify the installer with SHA-256</summary>
+            <p>Run this command in PowerShell, adjusting the path if you saved the installer elsewhere. Compare the result with the checksum below.</p>
+            <p><code>Get-FileHash -Algorithm SHA256 -LiteralPath "$env:USERPROFILE\Downloads\Acoustic-Desktop-App-offline-setup-0.9.3.exe"</code></p>
+            <p><code>1bb84ae2b4418785c2144e451bd1e97a30950172d7250177c992e590ce6eb244</code></p>
+          </details>
+        </li>
+        <li>
+          <h3>Open Acoustic</h3>
+          <p>Open <strong>Acoustic Desktop App</strong> from Start. It&rsquo;s ready to use offline after setup.</p>
+        </li>
+      </ol>
     </div>
   </section>
   <section class="band band-tight" id="windows-install">
     <div class="wrap">
       <div class="sec-head"><h2>Install the managed Windows beta</h2></div>
-      <p class="sec-strap">The managed beta installer is unsigned, so you may see a Microsoft Defender SmartScreen prompt when you open it. For the current desktop app, <a href="#windows-neurodivergent-install">see the Acoustic Neurodivergent installation steps</a>.</p>
       <ol class="windows-install-steps">
         <li>
-          <h3>Download Acoustic</h3>
-          <p><a href="index.html#windows-beta">Get the managed beta</a> and save your activation code. If you already have a code, <a href="index.html#windows-update">use it to download the installer</a>. Quit Acoustic before running the installer.</p>
+          <h3>Download and save your code</h3>
+          <p><a href="index.html#windows-beta">Sign up for the managed beta</a> and save the activation code shown on the page. If you already have a code or the link expires, <a href="index.html#windows-update">use your saved code to get a fresh link</a>.</p>
         </li>
-        <li id="windows-smartscreen">
-          <h3>Open the installer from Downloads</h3>
-          <p>If you see <strong>Windows protected your PC</strong>, select <strong>More info</strong>. Check that the file is the Acoustic installer you downloaded from this site, then select <strong>Run anyway</strong> if Windows offers it. If your device blocks the install, check with its administrator.</p>
-          <figure>
-            <img src="assets/screenshots/windows-smartscreen.png" alt="Microsoft Defender SmartScreen warning with the More info link highlighted." width="479" height="460" loading="lazy" decoding="async">
-            <figcaption>SmartScreen example from <a href="https://learn.microsoft.com/en-us/power-automate/desktop-flows/dynamics365-cs-rpa#install-and-configure-contoso-crm-app">Microsoft Learn</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></figcaption>
-          </figure>
+        <li>
+          <h3>Verify and run the installer</h3>
+          <p>Quit Acoustic if it is running. Compare the checksum below before opening the installer from Downloads. If Windows prompts you, follow the <a href="#windows-smartscreen">SmartScreen steps</a>.</p>
+          <details class="windows-install-checksum">
+            <summary>Verify the installer with SHA-256</summary>
+            <p>Run this command in PowerShell, adjusting the path if you saved the installer elsewhere. Compare the result with the checksum below.</p>
+            <p><code data-windows-installer-command>Get-FileHash -Algorithm SHA256 -LiteralPath "$env:USERPROFILE\Downloads\Acoustic-Desktop-App-setup-0.8.2-beta.7.exe"</code></p>
+            <p data-windows-version>Version 0.8.2-beta.7 &middot; Windows x64 &middot; 251 MiB</p>
+            <p><code data-windows-checksum>e9e385ee2740fb44f9d20efc85e458c6ab90c6b2191aa5017ee034a418aabd27</code></p>
+            <p><a href="/windows-release">View managed beta release details</a></p>
+          </details>
         </li>
         <li>
           <h3>Open Acoustic and activate</h3>
-          <p>When setup finishes, open <strong>Acoustic Desktop App</strong> from the Start menu. If prompted, paste the code from the website and select <strong>Check access</strong>.</p>
+          <p>Open <strong>Acoustic Desktop App</strong> from Start while connected to the internet. At the activation screen, paste your saved code and select <strong>Check access</strong>.</p>
+          <p>If an older beta build rejects your code, install the current managed beta and try the same code again. <a href="#contact">Contact Acoustic</a> if you need help.</p>
           <figure>
             <img src="assets/screenshots/windows-beta-activation.png" alt="Acoustic Windows beta activation screen with the code field and Check access button." width="560" height="410" loading="lazy" decoding="async">
             <figcaption>The Acoustic beta activation screen.</figcaption>
           </figure>
         </li>
       </ol>
-      <details class="windows-install-checksum">
-        <summary>Verify the installer with SHA-256</summary>
-        <p>In PowerShell, replace the path below with the path to your downloaded installer and run the command. Compare the output to the published SHA-256.</p>
-        <p><code>Get-FileHash -Algorithm SHA256 -LiteralPath "C:\path\to\installer.exe"</code></p>
-        <p data-windows-version>Version 0.8.2-beta.7 &middot; x64</p>
-        <p><code data-windows-checksum></code></p>
-        <p><a href="/windows-release">View managed beta release details</a></p>
-      </details>
+    </div>
+  </section>
+  <section class="band band-tight" id="windows-smartscreen">
+    <div class="wrap">
+      <div class="sec-head"><h2>If Windows shows a SmartScreen prompt</h2></div>
+      <ol class="windows-install-steps">
+        <li>Confirm you downloaded the installer from this site and that the SHA-256 matches the guide for your build. If it differs, stop and download a fresh copy.</li>
+        <li>On the <strong>Windows protected your PC</strong> screen, select <strong>More info</strong> and check the filename. If it matches and Windows offers <strong>Run anyway</strong>, you can continue.</li>
+        <li>If Windows or a device policy blocks the installer, contact your device administrator.</li>
+      </ol>
+      <figure class="windows-installer-example">
+        <img src="assets/screenshots/windows-smartscreen.png" alt="Microsoft Defender SmartScreen warning with the More info link highlighted." width="479" height="460" loading="lazy" decoding="async">
+        <figcaption>SmartScreen example from <a href="https://learn.microsoft.com/en-us/power-automate/desktop-flows/dynamics365-cs-rpa#install-and-configure-contoso-crm-app">Microsoft Learn</a> &middot; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></figcaption>
+      </figure>
     </div>
   </section>
   <section class="band" id="fineprint">

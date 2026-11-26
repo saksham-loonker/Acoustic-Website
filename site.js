@@ -267,13 +267,17 @@
         if (!response.ok) throw Error("Release details unavailable");
         return response.json();
       })
-      .then(({ version, bytes, sha256 }) => {
+      .then(({ version, filename, bytes, sha256 }) => {
         if (typeof version !== "string" || !/^\d+\.\d+\.\d+(?:-[\w.-]+)?$/.test(version) ||
-            !Number.isSafeInteger(bytes) || bytes <= 0) return;
+            filename !== `Acoustic-Desktop-App-setup-${version}.exe` ||
+            !Number.isSafeInteger(bytes) || bytes <= 0 ||
+            typeof sha256 !== "string" || !/^[0-9a-f]{64}$/.test(sha256)) return;
         const size = Math.round(bytes / (1024 * 1024));
-        releaseLabels.forEach((label) => { label.textContent = `Version ${version} · x64 · ${size} MiB`; });
+        releaseLabels.forEach((label) => { label.textContent = `Version ${version} · Windows x64 · ${size} MiB`; });
         const checksum = document.querySelector("[data-windows-checksum]");
-        if (checksum && typeof sha256 === "string" && /^[0-9a-f]{64}$/.test(sha256)) checksum.textContent = sha256;
+        if (checksum) checksum.textContent = sha256;
+        const command = document.querySelector("[data-windows-installer-command]");
+        if (command) command.textContent = `Get-FileHash -Algorithm SHA256 -LiteralPath "$env:USERPROFILE\\Downloads\\${filename}"`;
       })
       .catch(() => {});
   }
@@ -289,9 +293,24 @@
     if (!response.ok) return { error: result.error || "The Windows installer is temporarily unavailable." };
     const endpoint = new URL(form.action);
     const target = new URL(result.download);
+    const ticket = target.searchParams.get("ticket")?.match(/^(\d{10})\.[0-9a-f]{64}$/);
     if (target.origin !== endpoint.origin || target.pathname !== endpoint.pathname + "/download")
       throw Error("Invalid download link");
-    return { ...result, download: target.href };
+    if (!ticket) throw Error("Invalid download ticket");
+    return { ...result, download: target.href, expiresAt: Number(ticket[1]) * 1000 };
+  }
+
+  function showWindowsDownload(link, status, result, expiredMessage) {
+    link.href = result.download;
+    link.hidden = false;
+    link.onclick = (event) => {
+      if (Date.now() < result.expiresAt) return;
+      event.preventDefault();
+      link.hidden = true;
+      link.removeAttribute("href");
+      status.textContent = expiredMessage;
+      link.closest("form").querySelector('button[type="submit"]').focus();
+    };
   }
 
   const neurodivergentForm = document.getElementById("windowsNeurodivergentForm");
@@ -314,9 +333,8 @@
           status.textContent = result.error;
           return;
         }
-        download.href = result.download;
-        download.hidden = false;
-        status.textContent = "Your installer is ready to download.";
+        showWindowsDownload(download, status, result, "This link expired. Submit the same name and email to get a new link.");
+        status.textContent = "Your installer is ready. The link lasts 45 minutes.";
       } catch {
         status.textContent = "Could not prepare your installer. Please try again.";
       } finally {
@@ -357,9 +375,9 @@
         if (result.activationCode !== payload.activationCode)
           throw Error("Invalid enrollment response");
         code.value = result.activationCode;
-        download.href = result.download;
+        showWindowsDownload(download, status, result, "This link expired. Use your saved code in the managed beta download form above.");
         details.hidden = false;
-        status.textContent = "Your activation code and installer are ready.";
+        status.textContent = "Your activation code and installer are ready. The download link lasts 45 minutes.";
       } catch {
         status.textContent = "Could not prepare your beta access. Please try again on this page.";
       } finally {
@@ -409,10 +427,9 @@
           status.textContent = result.error;
           return;
         }
-        download.href = result.download;
-        download.hidden = false;
+        showWindowsDownload(download, status, result, "This link expired. Enter your saved code again to get a new link.");
         code.value = "";
-        status.textContent = "Your update is ready to download.";
+        status.textContent = "Your installer is ready. The link lasts 45 minutes.";
       } catch {
         status.textContent = "Could not prepare your update. Please try again.";
       } finally {

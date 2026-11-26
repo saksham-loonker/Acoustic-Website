@@ -54,7 +54,7 @@ Both installers are release assets in the private `Acoustic-Windows-Installers` 
 
 1. Set the managed beta version in the Desktop App repository’s `scripts/build_installer.mjs` and run `npm run desktop:installer -- --managed-beta` on Windows x64.
 2. Test the packaged app and record the exact installer byte count and SHA-256. Attach the executable to a prerelease in the private `Acoustic-Windows-Installers` repository.
-3. Update `windowsRelease` in `worker.mjs` with the version, filename, byte count, SHA-256, and numeric GitHub asset ID. Update the managed beta heading and fallback version on the homepage and the fallback version in the guide. Deploy the Worker. Supabase issues and validates download tickets, and the Worker selects the current installer and serves its public release metadata.
+3. Update `windowsRelease` in `worker.mjs` with the version, filename, byte count, SHA-256, and numeric GitHub asset ID. Update the managed beta heading and fallback release details on the homepage and in the guide. Deploy the Worker. Supabase issues and validates download tickets, and the Worker selects the current installer and serves its public release metadata.
 4. Test the live signup and saved-code update paths. Verify the complete download’s checksum against the installer you built.
 5. Keep the current release and one earlier verified installer for rollback. Restore the Worker's `windowsRelease` metadata for that asset when rolling back.
 

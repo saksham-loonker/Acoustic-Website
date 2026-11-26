@@ -180,12 +180,15 @@
   <section class="access" id="get">
     <h2 class="access-title">Try the Acoustic beta</h2>
     <div class="beta-options">
-      <h3 class="desktop-options-title" id="windows-desktop">Windows desktop apps</h3>
+      <div class="desktop-options-intro" id="windows-desktop">
+        <h3>Windows desktop apps</h3>
+        <p>Both installers are unsigned. Each build appears as <strong>Acoustic Desktop App</strong> in Start, and installing one replaces the other. <a href="guide.html#windows-before-install">Check your PC and prepare to install</a>.</p>
+      </div>
       <div class="beta-option" id="windows-neurodivergent">
         <h4>Acoustic Neurodivergent</h4>
-        <p>Version 0.9.3 &middot; Windows x64</p>
-        <p>The current desktop app includes Quiet break, sound avoidance preferences, and controls that are easier to distinguish. It can run offline.</p>
-        <p>The installer is unsigned. <a href="guide.html#windows-neurodivergent-install">Installation and checksum</a></p>
+        <p class="beta-version">Version 0.9.3 &middot; Windows x64 &middot; 251 MiB</p>
+        <p>The current build runs offline and includes Quiet break and sound avoidance preferences.</p>
+        <p>Sign up to get the download link on this page. <a href="guide.html#windows-neurodivergent-install">Installation and checksum</a></p>
         <form id="windowsNeurodivergentForm" method="post" action="https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-neurodivergent">
           <label for="neurodivergentName">Name</label>
           <input id="neurodivergentName" name="name" autocomplete="name" maxlength="120" required>
@@ -193,7 +196,7 @@
           <input id="neurodivergentEmail" name="email" type="email" autocomplete="email" maxlength="254" required>
           <div hidden><input name="website" tabindex="-1" autocomplete="off"></div>
           <p>Signing up adds your name and email to the Neurodivergent signup list. <a href="legal.html#privacy">Privacy Policy</a></p>
-          <button class="btn-primary" type="submit" disabled>Get the installer</button>
+          <button class="btn-primary" type="submit" disabled>Get the Neurodivergent installer</button>
           <p class="beta-status" id="windowsNeurodivergentStatus" role="status"></p>
           <a id="windowsNeurodivergentDownload" class="btn-primary" hidden>Download Acoustic Neurodivergent</a>
           <noscript><p>Enable JavaScript to sign up and download Acoustic Neurodivergent.</p></noscript>
@@ -201,16 +204,17 @@
       </div>
       <div class="beta-option" id="windows-beta">
         <h4>Acoustic Managed Beta 7</h4>
-        <p data-windows-version>Version 0.8.2-beta.7 &middot; x64</p>
-        <p>The earlier desktop build uses an activation code and checks beta access online.</p>
-        <p><strong>The beta installer is unsigned.</strong> <a href="guide.html#windows-install">See the installation guide with screenshots</a>.</p>
+        <p class="beta-version" data-windows-version>Version 0.8.2-beta.7 &middot; Windows x64 &middot; 251 MiB</p>
+        <p>The earlier build uses an activation code and checks beta access online.</p>
+        <p>New testers get their code and download link on this page. <a href="guide.html#windows-install">Installation and checksum</a></p>
         <details class="beta-update" id="windows-update">
           <summary>Download the managed beta with a saved code</summary>
-          <p>Use your saved activation code to download the managed beta installer. Quit Acoustic before running the installer. If an older beta build rejects your code, update and use the same code again.</p>
+          <p>Use the same code to download or reinstall the managed beta. If you&rsquo;ve lost your code, <a href="#contact">contact Acoustic</a>.</p>
           <form id="windowsUpdateForm" method="post" action="https://qsycldeqkdgteccdpsty.supabase.co/functions/v1/windows-beta">
             <label for="windowsUpdateCode">Saved activation code</label>
-            <input id="windowsUpdateCode" name="activationCode" type="text" autocomplete="off" spellcheck="false" autocapitalize="off" maxlength="64" required>
-            <button class="btn-primary" type="submit" disabled>Get the installer</button>
+            <input id="windowsUpdateCode" name="activationCode" type="text" autocomplete="off" spellcheck="false" autocapitalize="off" maxlength="64" aria-describedby="windowsUpdateCodeHint" required>
+            <p class="beta-hint" id="windowsUpdateCodeHint">Paste the full 48-character code.</p>
+            <button class="btn-primary" type="submit" disabled>Get the managed beta installer</button>
             <p class="beta-status" id="windowsUpdateStatus" role="status"></p>
             <a id="windowsUpdateDownload" class="btn-primary" hidden>Download the managed beta</a>
           </form>
@@ -223,13 +227,13 @@
           <input id="betaEmail" name="email" type="email" autocomplete="email" maxlength="254" required>
           <div hidden><input name="website" tabindex="-1" autocomplete="off"></div>
           <p>Signing up adds your name and email to the beta mailing list. Each code supports up to three devices. <a href="legal.html#privacy">Privacy Policy</a></p>
-          <button class="btn-primary" type="submit" disabled>Get your activation code</button>
+          <button class="btn-primary" type="submit" disabled>Get your code and installer</button>
           <p class="beta-status" id="windowsBetaStatus" role="status"></p>
           <div id="windowsBetaResult" hidden>
             <label for="windowsBetaCode">Your activation code</label>
             <input id="windowsBetaCode" type="text" readonly spellcheck="false">
             <button id="windowsBetaCopy" type="button">Copy code</button>
-            <p>Save this code somewhere private. After installing, paste it into Acoustic and choose <b>Check access</b>.</p>
+            <p>Save this code somewhere private before closing the page. After installing, paste it into Acoustic and choose <b>Check access</b>.</p>
             <a id="windowsBetaDownload" class="btn-primary">Download the managed beta</a>
           </div>
           <noscript><p>Enable JavaScript to sign up and download the managed beta.</p></noscript>
